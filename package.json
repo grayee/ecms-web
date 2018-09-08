@@ -33,7 +33,6 @@
     "bootstrap": "^3.3.7",
     "compression": "^1.7.3",
     "convert-source-map": "^1.5.1",
-    "css-selecr": "^0.7.0",
     "de-indent": "^1.0.2",
     "del": "^3.0.0",
     "detect-indent": "^5.0.0",

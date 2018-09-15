@@ -18,10 +18,10 @@ import 'admin-lte/dist/css/AdminLTE.min.css'
 import 'admin-lte/dist/css/skins/_all-skins.css'
 
 //datatables
-import 'datatables.net'
+/*import 'datatables.net'
 import 'datatables.net/js/jquery.dataTables.min.js'
 import 'datatables.net-bs/js/dataTables.bootstrap.min.js'
-import 'datatables.net-bs/css/dataTables.bootstrap.min.css'
+import 'datatables.net-bs/css/dataTables.bootstrap.min.css'*/
 
 Vue.config.productionTip = false;
 

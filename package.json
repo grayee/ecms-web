@@ -2,7 +2,7 @@
   "name": "ecms-web",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "root <zrg523@foxmail.com>",
+  "author": "Gray.Z <zrg523@foxmail.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

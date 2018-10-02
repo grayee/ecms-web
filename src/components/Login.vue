@@ -65,7 +65,7 @@
 
         <div class="row">
           <div class="col-xs-12">
-            <button type="submit" class="btn btn-danger btn-block btn-flat">登 录</button>
+            <button type="submit" class="btn btn-danger btn-block btn-flat" @click="handleLogin('loginForm')">登 录</button>
           </div>
         </div>
 
@@ -108,6 +108,11 @@
     data() {
       return {
         msg: 'Welcome to Login'
+      }
+    },
+    methods: {
+      handleLogin: function (message) {
+        console.log("登录信息："+message);
       }
     }
   }

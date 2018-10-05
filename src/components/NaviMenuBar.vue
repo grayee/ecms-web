@@ -16,85 +16,39 @@
       </form>
       <!-- /.search form -->
 
-      <ul class="sidebar-menu" data-widget="tree">
-        <li :class="['treeview', path == item.path ? 'active' : '']" v-for="(item,index) in menus" :key="index">
-          <a :href="item.path">
-            <i :class="['fa', 'fa-' + item.icon]"></i>
-            <span>{{item.text}}</span>
-          </a>
-        </li>
-      </ul>
-
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">导航菜单</li>
         <!-- Optionally, you can add icons to the links -->
 
-        <li class="treeview active">
-          <a href="#" data-url="/org/tree"><i class="fa fa-sitemap"></i> <span>组织管理</span>
-            <span class="pull-right-container">
+        <li :class="['treeview', path === parent.path ? 'active' : '']" v-for="(parent,index) in menus" :key="index">
+          <a :href="parent.path">
+            <i :class="['fa', 'fa-' + parent.icon]"></i>
+            {{parent.text}}
+            <span v-if="parent.children" class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
           </a>
-
-          <ul class="treeview-menu" style="display: block;">
-            <li><a href="#" data-url="/user/page/list"><i class="fa fa-user"></i><span>组织机构管理</span></a></li>
-            <li><a href="#" data-url="/function/tree"><i class="fa fa-cog"></i><span>公司档案管理</span></a></li>
-            <li><a href="#" data-url="/role/list"><i class="fa fa-street-view"></i><span>部门档案管理</span></a></li>
-            <li><a href="#" data-url="/rolefunc/list"><i class="fa fa-key"></i><span>岗位信息管理</span></a></li>
-            <li><a href="#" data-url="/dict/tree"><i class="fa fa-book"></i><span>人员档案管理</span></a></li>
-          </ul>
-        </li>
-
-        <li class="treeview">
-          <a href="#"><i class="fa fa-link"></i> <span>权限管理</span>
-            <span class="pull-right-container">
+          <!-- 第二级-->
+          <ul v-if="parent.children" class="treeview-menu" style="display: none;">
+            <li :class="['', child.children ? 'treeview' : '']" v-for="(child, index) in parent.children" :key="index">
+              <a :href="child.path">
+                <i :class="['fa', 'fa-' + child.icon]"></i>
+                {{child.text}}
+                <span v-if="child.children" class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i>用户管理</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i>角色管理</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i>菜单管理</a></li>
-            <li class="treeview">
-              <a href="#"><i class="fa fa-circle-o"></i>授权管理
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
               </a>
-              <ul class="treeview-menu" style="display: none;">
-                <li><a href="#"><i class="fa fa-circle-o"></i>用户授权</a></li>
-                <li><a href="#"><i class="fa fa-circle-o"></i>角色授权</a></li>
-                <li><a href="#"><i class="fa fa-circle-o"></i>机构授权</a></li>
+              <!-- 第三级-->
+              <ul v-if="child.children" class="treeview-menu" style="display: none;">
+                <li v-for="(childSub, index) in child.children" :key="index">
+                  <a :href="childSub.path">
+                    <i :class="['fa', 'fa-' + childSub.icon]"></i>
+                    {{childSub.text}}
+                  </a>
+                </li>
               </ul>
             </li>
-            <li class="treeview">
-              <a href="#"><i class="fa fa-circle-o"></i>资源注册
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-              </a>
-              <ul class="treeview-menu" style="display: none;">
-                <li><a href="#"><i class="fa fa-circle-o"></i>按钮注册</a></li>
-                <li><a href="#"><i class="fa fa-circle-o"></i>字段注册</a></li>
-                <li><a href="#"><i class="fa fa-circle-o"></i>记录注册</a></li>
-              </ul>
-            </li>
-
-          </ul>
-        </li>
-
-        <li class="treeview">
-          <a href="#"><i class="fa fa-link"></i> <span>系统管理</span>
-            <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i>字典管理</a></li>
-
-            <li><a href="#"><i class="fa fa-circle-o"></i>在线用户管理</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i>登录日志管理</a></li>
           </ul>
         </li>
       </ul>
@@ -105,6 +59,7 @@
 </template>
 
 <script>
+
   export default {
     name: 'NaviMenu',
     data() {
@@ -113,12 +68,12 @@
       }
     },
     props: {
-      menus : {
-        default : () => []
+      menus: {
+        default: () => []
       }
     },
     computed: {
-      path(){
+      path: function () {
         return location.pathname;
       }
     }

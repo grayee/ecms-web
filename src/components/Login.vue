@@ -42,13 +42,11 @@
           <div class="col-xs-6">
             <div class="checkbox icheck">
               <label>
-                <div class="icheckbox_square-red" aria-checked="false" aria-disabled="false"
-                     style="position: relative;">
-                  <input data-v-9fcfedee="" type="checkbox" name="rememberMe" style="position: absolute; top: -20%; left: -10%; display: block;">
-                  <ins class="iCheck-helper"
-                       style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                <div class="icheckbox_square-red" aria-checked="false" aria-disabled="false">
+                  <input type="checkbox" name="rememberMe" style="margin: 0 auto;position: relative">&nbsp;&nbsp;记住用户
+                  <ins class="iCheck-helper"></ins>
                 </div>
-                记住用户
+
               </label>
             </div>
           </div>

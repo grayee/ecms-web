@@ -24,7 +24,7 @@
         <li :class="['treeview', path === parent.path ? 'active' : '']" v-for="(parent,index) in menus" :key="index">
           <a :href="parent.path">
             <i :class="['fa', 'fa-' + parent.icon]"></i>
-            {{parent.text}}
+            <span>{{parent.text}}</span>
             <span v-if="parent.children" class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
@@ -34,7 +34,7 @@
             <li :class="['', child.children ? 'treeview' : '']" v-for="(child, index) in parent.children" :key="index">
               <a :href="child.path">
                 <i :class="['fa', 'fa-' + child.icon]"></i>
-                {{child.text}}
+                <span>{{child.text}}</span>
                 <span v-if="child.children" class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
@@ -44,7 +44,7 @@
                 <li v-for="(childSub, index) in child.children" :key="index">
                   <a :href="childSub.path">
                     <i :class="['fa', 'fa-' + childSub.icon]"></i>
-                    {{childSub.text}}
+                    <span>{{childSub.text}}</span>
                   </a>
                 </li>
               </ul>

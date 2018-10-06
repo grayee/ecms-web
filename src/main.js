@@ -16,16 +16,17 @@ import 'font-awesome/css/font-awesome.css'
 import 'admin-lte'
 import 'admin-lte/dist/css/AdminLTE.min.css'
 import 'admin-lte/dist/css/skins/_all-skins.css'
+//easy UI
+import 'vx-easyui/dist/themes/default/easyui.css';
+import 'vx-easyui/dist/themes/icon.css';
+import 'vx-easyui/dist/themes/vue.css';
+import EasyUI from 'vx-easyui';
 
-//datatables
-/*import 'datatables.net'
-import 'datatables.net/js/jquery.dataTables.min.js'
-import 'datatables.net-bs/js/dataTables.bootstrap.min.js'
-import 'datatables.net-bs/css/dataTables.bootstrap.min.css'*/
 
 Vue.config.productionTip = false;
 
 Vue.use(VueResource)
+Vue.use(EasyUI);
 
 //注册全局组件
 /* eslint-disable no-new */

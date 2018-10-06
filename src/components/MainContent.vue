@@ -17,44 +17,36 @@
       <!--------------------------
         | Your Page Content Here |
         -------------------------->
-      <div class="panel panel-default">
-        <div class="panel-heading">基本信息</div>
-        <div style="padding: 10px 0 20px 10px;">
-          <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Hover Data Table</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table id="example2" class="table table-bordered table-hover">
-                <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Position</th>
-                  <th>Office</th>
-                  <th>Extn.</th>
-                  <th>Start date</th>
-                  <th>Salary</th>
-                </tr>
-                </thead>
 
-                <tfoot>
-                <tr>
-                  <th>Name</th>
-                  <th>Position</th>
-                  <th>Office</th>
-                  <th>Extn.</th>
-                  <th>Start date</th>
-                  <th>Salary</th>
-                </tr>
-                </tfoot>
-              </table>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-        </div>
-      </div>
+      <Panel title="标题" :collapsible="true" :bodyStyle="{padding:'5px'}">
+        <p>
+          <DataGrid style="height:100%"
+                    :pagination="true"
+                    :lazy="true"
+                    :data="data"
+                    :total="total"
+                    :loading="loading"
+                    :pageNumber="pageNumber"
+                    :pageSize="pageSize"
+                    :pagePosition="pagePosition"
+                    @pageChange="onPageChange($event)">
+
+            <GridColumn align="center" cellCss="datagrid-td-rownumber" width="30">
+              <template slot="body" slot-scope="scope">
+                {{scope.rowIndex + 1}}
+              </template>
+            </GridColumn>
+            <GridColumn field="inv" title="Inv No"></GridColumn>
+            <GridColumn field="name" title="Name"></GridColumn>
+            <GridColumn field="amount" title="Amount" align="right" sortable="true"></GridColumn>
+            <GridColumn field="price" title="Price" align="right" sortable="true"></GridColumn>
+            <GridColumn field="cost" title="Cost" align="right"></GridColumn>
+            <GridColumn field="note" title="Note"></GridColumn>
+          </DataGrid>
+
+        </p>
+      </Panel>
+
     </section>
     <!-- /.content -->
   </div>
@@ -63,76 +55,69 @@
 
 <!-- 2.行为 :处理逻辑-->
 <script>
-
   export default {
-    name: 'MainContent',
     data() {
       return {
-        msg: 'Welcome to my Vue App!'
+        total: 0,
+        pageNumber: 1,
+        pageSize: 20,
+        data: [],
+        loading: false,
+        pagePosition: "bottom",
+        pageOptions: [
+          {value: "bottom", text: "Bottom"},
+          {value: "top", text: "Top"},
+          {value: "both", text: "Both"}
+        ]
+      };
+    },
+    created() {
+      this.loadPage(this.pageNumber, this.pageSize);
+    },
+    methods: {
+      onPageChange(event) {
+        this.loadPage(event.pageNumber, event.pageSize);
+      },
+      loadPage(pageNumber, pageSize) {
+        this.loading = true;
+        setTimeout(() => {
+          let result = this.getData(pageNumber, pageSize);
+          this.total = result.total;
+          this.pageNumber = result.pageNumber;
+          this.data = result.rows;
+          this.loading = false;
+        }, 1000);
+      },
+      getData(pageNumber, pageSize) {
+        let total = 100000;
+        let data = [];
+        let start = (pageNumber - 1) * pageSize;
+        for (let i = start + 1; i <= start + pageSize; i++) {
+          let amount = Math.floor(Math.random() * 1000);
+          let price = Math.floor(Math.random() * 1000);
+          data.push({
+            inv: "Inv No " + i,
+            name: "Name " + i,
+            amount: amount,
+            price: price,
+            cost: amount * price,
+            note: "Note " + i
+          });
+        }
+        return {
+          total: total,
+          pageNumber: pageNumber,
+          pageSize: pageSize,
+          rows: data
+        };
       }
     }
-  }
-
-
-  $(function () {
-    $('#example2').DataTable(
-      {
-        "ajax": './objects.txt',
-        buttons: [
-          { extend:'copy', attr: { id: 'allan' } }, 'csv', 'excel', 'pdf', 'print',  'colvis',
-          {
-            text: 'My button',
-            action: function ( e, dt, node, config ) {
-              alert( 'Button activated' );
-            }
-          },  {
-            text: 'Button 2',
-            action: function ( e, dt, node, conf ) {
-              alert( 'Button 2 clicked on' );
-            }
-          }
-        ],
-
-        "columns": [
-          { "data": "name" },
-          { "data": "position" },
-          { "data": "office" },
-          { "data": "extn" },
-          { "data": "start_date" },
-          { "data": "salary" }
-        ],
-        'paging': true,
-        'lengthChange': true,
-        'searching': true,
-        'ordering': true,
-        'info': true,
-        'autoWidth': false,
-        'scrollY': 200,
-        'scrollX': true,
-        "pagingType": "full_numbers",
-        "dom":"<'row'B<'col-sm-6'f>> <'row'<'col-sm-12'tr>><'row'<'col-sm-3'l> <'col-sm-3'i> <'col-sm-6'p>>",
-        "language": {
-          "emptyTable": "暂无数据",
-          "processing": "处理中...",
-          "loadingRecords": "加载中...",
-          "zeroRecords": "未查询到符合条件的数据",
-          "lengthMenu": "每页显示 _MENU_ 条记录",
-          "search": "搜索:",
-          "paginate": {
-            "first": "首页",
-            "last": "末页",
-            "next": "下一页",
-            "previous": "上一页"
-          },
-          "info": "显示 _START_ 到 _END_ 条记录， 共 _TOTAL_ 条记录",
-          "infoEmpty": "Showing 0 to 0 of 0 entries",
-        }
-      }
-    );
-  })
+  };
 </script>
 
 <!-- 3.样式:解决样式     -->
-<style>
-
+<style scoped>
+  .panel-header {
+    background-color: #f5f5f5;
+  }
 </style>

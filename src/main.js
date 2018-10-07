@@ -20,13 +20,18 @@ import 'admin-lte/dist/css/skins/_all-skins.css'
 import 'vx-easyui/dist/themes/default/easyui.css';
 import 'vx-easyui/dist/themes/icon.css';
 import 'vx-easyui/dist/themes/vue.css';
+
+
 import EasyUI from 'vx-easyui';
+import locale from 'vx-easyui/dist/locale/easyui-lang-zh_CN';
 
 
 Vue.config.productionTip = false;
 
 Vue.use(VueResource)
-Vue.use(EasyUI);
+Vue.use(EasyUI, {
+  locale: locale
+});
 
 //注册全局组件
 /* eslint-disable no-new */

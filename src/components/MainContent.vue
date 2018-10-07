@@ -18,24 +18,28 @@
         | Your Page Content Here |
         -------------------------->
 
-      <Panel title="标题" :collapsible="true" :bodyStyle="{padding:'5px'}">
-        <p>
+      <Panel title="标题" :collapsible="true" :bodyStyle="{padding:'5px'}" :headerStyle="{background: '#f5f5f5'}">
           <DataGrid style="height:100%"
                     :pagination="true"
                     :lazy="true"
+                    :showPageList="true"
+                    :pageList="pageList"
                     :data="data"
                     :total="total"
                     :loading="loading"
                     :pageNumber="pageNumber"
                     :pageSize="pageSize"
                     :pagePosition="pagePosition"
+                    :tpl="tpl"
+                    :pageLayout="['list','sep','first','prev','links','next','last','sep','refresh','info','tpl']"
                     @pageChange="onPageChange($event)">
 
-            <GridColumn align="center" cellCss="datagrid-td-rownumber" width="30">
+            <GridColumn align="center" cellCss="datagrid-td-rownumber" width="5%">
               <template slot="body" slot-scope="scope">
                 {{scope.rowIndex + 1}}
               </template>
             </GridColumn>
+
             <GridColumn field="inv" title="Inv No"></GridColumn>
             <GridColumn field="name" title="Name"></GridColumn>
             <GridColumn field="amount" title="Amount" align="right" sortable="true"></GridColumn>
@@ -44,7 +48,6 @@
             <GridColumn field="note" title="Note"></GridColumn>
           </DataGrid>
 
-        </p>
       </Panel>
 
     </section>
@@ -62,8 +65,12 @@
         pageNumber: 1,
         pageSize: 20,
         data: [],
+        pageList:[10,20,30,40,50],
         loading: false,
         pagePosition: "bottom",
+        tpl:"<template slot-scope='scope'> " +
+            "<NumberBox class='page-num' v-model='pageNumber' :min='1' :max='scope.pageCount'></NumberBox>" +
+        "</template>",
         pageOptions: [
           {value: "bottom", text: "Bottom"},
           {value: "top", text: "Top"},
@@ -121,3 +128,6 @@
     background-color: #f5f5f5;
   }
 </style>
+<!--
+https://www.cnblogs.com/wyguo/p/3556049.html
+-->

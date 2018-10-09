@@ -19,42 +19,56 @@
         -------------------------->
 
       <Panel title="标题" :collapsible="true" :bodyStyle="{padding:'5px'}" :headerStyle="{background: '#f5f5f5'}">
-          <DataGrid style="height:100%"
-                    :pagination="true"
-                    :lazy="true"
-                    :showPageList="true"
-                    :pageList="pageList"
-                    :data="data"
-                    :total="total"
-                    :loading="loading"
-                    :pageNumber="pageNumber"
-                    :pageSize="pageSize"
-                    :pagePosition="pagePosition"
-                    :tpl="tpl"
-                    :pageLayout="['list','sep','first','prev','links','next','last','sep','refresh','info','tpl']"
-                    @pageChange="onPageChange($event)">
+        <DataGrid style="height:100%"
+                  :pagination="true"
+                  :lazy="true"
+                  :pageList="pageList"
+                  :data="data"
+                  :total="total"
+                  :loading="loading"
+                  :pageNumber="pageNumber"
+                  :pageSize="pageSize"
+                  :pagePosition="pagePosition"
+                  :pageLinks="5"
+                  :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
+                  @pageChange="onPageChange($event)">
 
-            <div slot="tpl" slot-scope="{datagrid}">
-              <NumberBox style="width:60px;height:30px"
-                         v-model="datagrid.pageNumberState"
-                         :min="1" :max="datagrid.pageCountState"
-                         :inputStyle="{textAlign:'center'}">
-              </NumberBox>
-            </div>
+          <div slot="tpl" slot-scope="{datagrid}">
+            &nbsp;第
+            <NumberBox style="width:80px;height:23px" spinAlign="left" :spinners="true"
+                       v-model="datagrid.pageNumberState"
+                       :min="1" :max="Math.floor((total-1)/pageSize+1)"
+                       :inputStyle="{textAlign:'left'}">
+              <Addon align="right">
+                <LinkButton iconCls="icon-search"
+                            :style="{borderRadius:0,borderWidth:'0 1px 0 0',width:'20px'}"></LinkButton>
+              </Addon>
+            </NumberBox>
+            页,共 {{Math.floor((total-1)/pageSize+1)}} 页 &nbsp;
+          </div>
 
-            <GridColumn align="center" cellCss="datagrid-td-rownumber" width="5%">
-              <template slot="body" slot-scope="scope">
-                {{scope.rowIndex + 1}}
-              </template>
-            </GridColumn>
+          <GridColumn align="center" cellCss="datagrid-td-rownumber" width="5%">
+            <template slot="body" slot-scope="scope">
+              {{scope.rowIndex + 1}}
+            </template>
+          </GridColumn>
 
-            <GridColumn field="inv" title="Inv No"></GridColumn>
-            <GridColumn field="name" title="Name"></GridColumn>
-            <GridColumn field="amount" title="Amount" align="right" sortable="true"></GridColumn>
-            <GridColumn field="price" title="Price" align="right" sortable="true"></GridColumn>
-            <GridColumn field="cost" title="Cost" align="right"></GridColumn>
-            <GridColumn field="note" title="Note"></GridColumn>
-          </DataGrid>
+          <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
+            <template slot="header" slot-scope="scope">
+             <CheckBox :inputId="id" :value="id" :multiple="true" v-model="id"  style="width:15px;height:15px"></CheckBox>
+            </template>
+            <template slot="body" slot-scope="scope">
+              <CheckBox :inputId="id" :value="id" :multiple="true" v-model="id"  style="width:15px;height:15px"></CheckBox>
+            </template>
+          </GridColumn>
+
+          <GridColumn field="inv" title="Inv No"></GridColumn>
+          <GridColumn field="name" title="Name"></GridColumn>
+          <GridColumn field="amount" title="Amount" align="right" sortable="true"></GridColumn>
+          <GridColumn field="price" title="Price" align="right" sortable="true"></GridColumn>
+          <GridColumn field="cost" title="Cost" align="right"></GridColumn>
+          <GridColumn field="note" title="Note"></GridColumn>
+        </DataGrid>
 
       </Panel>
 
@@ -73,11 +87,11 @@
         pageNumber: 1,
         pageSize: 20,
         data: [],
-        pageList:[10,20,30,40,50],
+        pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
-        tpl:"<template slot-scope='scope'> " +
-            "<NumberBox class='page-num' v-model='pageNumber' :min='1' :max='scope.pageCount'></NumberBox>" +
+        tpl: "<template slot-scope='scope'> " +
+        "<NumberBox class='page-num' v-model='pageNumber' :min='1' :max='scope.pageCount'></NumberBox>" +
         "</template>",
         pageOptions: [
           {value: "bottom", text: "Bottom"},

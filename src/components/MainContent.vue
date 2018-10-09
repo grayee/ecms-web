@@ -34,6 +34,14 @@
                     :pageLayout="['list','sep','first','prev','links','next','last','sep','refresh','info','tpl']"
                     @pageChange="onPageChange($event)">
 
+            <div slot="tpl" slot-scope="{datagrid}">
+              <NumberBox style="width:60px;height:30px"
+                         v-model="datagrid.pageNumberState"
+                         :min="1" :max="datagrid.pageCountState"
+                         :inputStyle="{textAlign:'center'}">
+              </NumberBox>
+            </div>
+
             <GridColumn align="center" cellCss="datagrid-td-rownumber" width="5%">
               <template slot="body" slot-scope="scope">
                 {{scope.rowIndex + 1}}

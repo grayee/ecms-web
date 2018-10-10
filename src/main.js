@@ -17,7 +17,7 @@ import 'admin-lte'
 import 'admin-lte/dist/css/AdminLTE.min.css'
 import 'admin-lte/dist/css/skins/_all-skins.css'
 //easy UI
-import 'vx-easyui/dist/themes/default/easyui.css';
+import 'vx-easyui/dist/themes/bootstrap/easyui.css';
 import 'vx-easyui/dist/themes/icon.css';
 import 'vx-easyui/dist/themes/vue.css';
 

@@ -18,30 +18,48 @@
         | Your Page Content Here |
         -------------------------->
       <Layout>
-        <LayoutPanel region="west" :bodyStyle="{padding:'5px'}" style="width:150px;">
-          <Tree :data="menuData"></Tree>
+
+        <LayoutPanel region="west" :bodyStyle="{padding:'5px'}" style="width:150px;padding-right: 10px">
+          <Tree :data="menuData" :checkbox="true"></Tree>
         </LayoutPanel>
+
         <LayoutPanel region="center" style="height:100%">
-          <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'5px'}" :headerStyle="{background: '#f5f5f5'}">
-            <div style="margin-bottom:20px">
-              <Label for="d2" align="top">yyyy-MM-dd</Label>
+          <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px'}">
+            <div style="margin-bottom:10px">
+              <Label for="d2" style="text-align: right">日期： </Label>
+              <DateBox inputId="d2" v-model="value" format="yyyy-MM-dd"></DateBox>
+              至
               <DateBox inputId="d2" v-model="value" format="yyyy-MM-dd"></DateBox>
             </div>
-
-            <SearchBox style="width:300px"
-                       placeholder="Input something here"
-                       v-model="value"
-                       @search="onSearch($event)">
-              <Addon>
-                <span v-if="value" class="textbox-icon icon-clear" title="Clear value" @click="value=null"></span>
-              </Addon>
-              <Menu>
-                <MenuItem value="all" text="All News" iconCls="icon-ok"></MenuItem>
-                <MenuItem value="sports" text="Sports News" iconCls="icon-man"></MenuItem>
-              </Menu>
-            </SearchBox>
+            <div style="margin-bottom:10px">
+              <Label for="c1" style="text-align: right">条件1: </Label>
+              <ComboBox inputId="c1" v-model="value" :data="data"></ComboBox>
+              <Label for="name" style="text-align: right">条件2:</Label>
+              <TextBox inputId="name"></TextBox>
+              <Label for="n1" style="text-align: right">条件3:</Label>
+              <NumberBox inputId="n1" :value="100" :spinners="true"></NumberBox>
+            </div>
+            <div style="padding-left: 80px">
+              <LinkButton iconCls="icon-search" style="width:80px">查询</LinkButton>
+            </div>
           </Panel>
-          <Panel title="列表" :collapsible="true" :bodyStyle="{padding:'5px'}" :headerStyle="{background: '#f5f5f5'}">
+
+          <Panel title="列表" :bodyStyle="{padding:'5px'}">
+
+            <template slot="header">
+              <div class="f-row">
+                <div class="f-full" style="line-height:30px">列表</div>
+                <div>
+                  <LinkButton iconCls="icon-add" :plain="true">新增</LinkButton>
+                  <LinkButton iconCls="icon-reload" :plain="true">刷新</LinkButton>
+                  <LinkButton iconCls="icon-remove" :plain="true">删除</LinkButton>
+                  <LinkButton iconCls="icon-edit" :plain="true">编辑</LinkButton>
+                  <LinkButton iconCls="icon-print" :plain="true">打印</LinkButton>
+                  <LinkButton iconCls="icon-back" :plain="true"></LinkButton>
+                </div>
+              </div>
+            </template>
+
             <DataGrid style="height:100%"
                       :pagination="true"
                       :lazy="true"
@@ -70,18 +88,23 @@
                 页,共 {{Math.floor((total-1)/pageSize+1)}} 页 &nbsp;
               </div>
 
-              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="5%">
+              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
+                <template slot="header" slot-scope="scope">
+                  <CheckBox :inputId="id" :value="id" :multiple="true" v-model="id"
+                            style="width:15px;height:15px"></CheckBox>
+                </template>
                 <template slot="body" slot-scope="scope">
-                  {{scope.rowIndex + 1}}
+                  <CheckBox :inputId="id" :value="id" :multiple="true" v-model="id"
+                            style="width:15px;height:15px"></CheckBox>
                 </template>
               </GridColumn>
 
-              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
+              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="5%">
                 <template slot="header" slot-scope="scope">
-                  <CheckBox :inputId="id" :value="id" :multiple="true" v-model="id"  style="width:15px;height:15px"></CheckBox>
+                  <span>序</span>
                 </template>
                 <template slot="body" slot-scope="scope">
-                  <CheckBox :inputId="id" :value="id" :multiple="true" v-model="id"  style="width:15px;height:15px"></CheckBox>
+                  {{scope.rowIndex + 1}}
                 </template>
               </GridColumn>
 
@@ -117,21 +140,21 @@
           {
             text: "Item1",
             children: [
-              { text: "Item11" },
+              {text: "Item11"},
               {
                 text: "Item12",
                 state: "closed",
                 children: [
-                  { text: "Iteme121" },
-                  { text: "Iteme122" },
-                  { text: "Iteme123" }
+                  {text: "Iteme121"},
+                  {text: "Iteme122"},
+                  {text: "Iteme123"}
                 ]
               },
-              { text: "Item13" },
-              { text: "Item14" }
+              {text: "Item13"},
+              {text: "Item14"}
             ]
           },
-          { text: "Item2" }
+          {text: "Item2"}
         ],
         pageList: [10, 20, 30, 40, 50],
         loading: false,

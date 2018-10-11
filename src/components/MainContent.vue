@@ -41,6 +41,7 @@
             </div>
             <div style="padding-left: 80px">
               <LinkButton iconCls="icon-search" style="width:80px">查询</LinkButton>
+              <LinkButton iconCls="icon-cancel" style="width:80px"> 重置</LinkButton>
             </div>
           </Panel>
 

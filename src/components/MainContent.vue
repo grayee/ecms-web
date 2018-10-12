@@ -13,7 +13,7 @@
     </section>
 
     <!-- Main content -->
-    <section class="content container-fluid" style="background: rgb(255, 255, 255);">
+    <section class="content container-fluid" style="background: rgb(255, 255, 255);padding:5px">
       <!--------------------------
         | Your Page Content Here |
         -------------------------->

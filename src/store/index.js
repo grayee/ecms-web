@@ -16,11 +16,12 @@ const store = new Vuex.Store({
         children: [
           {
             icon: "archive",
-            path: "/index.html",
+            path: "/admin/orgs",
             text: "组织机构管理"
           },
           {
             icon: "star",
+            path: "/admin/hello",
             text: "公司档案管理"
           },
           {

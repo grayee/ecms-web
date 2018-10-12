@@ -3,7 +3,7 @@
   <div class="wrapper">
     <app-navi-header/>
     <app-navi-menu :menus="menus"/>
-    <app-main-content/>
+    <router-view></router-view>
     <app-main-footer/>
 
     <!-- Control Sidebar -->
@@ -93,7 +93,7 @@
   //引入Footer局部组件
   import MainFooter from './MainFooter';
 
-  import { mapState } from "vuex";
+  import {mapState} from "vuex";
 
   export default {
     components: {

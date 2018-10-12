@@ -32,13 +32,15 @@
           <!-- 第二级-->
           <ul v-if="parent.children" class="treeview-menu" style="display: none;">
             <li :class="['', child.children ? 'treeview' : '']" v-for="(child, index) in parent.children" :key="index">
-              <a :href="child.path">
+
+              <router-link :to="{ path:child.path}">
                 <i :class="['fa', 'fa-' + child.icon]"></i>
                 <span>{{child.text}}</span>
                 <span v-if="child.children" class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
-              </a>
+              </router-link>
+
               <!-- 第三级-->
               <ul v-if="child.children" class="treeview-menu" style="display: none;">
                 <li v-for="(childSub, index) in child.children" :key="index">

@@ -3,7 +3,7 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
+    <section class="content-header" style="padding: 0px 15px 0 15px;">
       <ol id="nav_title" class="breadcrumb" style="position: static; float: none;">
         <li class="active">
           <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;首页
@@ -13,18 +13,18 @@
     </section>
 
     <!-- Main content -->
-    <section class="content container-fluid" style="background: rgb(255, 255, 255); ">
+    <section class="content container-fluid" style="background: rgb(255, 255, 255);">
       <!--------------------------
         | Your Page Content Here |
         -------------------------->
       <Layout>
 
-        <LayoutPanel region="west" :bodyStyle="{padding:'5px'}" style="width:150px;padding-right: 10px">
+        <LayoutPanel region="west" :bodyStyle="{padding:'3px'}" style="width:150px;">
           <Tree :data="menuData" :checkbox="true"></Tree>
         </LayoutPanel>
 
-        <LayoutPanel region="center" style="height:100%">
-          <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px'}">
+        <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
+          <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
             <div style="margin-bottom:10px">
               <Label for="d2" style="text-align: right">日期： </Label>
               <DateBox inputId="d2" v-model="value" format="yyyy-MM-dd"></DateBox>
@@ -45,7 +45,7 @@
             </div>
           </Panel>
 
-          <Panel title="列表" :bodyStyle="{padding:'5px'}">
+          <Panel title="列表" :bodyStyle="{padding:'3px'}">
 
             <template slot="header">
               <div class="f-row">

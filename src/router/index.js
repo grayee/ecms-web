@@ -6,39 +6,48 @@ import AdminLTE from '@/components/AdminLTE'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 import NaviMenuBar from '@/components/NaviMenuBar'
+import MainContent from '@/components/MainContent'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/hello',
-      name: 'HelloWorld',
-      component: HelloWorld
-    },
-    {
       path: '/user',
-      name: 'user',
       component: Users
     },
     {
       path: '/admin',
-      name: 'admin',
-      component: AdminLTE
+      component: AdminLTE,
+      children:[
+        {
+          path:"",
+          component:MainContent
+        },
+        {
+          path:"orgs",
+          component:MainContent
+        },
+        {
+          path: 'hello',
+          component: HelloWorld
+        },
+        {
+          path:'*',
+          redirect: '/'
+        },
+        ]
     },
     {
       path: '/',
-      name: 'login',
       component: Login
     },
     {
       path: '/register',
-      name: 'register',
       component: Register
     },
     {
       path: '/menu',
-      name: "naviMenuBar",
       component: NaviMenuBar
     }
   ]

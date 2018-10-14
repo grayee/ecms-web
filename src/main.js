@@ -4,7 +4,6 @@ import Vue from 'vue'
 import store from "./store";
 import App from './App'
 import router from './router'
-import VueResource from 'vue-resource'
 
 //bootstrap
 import 'bootstrap'
@@ -21,14 +20,19 @@ import 'vx-easyui/dist/themes/bootstrap/easyui.css';
 import 'vx-easyui/dist/themes/icon.css';
 import 'vx-easyui/dist/themes/vue.css';
 
-
 import EasyUI from 'vx-easyui';
 import locale from 'vx-easyui/dist/locale/easyui-lang-zh_CN';
 
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
+Vue.use(VueAxios,axios);
 
 Vue.config.productionTip = false;
 
-Vue.use(VueResource)
+// 引入mockjs
+require('./mock/mock.js')
+
 Vue.use(EasyUI, {
   locale: locale
 });

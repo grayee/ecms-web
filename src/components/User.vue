@@ -50,13 +50,12 @@
     },
     created() {
       this.$http.get("http://jsonplaceholder.typicode.com/users").then((data) => {
-        //console.log(data);
-        this.users = data.body;
+        console.log("--->",data);
+        this.users = data.data;
+      }).catch(error => {
+        console.log("error",error);
       });
 
-      fetch("http://jsonplaceholder.typicode.com/users", {method: 'get'}).then((data) => {
-        console.log("---------->>"+data)
-      });
     }
 
   }

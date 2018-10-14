@@ -21,7 +21,7 @@ const store = new Vuex.Store({
           },
           {
             icon: "star",
-            path: "/admin/hello",
+            path: "/admin/company",
             text: "公司档案管理"
           },
           {

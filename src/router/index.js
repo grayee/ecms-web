@@ -7,6 +7,7 @@ import Login from '@/components/Login'
 import Register from '@/components/Register'
 import NaviMenuBar from '@/components/NaviMenuBar'
 import MainContent from '@/components/MainContent'
+import Company from '@/components/Company'
 
 Vue.use(Router)
 
@@ -29,8 +30,8 @@ export default new Router({
           component:MainContent
         },
         {
-          path: 'hello',
-          component: HelloWorld
+          path: 'company',
+          component: Company
         },
         {
           path:'*',

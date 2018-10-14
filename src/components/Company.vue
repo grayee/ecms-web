@@ -6,9 +6,9 @@
     <section class="content-header" style="padding: 0px 15px 0 15px;">
       <ol id="nav_title" class="breadcrumb" style="position: static; float: none;">
         <li class="active">
-          <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;首页
+          <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;组织机构管理
         </li>
-        <li class="active">控制台</li>
+        <li class="active">公司管理</li>
       </ol>
     </section>
 
@@ -18,26 +18,21 @@
         | Your Page Content Here |
         -------------------------->
       <Layout>
-
-        <LayoutPanel region="west" :bodyStyle="{padding:'3px'}" style="width:150px;">
-          <Tree :data="menuData" :checkbox="true"></Tree>
-        </LayoutPanel>
-
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
           <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
             <div style="margin-bottom:10px">
-              <Label for="d2" style="text-align: right">日期： </Label>
-              <DateBox inputId="d2" v-model="value" format="yyyy-MM-dd"></DateBox>
+              <Label for="d2" >日期： </Label>
+              <DateBox inputId="d2"  format="yyyy-MM-dd"></DateBox>
               至
-              <DateBox inputId="d2" v-model="value" format="yyyy-MM-dd"></DateBox>
-              <Label for="c1" style="text-align: right">条件1: </Label>
-              <ComboBox inputId="c1" v-model="value" :data="data"></ComboBox>
+              <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
+              <Label for="c1" >条件1: </Label>
+              <ComboBox inputId="c1"  :data="data"></ComboBox>
             </div>
             <div style="margin-bottom:10px">
               <div style="float: left">
-                <Label for="name" style="text-align: right">条件2:</Label>
+                <Label for="name" >条件2:</Label>
                 <TextBox inputId="name"></TextBox>
-                <Label for="n1" style="text-align: right">条件3:</Label>
+                <Label for="n1" >条件3:</Label>
                 <NumberBox inputId="n1" :value="100" :spinners="true"></NumberBox>
               </div>
               <div style="float: right">
@@ -53,12 +48,12 @@
               <div class="f-row">
                 <div class="f-full" style="line-height:30px">列表</div>
                 <div>
-                  <LinkButton iconCls="icon-add" :plain="true">新增</LinkButton>
-                  <LinkButton iconCls="icon-reload" :plain="true">刷新</LinkButton>
-                  <LinkButton iconCls="icon-remove" :plain="true">删除</LinkButton>
-                  <LinkButton iconCls="icon-edit" :plain="true">编辑</LinkButton>
-                  <LinkButton iconCls="icon-print" :plain="true">打印</LinkButton>
-                  <LinkButton iconCls="icon-back" :plain="true"></LinkButton>
+                  <LinkButton iconCls="icon-add" :plain="true" @click="$refs.d1.open()">新增</LinkButton>
+                  <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
+                  <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
+                  <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
+                  <LinkButton iconCls="icon-print" :plain="true" @click="print()">打印</LinkButton>
+                  <LinkButton iconCls="icon-back" :plain="true" @click="go(-1)"></LinkButton>
                 </div>
               </div>
             </template>
@@ -75,7 +70,9 @@
                       :pagePosition="pagePosition"
                       :pageLinks="5"
                       :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
-                      @pageChange="onPageChange($event)">
+                      @pageChange="onPageChange($event)"
+                      :selectionMode="'multiple'"
+                      @selectionChange="selected($event)">
 
               <div slot="tpl" slot-scope="{datagrid}">
                 &nbsp;第
@@ -111,16 +108,55 @@
 
               <GridColumn field="inv" title="Inv No"></GridColumn>
               <GridColumn field="name" title="Name"></GridColumn>
-              <GridColumn field="amount" title="Amount" align="right" sortable="true"></GridColumn>
-              <GridColumn field="price" title="Price" align="right" sortable="true"></GridColumn>
+              <GridColumn field="amount" title="Amount" align="right" :sortable="true"></GridColumn>
+              <GridColumn field="price" title="Price" align="right" :sortable="true"></GridColumn>
               <GridColumn field="cost" title="Cost" align="right"></GridColumn>
               <GridColumn field="note" title="Note"></GridColumn>
             </DataGrid>
-
           </Panel>
+
+          <Dialog ref="d1"
+                  :title="'添加'"
+                  :dialogStyle="{width:'600px',height:'400px'}"
+                  bodyCls="f-column" :draggable="true" :closed="true"
+                  :modal="true">
+            <div class="f-full" style="padding: 10px">
+              <Form ref="form" :model="user" :rules="rules" @validate="errors=$event">
+                <div style="margin-bottom:10px">
+                  <Label for="name" align="left">名称:</Label>
+                  <input type="text" id="name"  name="name" v-model="user.name" placeholder="请输入名称">
+                  <div class="error">{{getError('name')}}</div>
+                </div>
+                <div style="margin-bottom:10px">
+                  <Label for="email" align="left">邮箱:</Label>
+                  <TextBox inputId="email" name="email" v-model="user.email"></TextBox>
+                  <div class="error">{{getError('email')}}</div>
+                </div>
+
+                <div style="margin-bottom:10px">
+                  <Label for="email" align="left">下拉框:</Label>
+                  <select><option>ss</option></select>
+                  <div class="error">{{getError('email')}}</div>
+                </div>
+
+                <div style="margin-bottom:10px">
+                  <Label for="hero" align="left">Select a hero:</Label>
+                  <ComboBox inputId=hero name="hero" :data="heroes" v-model="user.hero"></ComboBox>
+                  <div class="error">{{getError('hero')}}</div>
+                </div>
+                <div style="margin-bottom:10px">
+                  <CheckBox inputId="accept" name="accept" v-model="user.accept"></CheckBox>
+                  <Label for="accept">Accept Me</Label>
+                </div>
+              </Form>
+            </div>
+            <div class="dialog-button">
+              <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="$refs.d1.close()">取消</LinkButton>
+            </div>
+          </Dialog>
+
         </LayoutPanel>
-
-
       </Layout>
     </section>
     <!-- /.content -->
@@ -138,33 +174,32 @@
         pageSize: 20,
         data: [],
         checkedIds:[],
-        menuData: [
-          {
-            text: "Item1",
-            children: [
-              {text: "Item11"},
-              {
-                text: "Item12",
-                state: "closed",
-                children: [
-                  {text: "Iteme121"},
-                  {text: "Iteme122"},
-                  {text: "Iteme123"}
-                ]
-              },
-              {text: "Item13"},
-              {text: "Item14"}
-            ]
-          },
-          {text: "Item2"}
-        ],
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
-        pageOptions: [
-          {value: "bottom", text: "Bottom"},
-          {value: "top", text: "Top"},
-          {value: "both", text: "Both"}
+        user: {
+          name: null,
+          email: null,
+          hero: null,
+          accept: false
+        },
+        rules: {
+          name: ["required", "length[5,10]"],
+          email: "email",
+          hero: "required"
+        },
+        errors: {},
+        heroes: [
+          { value: 11, text: "Mr. Nice" },
+          { value: 12, text: "Narco" },
+          { value: 13, text: "Bombasto" },
+          { value: 14, text: "Celeritas" },
+          { value: 15, text: "Magneta" },
+          { value: 16, text: "RubberMan" },
+          { value: 17, text: "Dynama" },
+          { value: 18, text: "Dr IQ" },
+          { value: 19, text: "Magma" },
+          { value: 20, text: "Tornado" }
         ]
       };
     },
@@ -208,6 +243,32 @@
           rows: data
         };
       },
+      remove(){
+        console.log("del");
+        if (this.checkedIds.length <= 0) {
+          this.$messager.alert({
+            title: "提示信息",
+            icon: "warning",
+            msg: "请至少选中一条记录!"
+          });
+        }
+      },
+      edit(){
+        console.log("edit");
+      },
+      refresh(){
+        console.log("refresh");
+      },
+      print(){
+        console.log("add");
+      },
+      selected(event){
+        this.checkedIds = [];
+        let _this = this;
+        event.forEach(function(item, i) {
+          _this.checkedIds.push(item.inv);
+        });
+      },
       checkAll(event){
         if(event.currentTarget.checked){
           this.checkedIds = [];
@@ -218,6 +279,19 @@
         }else{
           this.checkedIds = [];
         }
+      },
+      getError(name) {
+        return this.errors[name] && this.errors[name].length
+          ? this.errors[name][0]
+          : null;
+      },
+      hasError(name) {
+        return this.getError(name) != null;
+      },
+      submitForm(){
+        this.$refs.form.validate((valid) => {
+
+        })
       }
     }
   };
@@ -225,8 +299,14 @@
 
 <!-- 3.样式:解决样式     -->
 <style scoped>
-  .panel-header {
-    background-color: #f5f5f5;
+  .error {
+    color: red;
+    font-size: 12px;
+    margin: 4px 0 0 80px;
+  }
+
+  Label {
+    text-align: right
   }
 </style>
 <!--

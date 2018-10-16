@@ -20,22 +20,21 @@ const produceNewsData = function () {
 }
 
 const demoData = function (options) {
-  console.log("mock...........")
+  console.log("mock...........",JSON.parse(options.body))
+  let param = JSON.parse(options.body);
   let total = 100000;
   let data = [];
-  let pageNumber = options.pageNumber;
-  let pageSize = options.pageSize;
+  let pageNumber = param.pageNumber;
+  let pageSize = param.pageSize;
   let start = (pageNumber - 1) * pageSize;
   for (let i = start + 1; i <= start + pageSize; i++) {
-    let amount = Math.floor(Math.random() * 1000);
-    let price = Math.floor(Math.random() * 1000);
     data.push({
-      inv: "Inv No " + i,
+      inv: "Inv No " + Random.id(),
       name: Random.cname(),// Random.cname() 随机生成一个常见的中文姓名
-      amount: amount,
-      price: price,
-      cost: amount * price,
-      note: Random.date() + ' ' + Random.time() // Random.date()指示生成的日期字符串的格式,默认为yyyy-MM-dd；Random.time() 返回一个随机的时间字符串
+      amount: Random.integer(100,10000),
+      price: Random.float(60, 100, 3, 5),
+      cost: Random.email(),
+      note: Random.datetime() // Random.date()指示生成的日期字符串的格式,默认为yyyy-MM-dd；Random.time() 返回一个随机的时间字符串
     });
   }
   return {
@@ -47,4 +46,4 @@ const demoData = function (options) {
 }
 
 // Mock.mock( url, post/get , 返回的数据)；
-Mock.mock('/org/company', 'get', demoData);
+Mock.mock('/org/company', 'post', demoData);

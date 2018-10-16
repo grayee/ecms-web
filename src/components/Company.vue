@@ -36,7 +36,7 @@
                 <NumberBox inputId="n1" :value="100" :spinners="true"></NumberBox>
               </div>
               <div style="float: right">
-                <LinkButton iconCls="icon-search" style="width:80px">查询</LinkButton>
+                <LinkButton iconCls="icon-search" style="width:80px" >查询</LinkButton>
                 <LinkButton iconCls="icon-cancel" style="width:80px"> 重置</LinkButton>
               </div>
             </div>
@@ -207,48 +207,21 @@
       loadPage(pageNumber, pageSize) {
         this.loading = true;
         setTimeout(() => {
-          let result = this.getData(pageNumber, pageSize);
-
-          this.$http.get("#/org/company", {
-            params: {
-              pageNumber: pageNumber,
-              pageSize:pageSize
+          this.$http.post("/org/company", {
+              pageNumber: 1,
+              pageSize:20
             }
-          }).then((data) => {
-            console.log("--->",data);
-            this.users = data.data;
+          ).then((response) => {
+            //console.log("--->", response.data);
+            let result = response.data;
+            this.total = result.total;
+            this.pageNumber = result.pageNumber;
+            this.data = result.rows;
+            this.loading = false;
           }).catch(error => {
-            console.log("error",error);
+            console.log("error", error);
           });
-
-          this.total = result.total;
-          this.pageNumber = result.pageNumber;
-          this.data = result.rows;
-          this.loading = false;
         }, 1000);
-      },
-      getData(pageNumber, pageSize) {
-        let total = 100000;
-        let data = [];
-        let start = (pageNumber - 1) * pageSize;
-        for (let i = start + 1; i <= start + pageSize; i++) {
-          let amount = Math.floor(Math.random() * 1000);
-          let price = Math.floor(Math.random() * 1000);
-          data.push({
-            inv: "Inv No " + i,
-            name: "Name " + i,
-            amount: amount,
-            price: price,
-            cost: amount * price,
-            note: "Note " + i
-          });
-        }
-        return {
-          total: total,
-          pageNumber: pageNumber,
-          pageSize: pageSize,
-          rows: data
-        };
       },
       remove(){
         console.log("del");

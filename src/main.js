@@ -31,7 +31,7 @@ Vue.use(VueAxios,axios);
 Vue.config.productionTip = false;
 
 // 引入mockjs
-require('./mock/mock.js')
+require('./mock/mock.js');
 
 Vue.use(EasyUI, {
   locale: locale

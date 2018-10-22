@@ -121,19 +121,19 @@
                   bodyCls="f-column" :draggable="true" :closed="true"
                   :modal="true">
             <div class="f-full" style="padding: 10px">
-              <Form ref="form" :model="user" :rules="rules" @validate="errors=$event">
-                <div style="margin-bottom:10px">
-                  <Label for="name" align="left">名称:</Label>
-                  <input type="text" id="name"  name="name" v-model="user.name" placeholder="请输入名称">
+              <Form ref="form" :model="company" :rules="rules" @validate="errors=$event">
+                <div style="margin-bottom:5px">
+                  <Label for="name" align="left">公司名称:</Label>
+                  <TextBox inputId="name" name="name" v-model="company.name" placeholder="请输入名称"/>
                   <div class="error">{{getError('name')}}</div>
                 </div>
-                <div style="margin-bottom:10px">
+                <div style="margin-bottom:5px">
                   <Label for="email" align="left">邮箱:</Label>
-                  <TextBox inputId="email" name="email" v-model="user.email"></TextBox>
+                  <TextBox inputId="email" name="email" v-model="company.email"></TextBox>
                   <div class="error">{{getError('email')}}</div>
                 </div>
 
-                <div style="margin-bottom:10px">
+                <div style="margin-bottom:5px">
                   <Label for="email" align="left">下拉框:</Label>
                   <select><option>ss</option></select>
                   <div class="error">{{getError('email')}}</div>
@@ -141,11 +141,11 @@
 
                 <div style="margin-bottom:10px">
                   <Label for="hero" align="left">Select a hero:</Label>
-                  <ComboBox inputId=hero name="hero" :data="heroes" v-model="user.hero"></ComboBox>
+                  <ComboBox inputId=hero name="hero" :data="heroes" v-model="company.hero"></ComboBox>
                   <div class="error">{{getError('hero')}}</div>
                 </div>
                 <div style="margin-bottom:10px">
-                  <CheckBox inputId="accept" name="accept" v-model="user.accept"></CheckBox>
+                  <CheckBox inputId="accept" name="accept" v-model="company.accept"></CheckBox>
                   <Label for="accept">Accept Me</Label>
                 </div>
               </Form>
@@ -177,7 +177,7 @@
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
-        user: {
+        company: {
           name: null,
           email: null,
           hero: null,

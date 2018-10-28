@@ -26,6 +26,11 @@ import locale from 'vx-easyui/dist/locale/easyui-lang-zh_CN';
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
+import VeeValidate from 'vee-validate';
+//https://www.cnblogs.com/xxwang/p/6104715.html
+Vue.use(VeeValidate)
+;
+//axios 结合 vue-axios使用
 Vue.use(VueAxios,axios);
 
 Vue.config.productionTip = false;

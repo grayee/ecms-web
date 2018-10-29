@@ -27,9 +27,27 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 import VeeValidate from 'vee-validate';
-//https://www.cnblogs.com/xxwang/p/6104715.html
-Vue.use(VeeValidate)
-;
+//引入中文包，提示信息可以以中文形式显示
+import zh_CN from 'vee-validate/dist/locale/zh_CN';
+import VueI18n from 'vue-i18n';
+Vue.use(VueI18n);
+
+const i18n = new VueI18n({
+  locale: 'zh_CN',
+});
+
+Vue.use(VeeValidate, {
+  i18n,
+  i18nRootKey: 'validation',// customize the root path for validation messages.
+  dictionary: {
+    zh_CN:zh_CN
+  }
+});
+
+
+
+
+
 //axios 结合 vue-axios使用
 Vue.use(VueAxios,axios);
 

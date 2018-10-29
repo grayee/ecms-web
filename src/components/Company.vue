@@ -124,37 +124,35 @@
               <Form ref="form" :model="company">
                   <div style="float: left;margin-bottom:10px">
                     <Label for="name" align="left">公司名称:</Label>
-                    <TextBox inputId="name" name="name" v-model="company.name" placeholder="请输入公司名称"/>
-
+                    <TextBox inputId="name" name="name" v-model="company.name" v-validate="'min:5'" placeholder="请输入公司名称"/>
+                    <div class="error" >{{ errors.first('name') }}</div>
                   </div>
                   <div style="float: right;margin-bottom:10px">
                     <Label for="shortName" align="left">公司简称:</Label>
-                    <TextBox inputId="shortName" name="shortName" v-model="company.shortName" placeholder="请输入公司简称"/>
-
+                    <TextBox inputId="shortName" name="shortName" v-model="company.shortName" v-validate="'max:5'" placeholder="请输入公司简称"/>
+                    <div class="error" >{{ errors.first('shortName') }}</div>
                   </div>
 
                   <div style="float: left;margin-bottom:10px">
                     <Label for="code" align="left">公司编号:</Label>
-                    <TextBox inputId="code" name="code" v-model="company.code" placeholder="请输入公司编号"/>
-
+                    <TextBox inputId="code" name="code" v-model="company.code" v-validate="'required|alpha_num'" placeholder="请输入公司编号"/>
+                    <div class="error" >{{ errors.first('code') }}</div>
                   </div>
                   <div style="float: right;margin-bottom:10px">
                     <Label for="email" align="left">电子邮件:</Label>
-                    <TextBox inputId="email" name="email" v-model="company.email" placeholder="请输入邮件地址"></TextBox>
-
-                    <input v-validate="'required|email'" name="email" type="text">
-
-                    <span>{{ errors.first('email') }}</span>
+                    <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="company.email" placeholder="请输入邮件地址"></TextBox>
+                    <div class="error" >{{ errors.first('email') }}</div>
                   </div>
 
                   <div style="float: left;margin-bottom:10px">
                     <Label for="hero" align="left">Select:</Label>
-                    <ComboBox inputId=hero name="hero" :data="heroes" v-model="company.hero"></ComboBox>
-
+                    <ComboBox inputId=hero name="hero" :data="heroes" v-validate="'required'" v-model="company.hero"></ComboBox>
+                    <div class="error" >{{ errors.first('hero') }}</div>
                   </div>
                   <div style="float: right;margin-bottom:10px">
-                    <CheckBox inputId="accept" name="accept" v-model="company.accept"></CheckBox>
+                    <CheckBox inputId="accept" name="accept" v-model="company.accept" v-validate="'required'"></CheckBox>
                     <Label for="accept">Accept Me</Label>
+                    <div class="error" >{{ errors.first('accept') }}</div>
                   </div>
               </Form>
             </div>
@@ -265,7 +263,10 @@
         }
       },
       submitForm(){
-
+        this.$validator.validateAll().then((msg)=>{
+          console.log(msg);
+          if(msg){   }
+        })
       }
     }
   };

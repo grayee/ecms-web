@@ -21,22 +21,22 @@
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
           <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
             <div style="margin-bottom:10px">
-              <Label for="d2" >日期： </Label>
-              <DateBox inputId="d2"  format="yyyy-MM-dd"></DateBox>
+              <Label for="d2">日期： </Label>
+              <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
               至
               <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
-              <Label for="c1" >条件1: </Label>
-              <ComboBox inputId="c1"  :data="data"></ComboBox>
+              <Label for="c1">条件1: </Label>
+              <ComboBox inputId="c1" :data="data"></ComboBox>
             </div>
             <div style="margin-bottom:10px">
               <div style="float: left">
-                <Label for="name" >条件2:</Label>
+                <Label for="name">条件2:</Label>
                 <TextBox inputId="name"></TextBox>
-                <Label for="n1" >条件3:</Label>
+                <Label for="n1">条件3:</Label>
                 <NumberBox inputId="n1" :value="100" :spinners="true"></NumberBox>
               </div>
               <div style="float: right">
-                <LinkButton iconCls="icon-search" style="width:80px" >查询</LinkButton>
+                <LinkButton iconCls="icon-search" style="width:80px">查询</LinkButton>
                 <LinkButton iconCls="icon-cancel" style="width:80px"> 重置</LinkButton>
               </div>
             </div>
@@ -90,7 +90,7 @@
 
               <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
                 <template slot="header" slot-scope="scope">
-                  <input type="checkbox" @click="checkAll($event)" />
+                  <input type="checkbox" @click="checkAll($event)"/>
                 </template>
                 <template slot="body" slot-scope="scope">
                   <input type="checkbox" v-model="checkedIds" :value="scope.row.inv"/>
@@ -122,38 +122,52 @@
                   :modal="true">
             <div class="f-full" style="padding: 20px 60px 20px 20px">
               <Form ref="form" :model="company">
-                  <div style="float: left;margin-bottom:10px">
-                    <Label for="name" align="left">公司名称:</Label>
-                    <TextBox inputId="name" name="name" v-model="company.name" v-validate="'min:5'" placeholder="请输入公司名称"/>
-                    <div class="error" >{{ errors.first('name') }}</div>
-                  </div>
-                  <div style="float: right;margin-bottom:10px">
-                    <Label for="shortName" align="left">公司简称:</Label>
-                    <TextBox inputId="shortName" name="shortName" v-model="company.shortName" v-validate="'max:5'" placeholder="请输入公司简称"/>
-                    <div class="error" >{{ errors.first('shortName') }}</div>
-                  </div>
+                <div style="float: left;margin-bottom:10px">
+                  <Label for="name" align="left">公司名称:</Label>
+                  <TextBox inputId="name" name="name" v-model="company.name" v-validate="'required|min:5'"
+                           placeholder="请输入公司名称"/>
+                  <div class="error">{{ errors.first('name') }}</div>
+                </div>
+                <div style="float: right;margin-bottom:10px">
+                  <Label for="shortName" align="left">公司简称:</Label>
+                  <TextBox inputId="shortName" name="shortName" v-model="company.shortName"
+                           v-validate="'required|max:5'" placeholder="请输入公司简称"/>
+                  <div class="error">{{ errors.first('shortName') }}</div>
+                </div>
 
-                  <div style="float: left;margin-bottom:10px">
-                    <Label for="code" align="left">公司编号:</Label>
-                    <TextBox inputId="code" name="code" v-model="company.code" v-validate="'required|alpha_num'" placeholder="请输入公司编号"/>
-                    <div class="error" >{{ errors.first('code') }}</div>
-                  </div>
-                  <div style="float: right;margin-bottom:10px">
-                    <Label for="email" align="left">电子邮件:</Label>
-                    <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="company.email" placeholder="请输入邮件地址"></TextBox>
-                    <div class="error" >{{ errors.first('email') }}</div>
-                  </div>
+                <div style="float: left;margin-bottom:10px">
+                  <Label for="code" align="left">公司编号:</Label>
+                  <TextBox inputId="code" name="code" v-model="company.code" v-validate="'required|alpha_num'"
+                           placeholder="请输入公司编号"/>
+                  <div class="error">{{ errors.first('code') }}</div>
+                </div>
+                <div style="float: right;margin-bottom:10px">
+                  <Label for="email" align="left">电子邮件:</Label>
+                  <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="company.email"
+                           placeholder="请输入邮件地址"></TextBox>
+                  <div class="error">{{ errors.first('email') }}</div>
+                </div>
 
-                  <div style="float: left;margin-bottom:10px">
-                    <Label for="hero" align="left">Select:</Label>
-                    <ComboBox inputId=hero name="hero" :data="heroes" v-validate="'required'" v-model="company.hero"></ComboBox>
-                    <div class="error" >{{ errors.first('hero') }}</div>
-                  </div>
-                  <div style="float: right;margin-bottom:10px">
-                    <CheckBox inputId="accept" name="accept" v-model="company.accept" v-validate="'required'"></CheckBox>
-                    <Label for="accept">Accept Me</Label>
-                    <div class="error" >{{ errors.first('accept') }}</div>
-                  </div>
+                <div style="float: left;margin-bottom:10px">
+                  <Label for="hero" align="left">公司类型:</Label>
+                  <ComboBox inputId='companyType' name="companyType" :data="companyType" v-validate="'required'"
+                            v-model="company.companyType"></ComboBox>
+                  <div class="error">{{ errors.first('companyType') }}</div>
+                </div>
+                <div style="float: right;margin-bottom:10px">
+                  <Label for="parentCompany" align="left">所属公司:</Label>
+                  <ComboTree name='parentCompany'  :data="companyList" v-model="company.parent" placeholder="-请选择-">
+                    <Tree slot="tree"></Tree>
+                  </ComboTree>
+                  <div class="error">{{ errors.first('parentCompany') }}</div>
+                </div>
+
+                <div style="margin-bottom:10px">
+                  <Label for="remark" align="left">备注:</Label>
+                  <TextBox inputId="t2"  name="remark" :multiline="true" :value="description" style="width:83%;height:120px;"></TextBox>
+                  <div class="error">{{ errors.first('remark') }}</div>
+                </div>
+
               </Form>
             </div>
             <div class="dialog-button">
@@ -179,23 +193,80 @@
         pageNumber: 1,
         pageSize: 20,
         data: [],
-        checkedIds:[],
+        checkedIds: [],
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
         company: {
           name: null,
-          shortName:null,
-          code:null,
+          shortName: null,
+          code: null,
           email: null,
-          hero: null,
-          accept: false
+          companyType: null,
+          parent: null
         },
-        heroes: [
-          { value: 11, text: "Mr. Nice" },
-          { value: 12, text: "Narco" },
-          { value: 13, text: "Bombasto" },
-          { value: 20, text: "Tornado" }
+        companyType: [
+          {value: 11, text: "总公司"},
+          {value: 12, text: "分公司"},
+          {value: 13, text: "本部"},
+          {value: 20, text: "中支公司"}
+        ],
+        companyList: [
+          {
+            id: 1,
+            text: "XX集团",
+            children: [
+              {
+                id: 11,
+                text: "北京分公司",
+                state: "closed",
+                children: [
+                  {
+                    id: 111,
+                    text: "海淀营业部"
+                  },
+                  {
+                    id: 112,
+                    text: "朝阳营业部"
+                  },
+                  {
+                    id: 113,
+                    text: "东城营业部"
+                  }
+                ]
+              },
+              {
+                id: 12,
+                text: "上海分公司",
+                children: [
+                  {
+                    id: 121,
+                    text: "浦东营业部"
+                  },
+                  {
+                    id: 122,
+                    text: "闽西营业部"
+                  },
+                  {
+                    id: 123,
+                    text: "上海滩营业部"
+                  }
+                ]
+              },
+              {
+                id: 13,
+                text: "河北分公司"
+              },
+              {
+                id: 14,
+                text: "石家庄营业部"
+              },
+              {
+                id: 15,
+                text: "邯郸营业部"
+              }
+            ]
+          }
         ]
       };
     },
@@ -211,7 +282,7 @@
         setTimeout(() => {
           this.$http.post("/org/company", {
               pageNumber: 1,
-              pageSize:20
+              pageSize: 20
             }
           ).then((response) => {
             //console.log("--->", response.data);
@@ -225,7 +296,7 @@
           });
         }, 1000);
       },
-      remove(){
+      remove() {
         console.log("del");
         if (this.checkedIds.length <= 0) {
           this.$messager.alert({
@@ -235,37 +306,43 @@
           });
         }
       },
-      edit(){
+      edit() {
         console.log("edit");
       },
-      refresh(){
+      refresh() {
         console.log("refresh");
       },
-      print(){
+      print() {
         console.log("add");
       },
-      selected(event){
+      selected(event) {
         this.checkedIds = [];
         let _this = this;
-        event.forEach(function(item, i) {
+        event.forEach(function (item, i) {
           _this.checkedIds.push(item.inv);
         });
       },
-      checkAll(event){
-        if(event.currentTarget.checked){
+      checkAll(event) {
+        if (event.currentTarget.checked) {
           this.checkedIds = [];
           let _this = this;
-          this.data.forEach(function(item, i) {
+          this.data.forEach(function (item, i) {
             _this.checkedIds.push(item.inv);
           });
-        }else{
+        } else {
           this.checkedIds = [];
         }
       },
-      submitForm(){
-        this.$validator.validateAll().then((msg)=>{
-          console.log(msg);
-          if(msg){   }
+      submitForm() {
+        this.$validator.validateAll().then((valid) => {
+          if (valid) {
+            console.log("commit json data:" + JSON.stringify(this.company))
+            this.$http.post("/org/company", this.company).then((response) => {
+              console.log("--->", response.data);
+            }).catch(error => {
+              console.log("error", error);
+            });
+          }
         })
       }
     }

@@ -6,8 +6,9 @@ import AdminLTE from '@/components/AdminLTE'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 import NaviMenuBar from '@/components/NaviMenuBar'
+import Orgnization from '@/view/Orgnization'
+import Company from '@/view/Company'
 import MainContent from '@/components/MainContent'
-import Company from '@/components/Company'
 
 Vue.use(Router)
 
@@ -27,7 +28,7 @@ export default new Router({
         },
         {
           path:"orgs",
-          component:MainContent
+          component:Orgnization
         },
         {
           path: 'company',

@@ -6,7 +6,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>E</b>CMS</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>资金</b>管理系统</span>
+      <span class="logo-lg"><b>EC</b>MS</span>
     </a>
 
     <!-- Header Navbar -->

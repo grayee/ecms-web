@@ -15,6 +15,8 @@ import 'font-awesome/css/font-awesome.css'
 import 'admin-lte'
 import 'admin-lte/dist/css/AdminLTE.min.css'
 import 'admin-lte/dist/css/skins/_all-skins.css'
+import 'admin-lte/bower_components/chart.js/Chart'
+
 //easy UI
 import 'vx-easyui/dist/themes/bootstrap/easyui.css';
 import 'vx-easyui/dist/themes/icon.css';

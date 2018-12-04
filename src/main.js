@@ -16,6 +16,12 @@ import 'admin-lte'
 import 'admin-lte/dist/css/AdminLTE.min.css'
 import 'admin-lte/dist/css/skins/_all-skins.css'
 import 'admin-lte/bower_components/chart.js/Chart'
+import 'admin-lte/bower_components/Ionicons/css/ionicons.min.css'
+
+//AdminLTE dashboard demo (This is only for demo purposes)
+import 'admin-lte/dist/js/pages/dashboard2'
+//AdminLTE for demo purposes
+import 'admin-lte/dist/js/demo'
 
 //easy UI
 import 'vx-easyui/dist/themes/bootstrap/easyui.css';

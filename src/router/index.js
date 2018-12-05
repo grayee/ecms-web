@@ -8,6 +8,7 @@ import Register from '@/components/Register'
 import NaviMenuBar from '@/components/NaviMenuBar'
 import Orgnization from '@/view/Orgnization'
 import Company from '@/view/Company'
+import Menu from '@/view/Menu'
 import MainContent from '@/components/MainContent'
 
 Vue.use(Router)
@@ -33,6 +34,10 @@ export default new Router({
         {
           path: 'company',
           component: Company
+        },
+        {
+          path: 'menu',
+          component: Menu
         },
         {
           path:'*',

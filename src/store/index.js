@@ -38,7 +38,6 @@ const store = new Vuex.Store({
           }
         ]
       }, {
-        path: "/about.html",
         icon: "key",
         text: "权限管理",
         children: [
@@ -52,6 +51,7 @@ const store = new Vuex.Store({
           },
           {
             icon: "navicon",
+            path: "/admin/menu",
             text: "菜单管理"
           },
           {

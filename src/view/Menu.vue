@@ -6,9 +6,9 @@
     <section class="content-header" style="padding: 0px 15px 0 15px;">
       <ol id="nav_title" class="breadcrumb" style="position: static; float: none;">
         <li class="active">
-          <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;组织机构管理
+          <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;权限管理
         </li>
-        <li class="active">公司管理</li>
+        <li class="active">菜单管理</li>
       </ol>
     </section>
 
@@ -57,62 +57,12 @@
                 </div>
               </div>
             </template>
-
-            <DataGrid style="height:100%"
-                      :pagination="true"
-                      :lazy="true"
-                      :pageList="pageList"
-                      :data="data"
-                      :total="total"
-                      :loading="loading"
-                      :pageNumber="pageNumber"
-                      :pageSize="pageSize"
-                      :pagePosition="pagePosition"
-                      :pageLinks="5"
-                      :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
-                      @pageChange="onPageChange($event)"
-                      :selectionMode="'multiple'"
-                      @selectionChange="selected($event)">
-
-              <div slot="tpl" slot-scope="{datagrid}">
-                &nbsp;第
-                <NumberBox style="width:80px;height:23px" spinAlign="left" :spinners="true"
-                           v-model="datagrid.pageNumberState"
-                           :min="1" :max="Math.floor((total-1)/pageSize+1)"
-                           :inputStyle="{textAlign:'left'}">
-                  <Addon align="right">
-                    <LinkButton iconCls="icon-search"
-                                :style="{borderRadius:0,borderWidth:'0 1px 0 0',width:'20px'}"></LinkButton>
-                  </Addon>
-                </NumberBox>
-                页,共 {{Math.floor((total-1)/pageSize+1)}} 页 &nbsp;
-              </div>
-
-              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
-                <template slot="header" slot-scope="scope">
-                  <input type="checkbox" @click="checkAll($event)"/>
-                </template>
-                <template slot="body" slot-scope="scope">
-                  <input type="checkbox" v-model="checkedIds" :value="scope.row.inv"/>
-                </template>
-              </GridColumn>
-
-              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="5%">
-                <template slot="header" slot-scope="scope">
-                  <span>序</span>
-                </template>
-                <template slot="body" slot-scope="scope">
-                  {{scope.rowIndex + 1}}
-                </template>
-              </GridColumn>
-
-              <GridColumn field="inv" title="Inv No"></GridColumn>
-              <GridColumn field="name" title="Name"></GridColumn>
-              <GridColumn field="amount" title="Amount" align="right" :sortable="true"></GridColumn>
-              <GridColumn field="price" title="Price" align="right" :sortable="true"></GridColumn>
-              <GridColumn field="cost" title="Cost" align="right"></GridColumn>
-              <GridColumn field="note" title="Note"></GridColumn>
-            </DataGrid>
+            <TreeGrid style="height:80%"
+                      :data="data" idField="id" treeField="name" :footerData="footerData" :showFooter="true">
+              <GridColumn field="name" title="菜单名称"></GridColumn>
+              <GridColumn field="size" title="Size"></GridColumn>
+              <GridColumn field="date" title="修改日期"></GridColumn>
+            </TreeGrid>
           </Panel>
 
           <Dialog ref="d1"
@@ -192,7 +142,8 @@
         total: 0,
         pageNumber: 1,
         pageSize: 20,
-        data: [],
+        data: null,
+        footerData: null,
         checkedIds: [],
         pageList: [10, 20, 30, 40, 50],
         loading: false,
@@ -271,9 +222,107 @@
       };
     },
     created() {
-      this.loadPage(this.pageNumber, this.pageSize);
+      this.data = this.getData();
+      this.footerData =  {
+        name: "Total Size:",
+        size: 999
+      };
     },
     methods: {
+      getData() {
+        return [
+            {
+              id: 1,
+              name: "C",
+              size: "",
+              date: "02/19/2010",
+              children: [
+                {
+                  id: 2,
+                  name: "Program Files",
+                  size: "120 MB",
+                  date: "03/20/2010",
+                  children: [
+                    {
+                      id: 21,
+                      name: "Java",
+                      size: "",
+                      date: "01/13/2010",
+                      state: "closed",
+                      children: [
+                        {
+                          id: 211,
+                          name: "java.exe",
+                          size: "142 KB",
+                          date: "01/13/2010"
+                        },
+                        {
+                          id: 212,
+                          name: "jawt.dll",
+                          size: "5 KB",
+                          date: "01/13/2010"
+                        }
+                      ]
+                    },
+                    {
+                      id: 22,
+                      name: "MySQL",
+                      size: "",
+                      date: "01/13/2010",
+                      state: "closed",
+                      children: [
+                        {
+                          id: 221,
+                          name: "my.ini",
+                          size: "10 KB",
+                          date: "02/26/2009"
+                        },
+                        {
+                          id: 222,
+                          name: "my-huge.ini",
+                          size: "5 KB",
+                          date: "02/26/2009"
+                        },
+                        {
+                          id: 223,
+                          name: "my-large.ini",
+                          size: "5 KB",
+                          date: "02/26/2009"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  id: 3,
+                  name: "eclipse",
+                  size: "",
+                  date: "01/20/2010",
+                  children: [
+                    {
+                      id: 31,
+                      name: "eclipse.exe",
+                      size: "56 KB",
+                      date: "05/19/2009"
+                    },
+                    {
+                      id: 32,
+                      name: "eclipse.ini",
+                      size: "1 KB",
+                      date: "04/20/2010"
+                    },
+                    {
+                      id: 33,
+                      name: "notice.html",
+                      size: "7 KB",
+                      date: "03/17/2005"
+                    }
+                  ]
+                }
+              ]
+            }
+          ];
+      },
       onPageChange(event) {
         this.loadPage(event.pageNumber, event.pageSize);
       },

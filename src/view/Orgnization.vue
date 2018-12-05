@@ -9,7 +9,7 @@
         <li class="active">
           <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;首页
         </li>
-        <li class="active">控制台</li>
+        <li class="active">组织机构管理</li>
       </ol>
     </section>
 

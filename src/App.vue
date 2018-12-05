@@ -20,5 +20,8 @@
 
 <!-- 3.样式:解决样式     -->
 <style>
-
+  .f-field {
+    width: 12em;
+    height: 26px;
+  }
 </style>

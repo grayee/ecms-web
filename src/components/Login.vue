@@ -119,9 +119,20 @@
       handleLogin: function (message) {
         this.$validator.validateAll().then((valid) => {
           if (valid) {
-            console.log("commit form json data:" + JSON.stringify(this.loginForm))
-            this.$http.post("login", this.loginForm).then((response) => {
+            //因为axios默认发的是json格式数据，我们要做表单提交，需要更改axios配置
+            // 引入 Qs是为了把json格式，转为formdata 的数据格式
+            var qs = require('qs');
+            console.log("commit form json data:" +  qs.stringify(this.loginForm))
+            this.$http.post("login", qs.stringify(this.loginForm)).then((response) => {
               console.log("--->", response.data);
+              //登录成功后跳转
+              this.$router.push({
+                name: "Home",
+                params: {
+                  username: this.username
+                }
+              });
+
             }).catch(error => {
               console.log("error", error);
             });

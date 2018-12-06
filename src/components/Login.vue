@@ -2,7 +2,7 @@
   <body class="hold-transition login-page">
   <div class="login-box">
     <div class="login-logo">
-      <a href="#/admin">ECMS 管理系统</a>
+      <a href="/admin">ECMS 管理系统</a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
@@ -123,7 +123,12 @@
             // 引入 Qs是为了把json格式，转为formdata 的数据格式
             var qs = require('qs');
             console.log("commit form json data:" +  qs.stringify(this.loginForm))
-            this.$http.post("login", qs.stringify(this.loginForm)).then((response) => {
+
+            var instance = this.$http.create({
+              baseURL: 'http://localhost:8080/ecms/'
+            });
+
+            instance.post("/login", qs.stringify(this.loginForm)).then((response) => {
               console.log("--->", response.data);
               //登录成功后跳转
               this.$router.push({
@@ -132,12 +137,14 @@
                   username: this.username
                 }
               });
-
             }).catch(error => {
               console.log("error", error);
             });
           }
         })
+        this.$router.push({
+          path: '/admin'
+        });
         console.log("登录信息："+message);
       }
     }

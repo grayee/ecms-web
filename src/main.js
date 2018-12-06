@@ -52,10 +52,6 @@ Vue.use(VeeValidate, {
   }
 });
 
-
-
-
-
 //axios 结合 vue-axios使用
 Vue.use(VueAxios,axios);
 

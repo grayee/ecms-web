@@ -20,8 +20,18 @@
 
 <!-- 3.样式:解决样式     -->
 <style>
+  /* sasyUI 输入框样式控制 */
   .f-field {
     width: 12em;
     height: 26px;
   }
+  /* easyui panel头部高度样式 */
+ .panel-header {
+   padding: 1px 5px;
+ }
+  /* 错误提示信息样式*/
+ .error {
+   color: red;
+   font-size: 12px;
+ }
 </style>

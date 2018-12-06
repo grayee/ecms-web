@@ -8,19 +8,23 @@
     <div class="login-box-body">
       <p class="login-box-msg">管理员登录</p>
 
-      <form action="#/admin" method="get" novalidate="novalidate" class="bv-form">
+      <form ref="form" :model="loginForm" novalidate="novalidate" class="bv-form">
 
         <div class="form-group has-feedback">
-          <input type="text" name="username" class="form-control" placeholder="请输入登录邮箱/登录名" data-bv-field="username">
+          <input type="text" v-model="loginForm.username" name="username" v-validate="'required'"
+                 class="form-control" placeholder="请输入登录邮箱/登录名" data-bv-field="username">
           <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
           <small data-bv-validator="notEmpty" data-bv-validator-for="username" class="help-block"
                  style="display: none;">登录邮箱名或用户名不能为空
           </small>
+          <div class="error">{{ errors.first('username') }}</div>
         </div>
 
         <div class="form-group has-feedback">
-          <input type="password" name="password" class="form-control" placeholder="请输入密码">
+          <input type="password" v-model="loginForm.password" name="password"  v-validate="'required'"
+                 class="form-control" placeholder="请输入密码">
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          <div class="error">{{ errors.first('password') }}</div>
         </div>
 
         <div class="form-group">
@@ -67,7 +71,6 @@
           </div>
         </div>
 
-        <input type="hidden" value="">
       </form>
 
       <div class="social-auth-links" style="margin-bottom: 0px;">
@@ -82,7 +85,7 @@
               <a class="btn btn-social-icon btn-warning"><i class="fa fa-weibo"></i></a>
               <a class="btn btn-social-icon btn-info"><i class="fa fa-github"></i></a>-->
               <a class="btn btn-social-icon btn-info"
-                 href="https://github.com/login/oauth/authorize?client_id=665051f90d4b055f5ab6&amp;redirect_uri=http%3A%2F%2Fwww.admineap.com%2Foauth%2Fgithub%2Fcallback&amp;state=8da338efdb8c11e6a8f82c11d0e2fa3f"><i
+                 href="/oauth/login/github"><i
                 class="fa fa-github"></i></a>
             </div>
           </div>
@@ -105,11 +108,25 @@
     name: 'Login',
     data() {
       return {
-        msg: 'Welcome to Login'
+        msg: 'Welcome to Login',
+        loginForm: {
+          username: '',
+          password: '',
+        }
       }
     },
     methods: {
       handleLogin: function (message) {
+        this.$validator.validateAll().then((valid) => {
+          if (valid) {
+            console.log("commit form json data:" + JSON.stringify(this.loginForm))
+            this.$http.post("login", this.loginForm).then((response) => {
+              console.log("--->", response.data);
+            }).catch(error => {
+              console.log("error", error);
+            });
+          }
+        })
         console.log("登录信息："+message);
       }
     }

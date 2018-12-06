@@ -352,11 +352,8 @@
 <!-- 3.样式:解决样式     -->
 <style scoped>
   .error {
-    color: red;
-    font-size: 12px;
     margin: 4px 0 0 80px;
   }
-
   Label {
     text-align: right
   }

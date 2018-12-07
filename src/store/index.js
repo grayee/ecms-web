@@ -4,11 +4,18 @@ import getters from './getters';
 
 Vue.use(Vuex);
 
+/**
+ state:  存放所有变量, 不是所有变量都要放到 state 中，vuex 创立的初衷是方便我们对变量的管理，然而对组件的一些私有变量，
+         不需要和别的组件共享。所以，state里面只放全局变量、多组件共享变量
+ mutations:  存放同步读取、修改state的的方法
+ action :  存放异步读取、修改state的的方法
+ **/
 const store = new Vuex.Store({
   state: {
     count: "123",
     logoText: "资金管理系统",
     logoMiniText: "ECMS",
+    token:"",
     menus: [
       {
         icon: "sitemap",
@@ -115,6 +122,6 @@ const store = new Vuex.Store({
   getters: getters,
   mutations: {},
   actions: {}
-})
+});
 
 export default store;

@@ -130,7 +130,8 @@
 
             instance.post("/login", qs.stringify(this.loginForm)).then((response) => {
               console.log("--->", response.data);
-              //登录成功后跳转
+              //登录成功后设置TOKEN 并跳转
+              //store.state.token = response.data.access_token;
               this.$router.push({
                 name: "Home",
                 params: {

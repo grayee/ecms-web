@@ -93,11 +93,11 @@
                   <input type="checkbox" @click="checkAll($event)"/>
                 </template>
                 <template slot="body" slot-scope="scope">
-                  <input type="checkbox" v-model="checkedIds" :value="scope.row.inv"/>
+                  <input type="checkbox" v-model="checkedIds" :value="scope.row.id"/>
                 </template>
               </GridColumn>
 
-              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="5%">
+              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
                 <template slot="header" slot-scope="scope">
                   <span>序</span>
                 </template>
@@ -106,12 +106,16 @@
                 </template>
               </GridColumn>
 
-              <GridColumn field="inv" title="Inv No"></GridColumn>
-              <GridColumn field="name" title="Name"></GridColumn>
-              <GridColumn field="amount" title="Amount" align="right" :sortable="true"></GridColumn>
-              <GridColumn field="price" title="Price" align="right" :sortable="true"></GridColumn>
-              <GridColumn field="cost" title="Cost" align="right"></GridColumn>
-              <GridColumn field="note" title="Note"></GridColumn>
+              <GridColumn field="code" title="公司编码" width="5%"></GridColumn>
+              <GridColumn field="name" title="名称" width="10%"></GridColumn>
+              <GridColumn field="shortName" title="简称" width="8%" align="center" :sortable="true"></GridColumn>
+              <GridColumn field="address" title="地址" width="12%" align="right" :sortable="true"></GridColumn>
+              <GridColumn field="postcode" title="邮编" width="8%"  align="center"></GridColumn>
+              <GridColumn field="webSite" title="网址" width="10%"></GridColumn>
+              <GridColumn field="telPhone" title="电话" width="8%"></GridColumn>
+              <GridColumn field="email" title="邮件" width="8%"></GridColumn>
+              <GridColumn field="registeredCapital" title="注册资本" width="8%" align="right" ></GridColumn>
+              <GridColumn field="createTime" title="注册时间" width="8%"></GridColumn>
             </DataGrid>
           </Panel>
 
@@ -327,7 +331,7 @@
           this.checkedIds = [];
           let _this = this;
           this.data.forEach(function (item, i) {
-            _this.checkedIds.push(item.inv);
+            _this.checkedIds.push(item.id);
           });
         } else {
           this.checkedIds = [];

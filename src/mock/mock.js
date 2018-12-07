@@ -29,12 +29,17 @@ const demoData = function (options) {
   let start = (pageNumber - 1) * pageSize;
   for (let i = start + 1; i <= start + pageSize; i++) {
     data.push({
-      inv: "Inv No " + Random.id(),
-      name: Random.cname(),// Random.cname() 随机生成一个常见的中文姓名
-      amount: Random.integer(100,10000),
-      price: Random.float(60, 100, 3, 5),
-      cost: Random.email(),
-      note: Random.datetime() // Random.date()指示生成的日期字符串的格式,默认为yyyy-MM-dd；Random.time() 返回一个随机的时间字符串
+      id:  Random.id(),
+      code:Random.integer(1000,9999),
+      name: Random.ctitle(4)+"有限公司",// Random.cname() 随机生成一个常见的中文姓名
+      shortName: Random.ctitle(4),
+      address: Random.province()+Random.city()+Random.county(),
+      postcode: Random.zip(),
+      webSite: Random.url(),
+      telPhone:Random.integer(10000,900000),
+      email:Random.email("263.com"),
+      registeredCapital:Random.float(60, 100, 0, 2) +"万元",
+      createTime: Random.date(), // Random.date()指示生成的日期字符串的格式,默认为yyyy-MM-dd；Random.time() 返回一个随机的时间字符串
     });
   }
   return {

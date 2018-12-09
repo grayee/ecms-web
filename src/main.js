@@ -44,6 +44,10 @@ const i18n = new VueI18n({
   locale: 'zh_CN',
 });
 
+//import api from './api' // 导入api接口
+
+//Vue.prototype.$api = api; // 将api挂载到vue的原型上
+
 Vue.use(VeeValidate, {
   i18n,
   i18nRootKey: 'validation',// customize the root path for validation messages.

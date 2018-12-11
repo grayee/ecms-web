@@ -284,7 +284,7 @@
       loadPage(pageNumber, pageSize) {
         this.loading = true;
         setTimeout(() => {
-          this.$http.post("/org/company", {
+          this.$api.company.companyList({
               pageNumber: 1,
               pageSize: 20
             }
@@ -341,7 +341,7 @@
         this.$validator.validateAll().then((valid) => {
           if (valid) {
             console.log("commit json data:" + JSON.stringify(this.company))
-            this.$http.post("/org/company", this.company).then((response) => {
+            this.$api.company.companyAdd(this.company).then((response) => {
               console.log("--->", response.data);
             }).catch(error => {
               console.log("error", error);

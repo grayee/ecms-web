@@ -4,8 +4,12 @@ import qs from 'qs'; // 根据需求是否导入qs模块
 
 const company = {
   //公司列表
-  companyList() {
-    return axios.get(`${base.sq}/org/company/list`);
+  companyList(param) {
+    return axios.post(`${base.sq}/org/company/list`, param);
+  },
+  //公司新增
+  companyAdd(param) {
+    return axios.post(`${base.sq}/org/company`, param);
   },
   //公司详情,演示
   companyDetail(id, params) {
@@ -18,6 +22,6 @@ const company = {
     return axios.post(`${base.sq}/accesstoken`, qs.stringify(params));
   }
   // 其他接口…………
-}
+};
 
 export default company;

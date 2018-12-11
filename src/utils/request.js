@@ -1,35 +1,28 @@
 import axios from 'axios'
-import store from '../store/index'
+import Vue from 'vue'
+import VueAxios from 'vue-axios'
+import store from '@/store/index'
 import router from '../router';
 
-let cancel, promiseArr = {}
-const CancelToken = axios.CancelToken;
-//axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
-// 环境的切换
-if (process.env.NODE_ENV === 'development') {
-  axios.defaults.baseURL = '/ecms';
-} else if (process.env.NODE_ENV === 'debug') {
-  axios.defaults.baseURL = '';
-} else if (process.env.NODE_ENV === 'production') {
-  axios.defaults.baseURL = 'http://api.ecms.com/';
-} else {
-  axios.defaults.baseURL = 'api';
-}
+//axios 结合 vue-axios使用
+Vue.use(VueAxios,axios);
 
 // 创建axios实例
-var instance = axios.create({
+let instance = axios.create({
+  baseURL: process.env.BASE_API, // api的base_url
   timeout: 1000 * 12//设置请求超时
 });
-
+//axios cancel token API基于可取消的promise提议
+let cancel, promiseArr = {};
 // 请求拦截器
 instance.interceptors.request.use(function (config) {
   //在发送请求之前做某事
   //发起请求时，取消掉当前正在进行的相同请求
   if (promiseArr[config.url]) {
-    promiseArr[config.url]('操作取消')
-    promiseArr[config.url] = cancel
+    promiseArr[config.url]('操作取消');
+    promiseArr[config.url] = cancel;
   } else {
-    promiseArr[config.url] = cancel
+    promiseArr[config.url] = cancel;
   }
   // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
   // 即使本地存在token，也有可能token是过期的，所以在响应拦截器中要对返回状态进行判断
@@ -93,7 +86,7 @@ instance.interceptors.request.use(function (config) {
  * 禁止点击蒙层、显示一秒后关闭
  */
 const tip = msg => {
-
+  console.log("提示信息：" + msg);
 };
 
 /**
@@ -108,10 +101,10 @@ const toLogin = () => {
     }
   });
 };
-
 /**
  * 请求失败后的错误统一处理
- * @param {Number} status 请求失败的状态码
+ * @param status 请求失败的状态码
+ * @param other 其他信息
  */
 const errorHandle = (status, other) => {
   // 状态码判断
@@ -159,36 +152,3 @@ instance.interceptors.response.use(function (response) {
 });
 
 export default instance;
-
-/**
- * 封装axios的post请求
- * @param {String} url [请求的url地址]
- * @param {Object} params [请求时携带的参数]
- */
-export function post(url, params) {
-  return new Promise((resolve, reject) => {
-    axios.post(url, params)
-      .then(response => {
-        resolve(response.data);
-      }).catch((error) => {
-      reject(error);
-    })
-  })
-}
-
-/**
- * get方法，对应get请求
- * @param {String} url [请求的url地址]
- * @param {Object} params [请求时携带的参数]
- */
-export function get(url, params) {
-  return new Promise((resolve, reject) => {
-    axios.get(url, {
-      params: params
-    }).then(res => {
-      resolve(res.data);
-    }).catch(err => {
-      reject(err.data)
-    })
-  });
-}

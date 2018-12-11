@@ -31,9 +31,6 @@ import 'vx-easyui/dist/themes/vue.css';
 import EasyUI from 'vx-easyui';
 import locale from 'vx-easyui/dist/locale/easyui-lang-zh_CN';
 
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-
 import VeeValidate from 'vee-validate';
 //引入中文包，提示信息可以以中文形式显示
 import zh_CN from 'vee-validate/dist/locale/zh_CN';
@@ -44,9 +41,11 @@ const i18n = new VueI18n({
   locale: 'zh_CN',
 });
 
-//import api from './api' // 导入api接口
+import api from './api' // 导入api接口
+Vue.prototype.$api = api; // 将api挂载到vue的原型上
 
-//Vue.prototype.$api = api; // 将api挂载到vue的原型上
+// 引入mockjs
+import './mock/mock'
 
 Vue.use(VeeValidate, {
   i18n,
@@ -56,13 +55,7 @@ Vue.use(VeeValidate, {
   }
 });
 
-//axios 结合 vue-axios使用
-Vue.use(VueAxios,axios);
-
 Vue.config.productionTip = false;
-
-// 引入mockjs
-require('./mock/mock.js');
 
 Vue.use(EasyUI, {
   locale: locale
@@ -76,4 +69,4 @@ new Vue({
   store,
   components: {App},
   template: '<App/>'
-})
+});

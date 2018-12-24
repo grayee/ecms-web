@@ -46,6 +46,7 @@
     "interpret": "^1.1.0",
     "isexe": "^2.0.0",
     "jquery": "^3.3.1",
+    "js-cookie": "^2.2.0",
     "jsesc": "^2.5.1",
     "json-loader": "^0.5.7",
     "killable": "^1.0.0",

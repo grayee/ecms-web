@@ -93,7 +93,7 @@
   //引入Footer局部组件
   import MainFooter from './MainFooter';
 
-  import {mapState} from "vuex";
+  import {mapState,mapGetters,mapActions} from "vuex";
 
   export default {
     components: {
@@ -110,7 +110,7 @@
     },
     computed: {
       //访问 vuex store 中的数据
-      //此处用到 es6 stage-2 才有的三个点展开对象的语法, 对应 .babelrc 中的配置
+      //此处用到 es6 stage-2 才有的三个点展开对象的语法(对象展开运算符:...), 对应 .babelrc 中的配置
       ...mapState([
         "count",
         "logoText",

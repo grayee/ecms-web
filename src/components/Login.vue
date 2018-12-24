@@ -119,16 +119,7 @@
       handleLogin: function (message) {
         this.$validator.validateAll().then((valid) => {
           if (valid) {
-            //因为axios默认发的是json格式数据，我们要做表单提交，需要更改axios配置
-            // 引入 Qs是为了把json格式，转为formdata 的数据格式
-            var qs = require('qs');
-            console.log("commit form json data:" +  qs.stringify(this.loginForm))
-
-            var instance = this.$http.create({
-              baseURL: 'http://localhost:8080/ecms/'
-            });
-
-            instance.post("/login", qs.stringify(this.loginForm)).then((response) => {
+            this.$api.login.login(this.loginForm).then((response) => {
               console.log("--->", response.data);
               //登录成功后设置TOKEN 并跳转
               //store.state.token = response.data.access_token;
@@ -142,7 +133,7 @@
               console.log("error", error);
             });
           }
-        })
+        });
         this.$router.push({
           path: '/admin'
         });

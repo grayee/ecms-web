@@ -48,12 +48,13 @@
               <div class="f-row">
                 <div class="f-full" style="line-height:30px">列表</div>
                 <div>
-                  <LinkButton iconCls="icon-add" :plain="true" @click="$refs.d1.open()">新增</LinkButton>
+                  <LinkButton iconCls="icon-add" :plain="true" @click="toAdd()">新增</LinkButton>
                   <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
                   <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
                   <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
                   <LinkButton iconCls="icon-print" :plain="true" @click="print()">打印</LinkButton>
-                  <LinkButton iconCls="icon-back" :plain="true" @click="go(-1)"></LinkButton>
+                  <LinkButton iconCls="icon-back" :plain="true" @click="goBack()"></LinkButton>
+                  <LinkButton iconCls="icon-filter" :plain="true" @click="$refs.d2.open()">调整显示列</LinkButton>
                 </div>
               </div>
             </template>
@@ -122,7 +123,7 @@
           <Dialog ref="d1"
                   :title="'添加'"
                   :dialogStyle="{width:'600px',height:'400px'}"
-                  bodyCls="f-column" :draggable="true" :closed="true"
+                  :bodyCls="f-column" :draggable="true" :closed="true"
                   :modal="true">
             <div class="f-full" style="padding: 20px 60px 20px 20px">
               <Form ref="form" :model="company">
@@ -180,6 +181,27 @@
             </div>
           </Dialog>
 
+          <Dialog ref="d2"
+                  :title="'调整显示列'"
+                  :dialogStyle="{width:'300px',height:'500px'}" :draggable="true" :closed="true"
+                  :modal="true">
+
+            <DataList style="width:100%;height:410px;" :data="displayColumns"
+                      selectionMode="single">
+              <template slot-scope="scope">
+                <div style="padding:5px 5px">
+                  <input type="checkbox" :value="scope.row.itemid" :id="scope.row.itemid"/>
+                  <label :for="scope.row.itemid">{{scope.row.name}}</label>
+                </div>
+              </template>
+            </DataList>
+
+            <div class="dialog-button">
+              <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="$refs.d2.close()">取消</LinkButton>
+            </div>
+          </Dialog>
+
         </LayoutPanel>
       </Layout>
     </section>
@@ -201,6 +223,15 @@
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
+        displayColumns:[
+          {
+            "itemid":1,
+            "name":"公司名称"
+          },{
+            "itemid":2,
+            "name":"公司编码"
+          }
+        ],
         company: {
           name: null,
           shortName: null,
@@ -314,16 +345,29 @@
         console.log("edit");
       },
       refresh() {
-        console.log("refresh");
+        location.reload();
       },
       print() {
-        console.log("add");
+        let printhtml = window.document.body.innerHTML; // 获取打印区域
+        let oldhtml = window.document.innerHTML; // 保存原始内容
+        document.innerHtml = printhtml; // 赋值打印
+        window.print();
+        document.innerHtml = oldhtml; // 还原页面
+        window.location.reload(); // 刷新解决页面无法点击
+      },
+      goBack(){
+        this.$router.go(-1);
+      },
+      toAdd(){
+        this.$router.push({
+          path: '/admin/company/add'
+        });
       },
       selected(event) {
         this.checkedIds = [];
         let _this = this;
         event.forEach(function (item, i) {
-          _this.checkedIds.push(item.inv);
+          _this.checkedIds.push(item.id);
         });
       },
       checkAll(event) {

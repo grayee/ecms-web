@@ -9,6 +9,7 @@ import Register from '@/components/Register'
 import NaviMenuBar from '@/components/NaviMenuBar'
 import Orgnization from '@/view/Orgnization'
 import Company from '@/view/Company'
+import CompanyAdd from '@/view/CompanyAdd'
 import Menu from '@/view/Menu'
 import MainContent from '@/components/MainContent'
 
@@ -38,18 +39,22 @@ const router = new Router({
           component: Company
         },
         {
-          path: 'menu',
-          component: Menu
+          path: "company/add",
+          component: CompanyAdd
         },
         {
-          path: 'login',
-          redirect: '/'
-        },
+          path: 'menu',
+          component: Menu
+        }
       ]
     },
     {
       path: '/',
       component: Login
+    },
+    {
+      path: 'login',
+      redirect: '/'
     },
     {
       path: '/register',

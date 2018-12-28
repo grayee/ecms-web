@@ -20,60 +20,62 @@
         -------------------------->
       <Layout>
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
-            <div class="f-full" style="padding: 20px 60px 20px 20px">
-              <Form ref="form" :model="company">
-                <div style="float: left;margin-bottom:10px">
-                  <Label for="name" align="left">公司名称:</Label>
-                  <TextBox inputId="name" name="name" v-model="company.name" v-validate="'required|min:5'"
-                           placeholder="请输入公司名称"/>
-                  <div class="error">{{ errors.first('name') }}</div>
-                </div>
-                <div style="float: right;margin-bottom:10px">
-                  <Label for="shortName" align="left">公司简称:</Label>
-                  <TextBox inputId="shortName" name="shortName" v-model="company.shortName"
-                           v-validate="'required|max:5'" placeholder="请输入公司简称"/>
-                  <div class="error">{{ errors.first('shortName') }}</div>
-                </div>
 
-                <div style="float: left;margin-bottom:10px">
+          <Form ref="form" :model="company">
+            <div class="main">
+             <div>
+                <Label for="name" align="left">公司名称:</Label>
+                <TextBox inputId="name" name="name" v-model="company.name" v-validate="'required|min:5'"
+                         placeholder="请输入公司名称"/>
+                <div class="error">{{ errors.first('name') }}</div>
+              </div>
+              <div>
+                <Label for="shortName" align="left">公司简称:</Label>
+                <TextBox inputId="shortName" name="shortName" v-model="company.shortName"
+                         v-validate="'required|max:5'" placeholder="请输入公司简称"/>
+                <div class="error">{{ errors.first('shortName') }}</div>
+              </div>
+
+                <div>
                   <Label for="code" align="left">公司编号:</Label>
                   <TextBox inputId="code" name="code" v-model="company.code" v-validate="'required|alpha_num'"
                            placeholder="请输入公司编号"/>
                   <div class="error">{{ errors.first('code') }}</div>
                 </div>
-                <div style="float: right;margin-bottom:10px">
+                <div>
                   <Label for="email" align="left">电子邮件:</Label>
                   <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="company.email"
                            placeholder="请输入邮件地址"></TextBox>
                   <div class="error">{{ errors.first('email') }}</div>
                 </div>
 
-                <div style="float: left;margin-bottom:10px">
-                  <Label for="hero" align="left">公司类型:</Label>
-                  <ComboBox inputId='companyType' name="companyType" :data="companyType" v-validate="'required'"
-                            v-model="company.companyType"></ComboBox>
-                  <div class="error">{{ errors.first('companyType') }}</div>
-                </div>
-                <div style="float: right;margin-bottom:10px">
-                  <Label for="parentCompany" align="left">所属公司:</Label>
-                  <ComboTree name='parentCompany'  :data="companyList" v-model="company.parent" placeholder="-请选择-">
-                    <Tree slot="tree"></Tree>
-                  </ComboTree>
-                  <div class="error">{{ errors.first('parentCompany') }}</div>
-                </div>
+              <div>
+                <Label for="hero" align="left">公司类型:</Label>
+                <ComboBox inputId='companyType' name="companyType" :data="companyType" v-validate="'required'"
+                          v-model="company.companyType"></ComboBox>
+                <div class="error">{{ errors.first('companyType') }}</div>
+              </div>
+              <div>
+                <Label for="parentCompany" align="left">所属公司:</Label>
+                <ComboTree name='parentCompany' :data="companyList" v-model="company.parent" placeholder="-请选择-">
+                  <Tree slot="tree"></Tree>
+                </ComboTree>
+                <div class="error">{{ errors.first('parentCompany') }}</div>
+              </div>
 
-                <div style="margin-bottom:10px">
-                  <Label for="remark" align="left">备注:</Label>
-                  <TextBox inputId="t2"  name="remark" :multiline="true" :value="description" style="width:83%;height:120px;"></TextBox>
-                  <div class="error">{{ errors.first('remark') }}</div>
-                </div>
+              <div>
+                <Label for="remark" align="left">备注:</Label>
+                <TextBox inputId="t2" name="remark" :multiline="true" :value="description"
+                         style="width:83%;height:120px;"></TextBox>
+                <div class="error">{{ errors.first('remark') }}</div>
+              </div>
+              <div class="formBtn">
+                <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
+                <LinkButton style="width:60px" @click="goBack()">取消</LinkButton>
+              </div>
+            </div>
+          </Form>
 
-              </Form>
-            </div>
-            <div class="dialog-button">
-              <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
-              <LinkButton style="width:60px" @click="goBack()">取消</LinkButton>
-            </div>
         </LayoutPanel>
       </Layout>
     </section>
@@ -175,7 +177,7 @@
       print() {
         console.log("add");
       },
-      goBack(){
+      goBack() {
         this.$router.go(-1)
       },
       submitForm() {
@@ -199,8 +201,23 @@
   .error {
     margin: 4px 0 0 80px;
   }
+
   Label {
     text-align: right
+  }
+  .main{
+    padding: 20px;
+  }
+
+  .main > div {
+    width: 49%;
+    float: left;
+    padding: 5px;
+  }
+  .formBtn{
+    clear: both;
+    padding: 20px;
+    margin-right: 20px;
   }
 </style>
 <!--

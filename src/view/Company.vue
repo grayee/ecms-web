@@ -46,9 +46,9 @@
 
             <template slot="header">
               <div class="f-row">
-                <div class="f-full" style="line-height:30px">列表</div>
+                <div class="f-full" style="line-height:30px" >列表</div>
                 <div>
-                  <LinkButton iconCls="icon-add" :plain="true" @click="toAdd()">新增</LinkButton>
+                  <LinkButton iconCls="icon-add" :plain="true" @click="toAdd()" >新增</LinkButton>
                   <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
                   <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
                   <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
@@ -107,79 +107,12 @@
                 </template>
               </GridColumn>
 
-              <GridColumn field="code" title="公司编码" width="5%"></GridColumn>
-              <GridColumn field="name" title="名称" width="10%"></GridColumn>
-              <GridColumn field="shortName" title="简称" width="8%" align="center" :sortable="true"></GridColumn>
-              <GridColumn field="address" title="地址" width="12%" align="right" :sortable="true"></GridColumn>
-              <GridColumn field="postcode" title="邮编" width="8%"  align="center"></GridColumn>
-              <GridColumn field="webSite" title="网址" width="10%"></GridColumn>
-              <GridColumn field="telPhone" title="电话" width="8%"></GridColumn>
-              <GridColumn field="email" title="邮件" width="8%"></GridColumn>
-              <GridColumn field="registeredCapital" title="注册资本" width="8%" align="right" ></GridColumn>
-              <GridColumn field="createTime" title="注册时间" width="8%"></GridColumn>
+              <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
+                          v-if="column.show" :align="column.align"  :sortable="column.sortable"
+                          :width="column.width">
+              </GridColumn>
             </DataGrid>
           </Panel>
-
-          <Dialog ref="d1"
-                  :title="'添加'"
-                  :dialogStyle="{width:'600px',height:'400px'}"
-                  :bodyCls="f-column" :draggable="true" :closed="true"
-                  :modal="true">
-            <div class="f-full" style="padding: 20px 60px 20px 20px">
-              <Form ref="form" :model="company">
-                <div style="float: left;margin-bottom:10px">
-                  <Label for="name" align="left">公司名称:</Label>
-                  <TextBox inputId="name" name="name" v-model="company.name" v-validate="'required|min:5'"
-                           placeholder="请输入公司名称"/>
-                  <div class="error">{{ errors.first('name') }}</div>
-                </div>
-                <div style="float: right;margin-bottom:10px">
-                  <Label for="shortName" align="left">公司简称:</Label>
-                  <TextBox inputId="shortName" name="shortName" v-model="company.shortName"
-                           v-validate="'required|max:5'" placeholder="请输入公司简称"/>
-                  <div class="error">{{ errors.first('shortName') }}</div>
-                </div>
-
-                <div style="float: left;margin-bottom:10px">
-                  <Label for="code" align="left">公司编号:</Label>
-                  <TextBox inputId="code" name="code" v-model="company.code" v-validate="'required|alpha_num'"
-                           placeholder="请输入公司编号"/>
-                  <div class="error">{{ errors.first('code') }}</div>
-                </div>
-                <div style="float: right;margin-bottom:10px">
-                  <Label for="email" align="left">电子邮件:</Label>
-                  <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="company.email"
-                           placeholder="请输入邮件地址"></TextBox>
-                  <div class="error">{{ errors.first('email') }}</div>
-                </div>
-
-                <div style="float: left;margin-bottom:10px">
-                  <Label for="hero" align="left">公司类型:</Label>
-                  <ComboBox inputId='companyType' name="companyType" :data="companyType" v-validate="'required'"
-                            v-model="company.companyType"></ComboBox>
-                  <div class="error">{{ errors.first('companyType') }}</div>
-                </div>
-                <div style="float: right;margin-bottom:10px">
-                  <Label for="parentCompany" align="left">所属公司:</Label>
-                  <ComboTree name='parentCompany'  :data="companyList" v-model="company.parent" placeholder="-请选择-">
-                    <Tree slot="tree"></Tree>
-                  </ComboTree>
-                  <div class="error">{{ errors.first('parentCompany') }}</div>
-                </div>
-
-                <div style="margin-bottom:10px">
-                  <Label for="remark" align="left">备注:</Label>
-                  <TextBox inputId="t2"  name="remark" :multiline="true" :value="description" style="width:83%;height:120px;"></TextBox>
-                  <div class="error">{{ errors.first('remark') }}</div>
-                </div>
-
-              </Form>
-            </div>
-            <div class="dialog-button">
-              <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
-              <LinkButton style="width:60px" @click="$refs.d1.close()">取消</LinkButton>
-            </div>
-          </Dialog>
 
           <Dialog ref="d2"
                   :title="'调整显示列'"
@@ -187,11 +120,11 @@
                   :modal="true">
 
             <DataList style="width:100%;height:410px;" :data="displayColumns"
-                      selectionMode="single">
+                      selectionMode="multiple"  @selectionChange="onSelectionChange($event)">
               <template slot-scope="scope">
-                <div style="padding:5px 5px">
-                  <input type="checkbox" :value="scope.row.itemid" :id="scope.row.itemid"/>
-                  <label :for="scope.row.itemid">{{scope.row.name}}</label>
+                <div class="dataList">
+                  <input type="checkbox" :value="scope.row.id" :id="scope.row.id" style="margin-bottom: 3px"/>
+                  <label :for="scope.row.id">{{scope.row.title}}</label>
                 </div>
               </template>
             </DataList>
@@ -223,13 +156,71 @@
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
+        selection:null,
         displayColumns:[
           {
-            "itemid":1,
-            "name":"公司名称"
+            id:1,
+            title:"公司编码",
+            field:"code",
+            width:"5%",
+            show:true
+          },
+          {
+            id:2,
+            title:"公司名称",
+            field:"name",
+            width:"10%",
+            show:true
           },{
-            "itemid":2,
-            "name":"公司编码"
+            id:3,
+            title:"公司简称",
+            field:"shortName",
+            width:"8%",
+            show:true
+          }, {
+            id: 4,
+            title: "公司地址",
+            field: "address",
+            width:"12%",
+            show:true
+          }, {
+            id: 5,
+            title: "公司邮编",
+            field: "postcode",
+            width:"8%",
+            show:true
+          }, {
+            id: 6,
+            title: "公司网址",
+            field: "webSite",
+            width:"12%",
+            show:true
+          }, {
+            id: 7,
+            title: "联系电话",
+            field: "telPhone",
+            width:"12%",
+            show:true
+          }, {
+            id: 8,
+            title: "邮件",
+            field: "email",
+            width:"12%",
+            show:true
+          }, {
+            id: 9,
+            title: "注册资本",
+            field: "registeredCapital",
+            width:"8%",
+            align:"right",
+            show:true
+          }, {
+            id: 10,
+            title: "注册时间",
+            field: "createTime",
+            width:"8%",
+            sortable:true,
+            show:true
           }
         ],
         company: {
@@ -363,6 +354,10 @@
           path: '/admin/company/add'
         });
       },
+      onSelectionChange(event){
+        console.log(event);
+        this.selection = event;
+      },
       selected(event) {
         this.checkedIds = [];
         let _this = this;
@@ -403,7 +398,15 @@
     margin: 4px 0 0 80px;
   }
   Label {
-    text-align: right
+    text-align: right;
+    margin-left: 5px;
+  }
+  .dataList{
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    height: 35px;
+    border-bottom: 1px solid #eee;
   }
 </style>
 <!--

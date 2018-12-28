@@ -123,7 +123,7 @@
                       selectionMode="multiple"  @selectionChange="onSelectionChange($event)">
               <template slot-scope="scope">
                 <div class="dataList">
-                  <input type="checkbox" :value="scope.row.id" :id="scope.row.id" style="margin-bottom: 3px"/>
+                  <input type="checkbox" :value="scope.row.field" :id="scope.row.id" v-model="checkedFields" style="margin-bottom: 3px"/>
                   <label :for="scope.row.id">{{scope.row.title}}</label>
                 </div>
               </template>
@@ -153,6 +153,7 @@
         pageSize: 20,
         data: [],
         checkedIds: [],
+        checkedFields: [],
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
@@ -298,6 +299,10 @@
     },
     created() {
       this.loadPage(this.pageNumber, this.pageSize);
+      let _this = this;
+      this.displayColumns.forEach(function (item, i) {
+        _this.checkedFields.push(item.field);
+      });
     },
     methods: {
       onPageChange(event) {
@@ -323,7 +328,6 @@
         }, 1000);
       },
       remove() {
-        console.log("del");
         if (this.checkedIds.length <= 0) {
           this.$messager.alert({
             title: "提示信息",
@@ -355,8 +359,11 @@
         });
       },
       onSelectionChange(event){
-        console.log(event);
-        this.selection = event;
+        this.checkedFields = [];
+        let _this = this;
+        event.forEach(function (item, i) {
+          _this.checkedFields.push(item.field);
+        });
       },
       selected(event) {
         this.checkedIds = [];
@@ -377,16 +384,17 @@
         }
       },
       submitForm() {
-        this.$validator.validateAll().then((valid) => {
-          if (valid) {
-            console.log("commit json data:" + JSON.stringify(this.company))
-            this.$api.company.companyAdd(this.company).then((response) => {
-              console.log("--->", response.data);
-            }).catch(error => {
-              console.log("error", error);
-            });
-          }
-        })
+        if (this.checkedFields.length <= 0) {
+          alert("请至少选中一条数据");
+        } else {
+          let _this = this;
+          this.checkedFields.forEach(function (item,i) {
+            _this.displayColumns.forEach((column, i) => {
+              column.show = column.field === item;
+              console.log(column.field +"----"+ column.show)
+            })
+          })
+        }
       }
     }
   };

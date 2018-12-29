@@ -107,7 +107,7 @@
                 </template>
               </GridColumn>
 
-              <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
+              <GridColumn v-for="column in displayColumns"  :field="column.field" :title="column.title"
                           v-if="column.show" :align="column.align"  :sortable="column.sortable"
                           :width="column.width">
               </GridColumn>
@@ -130,7 +130,7 @@
             </DataList>
 
             <div class="dialog-button">
-              <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="submitForm($refs.d2)">确认</LinkButton>
               <LinkButton style="width:60px" @click="$refs.d2.close()">取消</LinkButton>
             </div>
           </Dialog>
@@ -299,9 +299,8 @@
     },
     created() {
       this.loadPage(this.pageNumber, this.pageSize);
-      let _this = this;
-      this.displayColumns.forEach(function (item, i) {
-        _this.checkedFields.push(item.field);
+      this.displayColumns.forEach((item, i) => {
+        this.checkedFields.push(item.field);
       });
     },
     methods: {
@@ -360,9 +359,8 @@
       },
       onSelectionChange(event){
         this.checkedFields = [];
-        let _this = this;
-        event.forEach(function (item, i) {
-          _this.checkedFields.push(item.field);
+        event.forEach((item, i)=> {
+          this.checkedFields.push(item.field);
         });
       },
       selected(event) {
@@ -383,17 +381,14 @@
           this.checkedIds = [];
         }
       },
-      submitForm() {
+      submitForm(dialog) {
         if (this.checkedFields.length <= 0) {
           alert("请至少选中一条数据");
         } else {
-          let _this = this;
-          this.checkedFields.forEach(function (item,i) {
-            _this.displayColumns.forEach((column, i) => {
-              column.show = column.field === item;
-              console.log(column.field +"----"+ column.show)
-            })
-          })
+          this.displayColumns.forEach((column, index) => {
+            column.show = this.checkedFields.indexOf(column.field) > -1;
+          });
+          dialog.close();
         }
       }
     }

@@ -1,15 +1,14 @@
-import { login} from '../../api/login';
+import  login from '../../api/login';
 import Cookies from 'js-cookie';
 
 const user = {
   state: {
     user: '',
     status: '',
-    email: '',
     code: '',
     uid: undefined,
     auth_type: '',
-    token: Cookies.get('Admin-Token'),
+    token: Cookies.get('access_token'),
     name: '',
     avatar: '',
     introduction: '',
@@ -30,9 +29,6 @@ const user = {
     },
     SET_UID: (state, uid) => {
       state.uid = uid;
-    },
-    SET_EMAIL: (state, email) => {
-      state.email = email;
     },
     SET_INTRODUCTION: (state, introduction) => {
       state.introduction = introduction;
@@ -60,16 +56,13 @@ const user = {
     }
   },
   actions: {
-    // 邮箱登录
-    LoginByEmail({ commit }, userInfo) {
-      const email = userInfo.email.trim();
+    // 登录
+    Login({ commit }, param) {
       return new Promise((resolve, reject) => {
-        loginByEmail(email, userInfo.password).then(response => {
-          const data = response.data;
-          console.log(response.data);
-          Cookies.set('Admin-Token', response.data.token);
-          commit('SET_TOKEN', data.token);
-          commit('SET_EMAIL', email);
+        login.logon(param).then(response => {
+          const result = response.data.data;
+          //Cookies.set('access_token'.result.access_token);
+          commit('SET_TOKEN', result.access_token);
           resolve();
         }).catch(error => {
           reject(error);
@@ -137,7 +130,7 @@ const user = {
       return new Promise(resolve => {
         commit('SET_ROLES', [role]);
         commit('SET_TOKEN', role);
-        Cookies.set('Admin-Token', role);
+        Cookies.set('access_token', role);
         resolve();
       })
     }
@@ -147,7 +140,6 @@ const user = {
     avatar: state => state.avatar,
     name: state => state.name,
     uid: state => state.uid,
-    email: state => state.email,
     introduction: state => state.introduction,
     auth_type: state => state.auth_type,
     status: state => state.status,

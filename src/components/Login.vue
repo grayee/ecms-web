@@ -14,25 +14,24 @@
           <input type="text" v-model="loginForm.username" name="username" v-validate="'required'"
                  class="form-control" placeholder="请输入登录邮箱/登录名" data-bv-field="username">
           <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-          <small data-bv-validator="notEmpty" data-bv-validator-for="username" class="help-block"
-                 style="display: none;">登录邮箱名或用户名不能为空
-          </small>
-          <div class="error">{{ errors.first('username') }}</div>
+          <!--
+          errors.first('field') -- 获取关于当前field的第一个错误信息
+          collect('field') -- 获取关于当前field的所有错误信息(list)
+          has('field') -- 当前filed是否有错误(true/false)
+          -->
+          <div v-show="errors.has('username')"  class="error">{{ errors.first('username') }}</div>
         </div>
 
         <div class="form-group has-feedback">
           <input type="password" v-model="loginForm.password" name="password"  v-validate="'required'"
                  class="form-control" placeholder="请输入密码">
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-          <div class="error">{{ errors.first('password') }}</div>
+          <div v-show="errors.has('password')" class="error">{{ errors.first('password') }}</div>
         </div>
 
         <div class="form-group">
           <div class="col-xs-4" style="padding:0px;">
             <input type="text" class="form-control" name="captcha" placeholder="请输入验证码" data-bv-field="captcha">
-            <small data-bv-validator="notEmpty" data-bv-validator-for="captcha" class="help-block"
-                   style="display: none;">验证码不能为空
-            </small>
           </div>
           <div class="col-xs-5" style="text-align:right;padding-right: 0px;">
             <img id="codeImg" src="/captcha" onclick="changeCaptcha()" class="img-responsive" style="height: 35px;">
@@ -67,7 +66,7 @@
 
         <div class="row">
           <div class="col-xs-12">
-            <button type="submit" class="btn btn-danger btn-block btn-flat" @click="handleLogin('loginForm')">登 录</button>
+            <button type="button" class="btn btn-danger btn-block btn-flat" @click="handleLogin('loginForm')">登 录</button>
           </div>
         </div>
 
@@ -115,27 +114,25 @@
         }
       }
     },
+    mounted: function () {
+      console.log("login view load finished!");
+    },
     methods: {
       handleLogin: function (message) {
         this.$validator.validateAll().then((valid) => {
           if (valid) {
-            this.$api.login.login(this.loginForm).then((response) => {
-              console.log("--->", response.data);
-              //登录成功后设置TOKEN 并跳转
-              //store.state.token = response.data.access_token;
-              this.$router.push({
-                name: "Home",
-                params: {
-                  username: this.username
-                }
-              });
+            this.$store.dispatch("Login",this.loginForm).then(() => {
+             /* this.$router.push({
+                path: '/admin'
+              });*/
+              window.location = "/admin";
             }).catch(error => {
               console.log("error", error);
             });
+          }else{
+            console.log("validate form failed!");
+            return false;
           }
-        });
-        this.$router.push({
-          path: '/admin'
         });
         console.log("登录信息："+message);
       }

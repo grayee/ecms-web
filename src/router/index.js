@@ -68,7 +68,7 @@ const router = new Router({
 });
 
 // 不重定向白名单
-const whiteList = ['/login', '/authredirect'];
+const whiteList = ['/', '/authredirect'];
 
 /**
  * 全局的 before 钩子,导航触发时异步解析执,按照创建顺序调用
@@ -76,13 +76,13 @@ const whiteList = ['/login', '/authredirect'];
  * @param from: 当前导航正要离开的路由
  * @param  next: Function,一定要调用该方法来 resolve 这个钩子。执行效果依赖 next 方法的调用参数
  */
-/*
+
 router.beforeEach((to, from, next) => {
   if (store.getters.token) { // 判断是否有token，从vuex中取出
     if (to.path === '/login') {
       next({path: '/'})
     } else {
-      if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
+  /*    if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetInfo').then(res => { // 拉取user_info
           const roles = res.data.role
           store.dispatch('GenerateRoutes', {roles}).then(() => { // 生成可访问的路由表
@@ -102,17 +102,18 @@ router.beforeEach((to, from, next) => {
           next({path: '/', query: {noGoBack: true}})
         }
         // 可删 ↑
-      }
+      }*/
+      next();
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
       next()
     } else {
       // 否则全部重定向到登录页
-      next('/login');
+      next();
     }
   }
 
-});*/
+});
 
 export default router;

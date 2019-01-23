@@ -14,7 +14,7 @@ const login = {
     });
   },
   // post登陆提交
-  login(params) {
+  logon(params) {
     return axios.post(`${base.sq}/login/oauth`, params, {
       headers: {
         'Authorization': "Basic Y2xpZW50X2lkXzEyMzQ1Njc4OTA6Y2xpZW50X3NlY3JldF8xMjM0NTY3ODkw"

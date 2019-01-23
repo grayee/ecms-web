@@ -46,9 +46,9 @@
 
             <template slot="header">
               <div class="f-row">
-                <div class="f-full" style="line-height:30px" >列表</div>
+                <div class="f-full" style="line-height:30px">列表</div>
                 <div>
-                  <LinkButton iconCls="icon-add" :plain="true" @click="toAdd()" >新增</LinkButton>
+                  <LinkButton iconCls="icon-add" :plain="true" @click="toAdd()">新增</LinkButton>
                   <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
                   <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
                   <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
@@ -107,8 +107,8 @@
                 </template>
               </GridColumn>
 
-              <GridColumn v-for="column in displayColumns"  :field="column.field" :title="column.title"
-                          v-if="column.show" :align="column.align"  :sortable="column.sortable"
+              <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
+                          v-if="column.show" :align="column.align" :sortable="column.sortable"
                           :width="column.width">
               </GridColumn>
             </DataGrid>
@@ -120,10 +120,11 @@
                   :modal="true">
 
             <DataList style="width:100%;height:410px;" :data="displayColumns"
-                      selectionMode="multiple"  @selectionChange="onSelectionChange($event)">
+                      selectionMode="multiple" @rowClick="onRowClick($event)">
               <template slot-scope="scope">
                 <div class="dataList">
-                  <input type="checkbox" :value="scope.row.field" :id="scope.row.id" v-model="checkedFields" style="margin-bottom: 3px"/>
+                  <input type="checkbox" :value="scope.row.field" :id="scope.row.id" v-model="checkedFields"
+                         style="margin-bottom: 3px"/>
                   <label :for="scope.row.id">{{scope.row.title}}</label>
                 </div>
               </template>
@@ -157,71 +158,71 @@
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
-        selection:null,
-        displayColumns:[
+        selection: null,
+        displayColumns: [
           {
-            id:1,
-            title:"公司编码",
-            field:"code",
-            width:"5%",
-            show:true
+            id: 1,
+            title: "公司编码",
+            field: "code",
+            width: "5%",
+            show: true
           },
           {
-            id:2,
-            title:"公司名称",
-            field:"name",
-            width:"10%",
-            show:true
-          },{
-            id:3,
-            title:"公司简称",
-            field:"shortName",
-            width:"8%",
-            show:true
+            id: 2,
+            title: "公司名称",
+            field: "name",
+            width: "10%",
+            show: true
+          }, {
+            id: 3,
+            title: "公司简称",
+            field: "shortName",
+            width: "8%",
+            show: true
           }, {
             id: 4,
             title: "公司地址",
             field: "address",
-            width:"12%",
-            show:true
+            width: "12%",
+            show: true
           }, {
             id: 5,
             title: "公司邮编",
             field: "postcode",
-            width:"8%",
-            show:true
+            width: "8%",
+            show: true
           }, {
             id: 6,
             title: "公司网址",
             field: "webSite",
-            width:"12%",
-            show:true
+            width: "12%",
+            show: true
           }, {
             id: 7,
             title: "联系电话",
             field: "telPhone",
-            width:"12%",
-            show:true
+            width: "12%",
+            show: true
           }, {
             id: 8,
             title: "邮件",
             field: "email",
-            width:"12%",
-            show:true
+            width: "12%",
+            show: true
           }, {
             id: 9,
             title: "注册资本",
             field: "registeredCapital",
-            width:"8%",
-            align:"right",
-            show:true
+            width: "8%",
+            align: "right",
+            show: true
           }, {
             id: 10,
             title: "注册时间",
             field: "createTime",
-            width:"8%",
-            sortable:true,
-            show:true
+            width: "8%",
+            sortable: true,
+            show: false
           }
         ],
         company: {
@@ -300,7 +301,9 @@
     created() {
       this.loadPage(this.pageNumber, this.pageSize);
       this.displayColumns.forEach((item, i) => {
-        this.checkedFields.push(item.field);
+        if (item.show) {
+          this.checkedFields.push(item.field);
+        }
       });
     },
     methods: {
@@ -349,19 +352,20 @@
         document.innerHtml = oldhtml; // 还原页面
         window.location.reload(); // 刷新解决页面无法点击
       },
-      goBack(){
+      goBack() {
         this.$router.go(-1);
       },
-      toAdd(){
+      toAdd() {
         this.$router.push({
           path: '/admin/company/add'
         });
       },
-      onSelectionChange(event){
-        this.checkedFields = [];
-        event.forEach((item, i)=> {
-          this.checkedFields.push(item.field);
-        });
+      onRowClick(row) {
+        if (this.checkedFields.indexOf(row.field) > -1) {
+          delete this.checkedIds[this.checkedFields.indexOf(row.field)];
+        } else {
+          this.checkedFields.push(row.field);
+        }
       },
       selected(event) {
         this.checkedIds = [];
@@ -400,11 +404,13 @@
   .error {
     margin: 4px 0 0 80px;
   }
+
   Label {
     text-align: right;
     margin-left: 5px;
   }
-  .dataList{
+
+  .dataList {
     display: flex;
     align-items: center;
     padding: 5px 10px;

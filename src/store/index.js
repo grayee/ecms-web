@@ -26,8 +26,6 @@ const store = new Vuex.Store({
     count: "123",
     logoText: "资金管理系统",
     logoMiniText: "ECMS",
-
-
     menus: [
       {
         icon: "sitemap",

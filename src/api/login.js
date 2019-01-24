@@ -15,11 +15,15 @@ const login = {
   },
   // post登陆提交
   logon(params) {
-    return axios.post(`${base.sq}/login/oauth`, params, {
-      headers: {
-        'Authorization': "Basic Y2xpZW50X2lkXzEyMzQ1Njc4OTA6Y2xpZW50X3NlY3JldF8xMjM0NTY3ODkw"
-      }
-    });
+    return axios.post(`${base.sq}/login/oauth`, params);
+  },
+
+  /**
+   * 获取菜单
+   * @param param 用户名
+   */
+  getMenus(param) {
+    return axios.get(`${base.sq}/au/menu/tree`);
   }
 };
 

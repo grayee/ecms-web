@@ -121,11 +121,17 @@
       handleLogin: function (message) {
         this.$validator.validateAll().then((valid) => {
           if (valid) {
-            this.$store.dispatch("Login",this.loginForm).then(() => {
+            this.$store.dispatch("LoginByUsername",this.loginForm).then(() => {
+              // 在这个时候进行获取后台权限及菜单
+              this.$store.dispatch('GetMenus', this.loginForm.username).then((response) => {
+                // 把这个菜单信息注册为路由信息
+                //this.$router.addRoutes(response);
+              });
+              // 除了登录路由、和系统消息路由，这个跟路由是一个欢迎路由，是静态路由
              /* this.$router.push({
                 path: '/admin'
               });*/
-              window.location = "/admin";
+              //window.location = "/admin";
             }).catch(error => {
               console.log("error", error);
             });

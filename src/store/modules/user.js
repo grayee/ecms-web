@@ -15,7 +15,8 @@ const user = {
     roles: [],
     setting: {
       articlePlatform: []
-    }
+    },
+    menus:[]
   },
   mutations: {
     SET_AUTH_TYPE: (state, type) => {
@@ -53,16 +54,23 @@ const user = {
     },
     LOGOUT_USER: state => {
       state.user = '';
+    },
+    SET_MENUS: (state, menus) => {
+      state.menus = menus
     }
   },
   actions: {
     // 登录
-    Login({ commit }, param) {
+    LoginByUsername({ commit }, param) {
       return new Promise((resolve, reject) => {
+        //客户端公钥
+        commit('SET_TOKEN', "Basic Y2xpZW50X2lkXzEyMzQ1Njc4OTA6Y2xpZW50X3NlY3JldF8xMjM0NTY3ODkw");
         login.logon(param).then(response => {
+          console.log("登陆信息：",response);
           const result = response.data.data;
+          //登录成功后将token存储在cookie之中,这样下次打开页面或者刷新页面的时候能记住用户的登录状态，不用再去登录页面重新登录了
           //Cookies.set('access_token'.result.access_token);
-          commit('SET_TOKEN', result.access_token);
+          commit('SET_TOKEN', result.token_type + " " + result.access_token);
           resolve();
         }).catch(error => {
           reject(error);
@@ -70,6 +78,18 @@ const user = {
       });
     },
 
+    GetMenus({ commit }, param){
+      return new Promise((resolve, reject) => {
+        login.getMenus(param).then(response => {
+          const result = response.data.data;
+          console.log("菜单数据：", result);
+          commit('SET_MENUS', result);
+          resolve();
+        }).catch(error => {
+          reject(error);
+        });
+      });
+    },
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
@@ -144,7 +164,8 @@ const user = {
     auth_type: state => state.auth_type,
     status: state => state.status,
     roles: state => state.roles,
-    setting: state => state.setting
+    setting: state => state.setting,
+    menus: state => state.menus
   }
 };
 

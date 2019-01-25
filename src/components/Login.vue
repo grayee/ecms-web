@@ -123,7 +123,7 @@
           if (valid) {
             this.$store.dispatch("LoginByUsername",this.loginForm).then(() => {
               // 在这个时候进行获取后台权限及菜单
-              this.$store.dispatch('GetMenus', this.loginForm.username).then((response) => {
+              this.$store.dispatch('GetMenus', this.loginForm.username).then((res) => {
                 // 把这个菜单信息注册为路由信息
                 //this.$router.addRoutes(response);
               });
@@ -131,7 +131,7 @@
              /* this.$router.push({
                 path: '/admin'
               });*/
-              //window.location = "/admin";
+             // window.location = "/admin";
             }).catch(error => {
               console.log("error", error);
             });

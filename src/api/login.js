@@ -23,7 +23,7 @@ const login = {
    * @param param 用户名
    */
   getMenus(param) {
-    return axios.get(`${base.sq}/au/menu/tree`);
+    return axios.get(`${base.sq}/auth/menu`);
   }
 };
 

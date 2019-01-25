@@ -66,8 +66,8 @@ const user = {
         //客户端公钥
         commit('SET_TOKEN', "Basic Y2xpZW50X2lkXzEyMzQ1Njc4OTA6Y2xpZW50X3NlY3JldF8xMjM0NTY3ODkw");
         login.logon(param).then(response => {
-          console.log("登陆信息：",response);
           const result = response.data.data;
+          console.log("登陆信息：",JSON.stringify(result));
           //登录成功后将token存储在cookie之中,这样下次打开页面或者刷新页面的时候能记住用户的登录状态，不用再去登录页面重新登录了
           //Cookies.set('access_token'.result.access_token);
           commit('SET_TOKEN', result.token_type + " " + result.access_token);
@@ -82,7 +82,7 @@ const user = {
       return new Promise((resolve, reject) => {
         login.getMenus(param).then(response => {
           const result = response.data.data;
-          console.log("菜单数据：", result);
+          console.log("菜单数据：", JSON.stringify(result));
           commit('SET_MENUS', result);
           resolve();
         }).catch(error => {

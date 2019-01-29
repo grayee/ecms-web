@@ -19,41 +19,10 @@
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">导航菜单</li>
-        <!-- Optionally, you can add icons to the links -->
-
-        <li :class="['treeview', path === parent.path ? 'active' : '']" v-for="(parent,index) in menus" :key="index">
-          <a :href="parent.path">
-            <i :class="['fa', 'fa-' + parent.icon]"></i>
-            <span>{{parent.text}}</span>
-            <span v-if="parent.children" class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-          </a>
-          <!-- 第二级-->
-          <ul v-if="parent.children" class="treeview-menu" style="display: none;">
-            <li :class="['', child.children ? 'treeview' : '']" v-for="(child, index) in parent.children" :key="index">
-
-              <router-link :to="{ path:child.path}">
-                <i :class="['fa', 'fa-' + child.icon]"></i>
-                <span>{{child.text}}</span>
-                <span v-if="child.children" class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-              </router-link>
-
-              <!-- 第三级-->
-              <ul v-if="child.children" class="treeview-menu" style="display: none;">
-                <li v-for="(childSub, index) in child.children" :key="index">
-                  <a :href="childSub.path">
-                    <i :class="['fa', 'fa-' + childSub.icon]"></i>
-                    <span>{{childSub.text}}</span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
+        <tree-view  v-for="(menu, index) in menus" :key="index" class="item" :model="menu" >
+        </tree-view>
       </ul>
+
       <!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->
@@ -62,7 +31,12 @@
 
 <script>
 
+  import TreeView from './TreeView';
+
   export default {
+    components: {
+      "tree-view": TreeView
+    },
     name: 'NaviMenu',
     data() {
       return {

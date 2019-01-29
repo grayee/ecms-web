@@ -123,15 +123,16 @@
           if (valid) {
             this.$store.dispatch("LoginByUsername",this.loginForm).then(() => {
               // 在这个时候进行获取后台权限及菜单
-              this.$store.dispatch('GetMenus', this.loginForm.username).then((res) => {
+              this.$store.dispatch('GetMenus', this.loginForm.username).then(() => {
                 // 把这个菜单信息注册为路由信息
                 //this.$router.addRoutes(response);
+                console.log(this.$store.getters.menus);
               });
               // 除了登录路由、和系统消息路由，这个跟路由是一个欢迎路由，是静态路由
-             /* this.$router.push({
+              /*this.$router.push({
                 path: '/admin'
               });*/
-             // window.location = "/admin";
+              window.location = "/admin";
             }).catch(error => {
               console.log("error", error);
             });

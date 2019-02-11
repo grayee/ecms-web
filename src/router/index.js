@@ -31,11 +31,11 @@ const router = new Router({
           component: MainContent
         },
         {
-          path: "orgs",
+          path: "org",
           component: Orgnization
         },
         {
-          path: 'company',
+          path: 'org/company',
           component: Company
         },
         {

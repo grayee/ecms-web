@@ -42,6 +42,7 @@ const user = {
     },
     SET_NAME: (state, name) => {
       state.name = name;
+      state.user = name;
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar;
@@ -71,7 +72,8 @@ const user = {
           //登录成功后将token存储在cookie之中,这样下次打开页面或者刷新页面的时候能记住用户的登录状态，不用再去登录页面重新登录了
           //Cookies.set('access_token'.result.access_token);
           commit('SET_TOKEN', result.token_type + " " + result.access_token);
-          resolve();
+          commit('SET_NAME', param.username);
+            resolve();
         }).catch(error => {
           reject(error);
         });

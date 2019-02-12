@@ -5,10 +5,12 @@
 
 // 文章模块接口
 import company from '@/api/company';
+import menu from '@/api/login';
 // 其他模块的接口……
 
 // 导出接口
 export default {
-  company
+  company,
+  menu
   // ……
 }

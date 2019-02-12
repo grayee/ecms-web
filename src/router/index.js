@@ -10,7 +10,16 @@ import NaviMenuBar from '@/components/NaviMenuBar'
 import Orgnization from '@/view/Orgnization'
 import Company from '@/view/Company'
 import CompanyAdd from '@/view/CompanyAdd'
+
+import Department from '@/view/Department'
+import Position from '@/view/Position'
+import Employee from '@/view/Employee'
 import Menu from '@/view/Menu'
+import User from '@/view/User'
+import Role from '@/view/Role'
+import UserAuthGrant from '@/view/UserAuthGrant'
+import RoleAuthGrant from '@/view/RoleAuthGrant'
+import OrgAuthGrant from '@/view/OrgAuthGrant'
 import MainContent from '@/components/MainContent'
 
 Vue.use(Router);
@@ -39,12 +48,44 @@ const router = new Router({
           component: Company
         },
         {
+          path: 'org/department',
+          component: Department
+        },
+        {
+          path: 'org/position',
+          component: Position
+        },
+        {
+          path: 'org/employee',
+          component: Employee
+        },
+        {
           path: "company/add",
           component: CompanyAdd
         },
         {
-          path: 'menu',
+          path: 'auth/menu',
           component: Menu
+        },
+        {
+          path: 'auth/user',
+          component: User
+        },
+        {
+          path: 'auth/role',
+          component: Role
+        },
+        {
+          path: 'auth/grant/user',
+          component: UserAuthGrant
+        },
+        {
+          path: 'auth/grant/role',
+          component: RoleAuthGrant
+        },
+        {
+          path: 'auth/grant/org',
+          component: OrgAuthGrant
         }
       ]
     },

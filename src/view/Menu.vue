@@ -48,7 +48,7 @@
               <div class="f-row">
                 <div class="f-full" style="line-height:30px">列表</div>
                 <div>
-                  <LinkButton iconCls="icon-add" :plain="true" @click="$refs.d1.open()">新增</LinkButton>
+                  <LinkButton iconCls="icon-add" :plain="true" @click="add()&&$refs.d1.open();">新增</LinkButton>
                   <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
                   <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
                   <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
@@ -58,9 +58,10 @@
               </div>
             </template>
             <TreeGrid style="height:80%"
-                      :data="data" idField="id" treeField="name" :footerData="footerData" :showFooter="true">
-              <GridColumn field="name" title="菜单名称"></GridColumn>
-              <GridColumn field="size" title="Size"></GridColumn>
+                      :data="data" idField="id" treeField="text" :footerData="footerData" :showFooter="true"
+                      @selectionChange="selection=$event">
+              <GridColumn field="text" title="菜单名称"></GridColumn>
+              <GridColumn field="iconCls" title="图标"></GridColumn>
               <GridColumn field="date" title="修改日期"></GridColumn>
             </TreeGrid>
           </Panel>
@@ -106,7 +107,7 @@
                 </div>
                 <div style="float: right;margin-bottom:10px">
                   <Label for="parentCompany" align="left">所属公司:</Label>
-                  <ComboTree name='parentCompany'  :data="companyList" v-model="company.parent" placeholder="-请选择-">
+                  <ComboTree name='parentCompany' :data="companyList" v-model="company.parent" placeholder="-请选择-">
                     <Tree slot="tree"></Tree>
                   </ComboTree>
                   <div class="error">{{ errors.first('parentCompany') }}</div>
@@ -114,7 +115,8 @@
 
                 <div style="margin-bottom:10px">
                   <Label for="remark" align="left">备注:</Label>
-                  <TextBox inputId="t2"  name="remark" :multiline="true" :value="description" style="width:83%;height:120px;"></TextBox>
+                  <TextBox inputId="t2" name="remark" :multiline="true" :value="description"
+                           style="width:83%;height:120px;"></TextBox>
                   <div class="error">{{ errors.first('remark') }}</div>
                 </div>
 
@@ -139,13 +141,9 @@
   export default {
     data() {
       return {
-        total: 0,
-        pageNumber: 1,
-        pageSize: 20,
         data: null,
         footerData: null,
-        checkedIds: [],
-        pageList: [10, 20, 30, 40, 50],
+        selection: null,
         loading: false,
         pagePosition: "bottom",
         company: {
@@ -222,132 +220,45 @@
       };
     },
     created() {
-      this.data = this.getData();
-      this.footerData =  {
-        name: "Total Size:",
-        size: 999
+      this.getData().then(result => {
+        console.log(JSON.stringify(result));
+        this.data = result.map(value => {
+          value.date = value.attributes.modifyDate;
+          return value;
+        });
+      });
+
+      this.footerData = {
+        text: "Total Size:",
+        text: 999
       };
     },
     methods: {
       getData() {
-        return [
-            {
-              id: 1,
-              name: "C",
-              size: "",
-              date: "02/19/2010",
-              children: [
-                {
-                  id: 2,
-                  name: "Program Files",
-                  size: "120 MB",
-                  date: "03/20/2010",
-                  children: [
-                    {
-                      id: 21,
-                      name: "Java",
-                      size: "",
-                      date: "01/13/2010",
-                      state: "closed",
-                      children: [
-                        {
-                          id: 211,
-                          name: "java.exe",
-                          size: "142 KB",
-                          date: "01/13/2010"
-                        },
-                        {
-                          id: 212,
-                          name: "jawt.dll",
-                          size: "5 KB",
-                          date: "01/13/2010"
-                        }
-                      ]
-                    },
-                    {
-                      id: 22,
-                      name: "MySQL",
-                      size: "",
-                      date: "01/13/2010",
-                      state: "closed",
-                      children: [
-                        {
-                          id: 221,
-                          name: "my.ini",
-                          size: "10 KB",
-                          date: "02/26/2009"
-                        },
-                        {
-                          id: 222,
-                          name: "my-huge.ini",
-                          size: "5 KB",
-                          date: "02/26/2009"
-                        },
-                        {
-                          id: 223,
-                          name: "my-large.ini",
-                          size: "5 KB",
-                          date: "02/26/2009"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  id: 3,
-                  name: "eclipse",
-                  size: "",
-                  date: "01/20/2010",
-                  children: [
-                    {
-                      id: 31,
-                      name: "eclipse.exe",
-                      size: "56 KB",
-                      date: "05/19/2009"
-                    },
-                    {
-                      id: 32,
-                      name: "eclipse.ini",
-                      size: "1 KB",
-                      date: "04/20/2010"
-                    },
-                    {
-                      id: 33,
-                      name: "notice.html",
-                      size: "7 KB",
-                      date: "03/17/2005"
-                    }
-                  ]
-                }
-              ]
-            }
-          ];
-      },
-      onPageChange(event) {
-        this.loadPage(event.pageNumber, event.pageSize);
-      },
-      loadPage(pageNumber, pageSize) {
-        this.loading = true;
-        setTimeout(() => {
-          this.$http.post("/org/company", {
-              pageNumber: 1,
-              pageSize: 20
-            }
-          ).then((response) => {
-            //console.log("--->", response.data);
-            let result = response.data;
-            this.total = result.total;
-            this.pageNumber = result.pageNumber;
-            this.data = result.rows;
-            this.loading = false;
+        return new Promise((resolve, reject) => {
+          this.$api.menu.getMenus('').then(response => {
+            const result = response.data.data;
+            resolve(result);
           }).catch(error => {
-            console.log("error", error);
+            reject(error);
           });
-        }, 1000);
+        });
+      },
+      add() {
+        if (this.selection) {
+          return true;
+        } else {
+          this.$messager.alert({
+            title: "提示信息",
+            icon: "warning",
+            msg: "请至少选中一条记录!"
+          });
+          return false;
+        }
       },
       remove() {
-        console.log("del");
-        if (this.checkedIds.length <= 0) {
+        //console.log(this.selection);
+        if (!this.selection) {
           this.$messager.alert({
             title: "提示信息",
             icon: "warning",
@@ -363,24 +274,6 @@
       },
       print() {
         console.log("add");
-      },
-      selected(event) {
-        this.checkedIds = [];
-        let _this = this;
-        event.forEach(function (item, i) {
-          _this.checkedIds.push(item.inv);
-        });
-      },
-      checkAll(event) {
-        if (event.currentTarget.checked) {
-          this.checkedIds = [];
-          let _this = this;
-          this.data.forEach(function (item, i) {
-            _this.checkedIds.push(item.inv);
-          });
-        } else {
-          this.checkedIds = [];
-        }
       },
       submitForm() {
         this.$validator.validateAll().then((valid) => {

@@ -61,65 +61,58 @@
                       :data="data" idField="id" treeField="text" :footerData="footerData" :showFooter="true"
                       @selectionChange="selection=$event">
               <GridColumn field="text" title="菜单名称"></GridColumn>
-              <GridColumn field="iconCls" title="图标"></GridColumn>
+              <GridColumn field="path" title="路径"></GridColumn>
               <GridColumn field="date" title="修改日期"></GridColumn>
             </TreeGrid>
           </Panel>
 
           <Dialog ref="d1"
-                  :title="'添加'"
-                  :dialogStyle="{width:'600px',height:'400px'}"
+                  :title="'添加菜单'"
+                  :dialogStyle="{width:'450px',height:'450px'}"
                   bodyCls="f-column" :draggable="true" :closed="true"
                   :modal="true">
             <div class="f-full" style="padding: 20px 60px 20px 20px">
-              <Form ref="form" :model="company">
-                <div style="float: left;margin-bottom:10px">
-                  <Label for="name" align="left">公司名称:</Label>
-                  <TextBox inputId="name" name="name" v-model="company.name" v-validate="'required|min:5'"
-                           placeholder="请输入公司名称"/>
-                  <div class="error">{{ errors.first('name') }}</div>
-                </div>
-                <div style="float: right;margin-bottom:10px">
-                  <Label for="shortName" align="left">公司简称:</Label>
-                  <TextBox inputId="shortName" name="shortName" v-model="company.shortName"
-                           v-validate="'required|max:5'" placeholder="请输入公司简称"/>
-                  <div class="error">{{ errors.first('shortName') }}</div>
-                </div>
+              <Form ref="form" :model="menu">
+                <Label for="menuParent" align="left">上级菜单:</Label>
+                <ComboTree name='menuParent' :data="menus" v-model="menu.parentId" v-validate="'required'"
+                           placeholder="-请选择-">
+                  <Tree slot="tree"></Tree>
+                </ComboTree>
+                <span style="color: red; ">*</span>
+                <div class="error">{{ errors.first('menuParent') }}</div>
 
-                <div style="float: left;margin-bottom:10px">
-                  <Label for="code" align="left">公司编号:</Label>
-                  <TextBox inputId="code" name="code" v-model="company.code" v-validate="'required|alpha_num'"
-                           placeholder="请输入公司编号"/>
-                  <div class="error">{{ errors.first('code') }}</div>
-                </div>
-                <div style="float: right;margin-bottom:10px">
-                  <Label for="email" align="left">电子邮件:</Label>
-                  <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="company.email"
-                           placeholder="请输入邮件地址"></TextBox>
-                  <div class="error">{{ errors.first('email') }}</div>
-                </div>
+                <Label for="menuName" align="left">菜单名称:</Label>
+                <TextBox inputId="menuName" name="menuName" v-model="menu.name"
+                         v-validate="'required|max:5'" placeholder="请输入菜单名称"></TextBox>
+                <span style="color: red; ">*</span>
+                <div class="error">{{ errors.first('menuName') }}</div>
 
-                <div style="float: left;margin-bottom:10px">
-                  <Label for="hero" align="left">公司类型:</Label>
-                  <ComboBox inputId='companyType' name="companyType" :data="companyType" v-validate="'required'"
-                            v-model="company.companyType"></ComboBox>
-                  <div class="error">{{ errors.first('companyType') }}</div>
-                </div>
-                <div style="float: right;margin-bottom:10px">
-                  <Label for="parentCompany" align="left">所属公司:</Label>
-                  <ComboTree name='parentCompany' :data="companyList" v-model="company.parent" placeholder="-请选择-">
-                    <Tree slot="tree"></Tree>
-                  </ComboTree>
-                  <div class="error">{{ errors.first('parentCompany') }}</div>
-                </div>
+                <Label for="menuPath" align="left">菜单路径:</Label>
+                <TextBox inputId="menuPath" name="menuPath" v-model="menu.url" v-validate="'required|alpha_num'"
+                         placeholder="请输入菜单路径"></TextBox>
+                <span style="color: red; ">*</span>
+                <div class="error">{{ errors.first('menuPath') }}</div>
 
-                <div style="margin-bottom:10px">
-                  <Label for="remark" align="left">备注:</Label>
-                  <TextBox inputId="t2" name="remark" :multiline="true" :value="description"
-                           style="width:83%;height:120px;"></TextBox>
-                  <div class="error">{{ errors.first('remark') }}</div>
-                </div>
+                <Label for="menuIcon" align="left">菜单图标:</Label>
+                <TextBox inputId="menuIcon" name="menuIcon" v-model="menu.icon" v-validate="'required'"
+                         placeholder="请输入菜单图标样式"></TextBox>
+                <div class="error">{{ errors.first('menuIcon') }}</div>
 
+                <Label for="orderNo" align="left">排序编码:</Label>
+                <TextBox inputId="orderNo" v-validate="'required'" name="orderNo" v-model="menu.orderNo"
+                         placeholder="请输入排序编码"></TextBox>
+                <div class="error">{{ errors.first('orderNo') }}</div>
+
+                <Label for="menuType" align="left">菜单类型:</Label>
+                <ComboBox inputId='menuType' name="menuType" :data="menuType" v-validate="'required'"
+                          placeholder="-请选择-"
+                          v-model="menu.type"></ComboBox>
+                <div class="error">{{ errors.first('menuType') }}</div>
+
+                <Label for="remark" align="left">备注信息:</Label>
+                <TextBox inputId="t2" name="remark" :multiline="true" :value="remark"
+                         style="width:63%;height:100px;"></TextBox>
+                <div class="error">{{ errors.first('remark') }}</div>
               </Form>
             </div>
             <div class="dialog-button">
@@ -143,100 +136,53 @@
       return {
         data: null,
         footerData: null,
-        selection: null,
+        selection: {},
         loading: false,
         pagePosition: "bottom",
-        company: {
+        menu: {
           name: null,
-          shortName: null,
-          code: null,
-          email: null,
-          companyType: null,
-          parent: null
+          url: null,
+          orderNo: null,
+          type: 1,
+          icon: null,
+          parentId: null,
+          remark: null
         },
-        companyType: [
-          {value: 11, text: "总公司"},
-          {value: 12, text: "分公司"},
-          {value: 13, text: "本部"},
-          {value: 20, text: "中支公司"}
+        menuType: [
+          {value: 0, text: "目录"},
+          {value: 1, text: "功能菜单"},
+          {value: 2, text: "页面按钮"},
         ],
-        companyList: [
-          {
-            id: 1,
-            text: "XX集团",
-            children: [
-              {
-                id: 11,
-                text: "北京分公司",
-                state: "closed",
-                children: [
-                  {
-                    id: 111,
-                    text: "海淀营业部"
-                  },
-                  {
-                    id: 112,
-                    text: "朝阳营业部"
-                  },
-                  {
-                    id: 113,
-                    text: "东城营业部"
-                  }
-                ]
-              },
-              {
-                id: 12,
-                text: "上海分公司",
-                children: [
-                  {
-                    id: 121,
-                    text: "浦东营业部"
-                  },
-                  {
-                    id: 122,
-                    text: "闽西营业部"
-                  },
-                  {
-                    id: 123,
-                    text: "上海滩营业部"
-                  }
-                ]
-              },
-              {
-                id: 13,
-                text: "河北分公司"
-              },
-              {
-                id: 14,
-                text: "石家庄营业部"
-              },
-              {
-                id: 15,
-                text: "邯郸营业部"
-              }
-            ]
-          }
-        ]
+        menus: null
       };
     },
     created() {
       this.getData().then(result => {
-        console.log(JSON.stringify(result));
-        this.data = result.map(value => {
-          value.date = value.attributes.modifyDate;
-          return value;
-        });
+        const mapChildren = function (result) {
+          result.map(value => {
+            value.date = value.attributes.modifyDate;
+            delete value.attributes;
+            if (value.children) {
+              mapChildren(value.children);
+            }
+            return value;
+          });
+          return result;
+        };
+        const menuList = mapChildren(result);
+        this.data = menuList;
+        this.menus = JSON.parse(JSON.stringify(menuList))
       });
 
       this.footerData = {
-        text: "Total Size:",
-        text: 999
+        text: "汇总信息:",
+        path: 99
       };
     },
     methods: {
       getData() {
         return new Promise((resolve, reject) => {
-          this.$api.menu.getMenus('').then(response => {
+          this.$api.menu.getMenuTree('').then(response => {
             const result = response.data.data;
             resolve(result);
           }).catch(error => {
@@ -246,6 +192,7 @@
       },
       add() {
         if (this.selection) {
+          this.menu.parentId = this.selection.id;
           return true;
         } else {
           this.$messager.alert({
@@ -278,8 +225,8 @@
       submitForm() {
         this.$validator.validateAll().then((valid) => {
           if (valid) {
-            console.log("commit json data:" + JSON.stringify(this.company))
-            this.$http.post("/org/company", this.company).then((response) => {
+            console.log("commit json data:" + JSON.stringify(this.menu));
+            this.$api.menu.menuAdd(this.menu).then((response) => {
               console.log("--->", response.data);
             }).catch(error => {
               console.log("error", error);

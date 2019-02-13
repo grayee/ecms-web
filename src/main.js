@@ -65,7 +65,12 @@ const dictionary = {
     },
     attributes: {
       username: '用户名',
-      password: '密码'
+      password: '密码',
+      menuPath:'菜单路径',
+      menuName:'菜单名称',
+      menuParent:'上级菜单',
+      menuIcon:'菜单图标',
+      orderNo:'排序编码'
     }
   }
 };

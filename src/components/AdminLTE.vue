@@ -19,7 +19,7 @@
           <div v-if="!collapsed" class="sidebar-user">
             导航菜单
           </div>
-          <SideMenu :data="menus" :border="false" :collapsed="collapsed" @itemClick="onItemClick($event)"></SideMenu>
+          <SideMenu :data="menus" :border="false" :collapsed="collapsed" :animte="true" @itemClick="onItemClick($event)"></SideMenu>
         </div>
         <div class="main-body f-full">
           <router-view></router-view>

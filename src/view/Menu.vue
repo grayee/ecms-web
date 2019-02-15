@@ -48,10 +48,10 @@
               <div class="f-row">
                 <div class="f-full" style="line-height:30px">列表</div>
                 <div>
-                  <LinkButton iconCls="icon-add" :plain="true" @click="add()&&$refs.d1.open();">新增</LinkButton>
+                  <LinkButton iconCls="icon-add" :plain="true" @click="add()&&$refs.d1.open()">新增</LinkButton>
                   <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
                   <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
-                  <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
+                  <LinkButton iconCls="icon-edit" :plain="true" @click="edit()&&$refs.d1.open()">编辑</LinkButton>
                   <LinkButton iconCls="icon-print" :plain="true" @click="print()">打印</LinkButton>
                   <LinkButton iconCls="icon-back" :plain="true" @click="go(-1)"></LinkButton>
                 </div>
@@ -62,6 +62,7 @@
                       @selectionChange="selection=$event">
               <GridColumn field="text" title="菜单名称"></GridColumn>
               <GridColumn field="path" title="路径"></GridColumn>
+              <GridColumn field="orderNo" title="排序编码"></GridColumn>
               <GridColumn field="date" title="修改日期"></GridColumn>
             </TreeGrid>
           </Panel>
@@ -73,24 +74,28 @@
                   :modal="true">
             <div class="f-full" style="padding: 20px 60px 20px 20px">
               <Form ref="form" :model="menu">
+
+                <Label for="menuType" align="left">菜单类型:</Label>
+                <label><input type="radio" value='0' v-model="menu.type">目录</label>
+                <label><input type="radio" value='1' v-model="menu.type">功能菜单</label>
+                <label><input type="radio" value='2' v-model="menu.type">页面按钮</label>
+                <div class="error">{{ errors.first('menuType') }}</div>
+
                 <Label for="menuParent" align="left">上级菜单:</Label>
-                <ComboTree name='menuParent' :data="menus" v-model="menu.parentId" v-validate="'required'"
-                           placeholder="-请选择-">
+                <ComboTree name='menuParent' :data="menus" v-model="menu.parentId" placeholder="-请选择-">
                   <Tree slot="tree"></Tree>
                 </ComboTree>
-                <span style="color: red; ">*</span>
                 <div class="error">{{ errors.first('menuParent') }}</div>
 
                 <Label for="menuName" align="left">菜单名称:</Label>
                 <TextBox inputId="menuName" name="menuName" v-model="menu.name"
-                         v-validate="'required|max:5'" placeholder="请输入菜单名称"></TextBox>
+                         v-validate="'required|max:10'" placeholder="请输入菜单名称"></TextBox>
                 <span style="color: red; ">*</span>
                 <div class="error">{{ errors.first('menuName') }}</div>
 
                 <Label for="menuPath" align="left">菜单路径:</Label>
-                <TextBox inputId="menuPath" name="menuPath" v-model="menu.url" v-validate="'required|alpha_num'"
+                <TextBox inputId="menuPath" name="menuPath" v-model="menu.url" v-validate="'max:100'"
                          placeholder="请输入菜单路径"></TextBox>
-                <span style="color: red; ">*</span>
                 <div class="error">{{ errors.first('menuPath') }}</div>
 
                 <Label for="menuIcon" align="left">菜单图标:</Label>
@@ -99,24 +104,18 @@
                 <div class="error">{{ errors.first('menuIcon') }}</div>
 
                 <Label for="orderNo" align="left">排序编码:</Label>
-                <TextBox inputId="orderNo" v-validate="'required'" name="orderNo" v-model="menu.orderNo"
-                         placeholder="请输入排序编码"></TextBox>
+                <NumberBox inputId="orderNo" name="orderNo" v-model="menu.orderNo" v-validate="'required'"
+                           placeholder="请输入排序编码" :value="100" :spinners="true"></NumberBox>
                 <div class="error">{{ errors.first('orderNo') }}</div>
 
-                <Label for="menuType" align="left">菜单类型:</Label>
-                <ComboBox inputId='menuType' name="menuType" :data="menuType" v-validate="'required'"
-                          placeholder="-请选择-"
-                          v-model="menu.type"></ComboBox>
-                <div class="error">{{ errors.first('menuType') }}</div>
-
                 <Label for="remark" align="left">备注信息:</Label>
-                <TextBox inputId="t2" name="remark" :multiline="true" :value="remark"
+                <TextBox inputId="remark" name="remark" :multiline="true" v-model="menu.remark"
                          style="width:63%;height:100px;"></TextBox>
                 <div class="error">{{ errors.first('remark') }}</div>
               </Form>
             </div>
             <div class="dialog-button">
-              <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="submitForm()&&$refs.d1.close()">确认</LinkButton>
               <LinkButton style="width:60px" @click="$refs.d1.close()">取消</LinkButton>
             </div>
           </Dialog>
@@ -143,7 +142,7 @@
           name: null,
           url: null,
           orderNo: null,
-          type: 1,
+          type: null,
           icon: null,
           parentId: null,
           remark: null
@@ -157,29 +156,33 @@
       };
     },
     created() {
-      this.getData().then(result => {
-        const mapChildren = function (result) {
-          result.map(value => {
-            value.date = value.attributes.modifyDate;
-            delete value.attributes;
-            if (value.children) {
-              mapChildren(value.children);
-            }
-            return value;
-          });
-          return result;
-        };
-        const menuList = mapChildren(result);
-        this.data = menuList;
-        this.menus = JSON.parse(JSON.stringify(menuList))
-      });
-
+      this.initData();
       this.footerData = {
         text: "汇总信息:",
         path: 99
       };
     },
     methods: {
+      initData() {
+        this.getData().then(result => {
+          const mapChildren = function (result) {
+            result.map(value => {
+              value.date = value.attributes.modifyDate;
+              value.type = value.attributes.menuType;
+              value.orderNo = value.attributes.orderNo;
+              delete value.attributes;
+              if (value.children) {
+                mapChildren(value.children);
+              }
+              return value;
+            });
+            return result;
+          };
+          const menuList = mapChildren(result);
+          this.data = menuList;
+          this.menus = JSON.parse(JSON.stringify(menuList))
+        });
+      },
       getData() {
         return new Promise((resolve, reject) => {
           this.$api.menu.getMenuTree('').then(response => {
@@ -191,6 +194,15 @@
         });
       },
       add() {
+        this.menu = {
+          name: null,
+          url: null,
+          orderNo: null,
+          type: 1,
+          icon: null,
+          parentId: null,
+          remark: null
+        };
         if (this.selection) {
           this.menu.parentId = this.selection.id;
           return true;
@@ -205,7 +217,16 @@
       },
       remove() {
         //console.log(this.selection);
-        if (!this.selection) {
+        if (this.selection.id) {
+          const ids = [];
+          ids.push(this.selection.id);
+          this.$api.menu.menuDel(ids).then((response) => {
+            console.log("--->", response.data);
+            this.initData();
+          }).catch(error => {
+            console.log("error", error);
+          });
+        } else {
           this.$messager.alert({
             title: "提示信息",
             icon: "warning",
@@ -214,7 +235,30 @@
         }
       },
       edit() {
-        console.log("edit");
+        if (this.selection.id) {
+          console.log(this.selection);
+          this.$api.menu.menuDetail(this.selection.id).then((response) => {
+            const result = response.data.data;
+            this.menu.id = result.id;
+            this.menu.parentId = result.parentId;
+            this.menu.name = result.name;
+            this.menu.type = result.type;
+            this.menu.url = result.url;
+            this.menu.orderNo = result.orderNo;
+            this.menu.remark = result.remark;
+            this.menu.icon = result.icon;
+          }).catch(error => {
+            console.log("get menu detail error", error);
+          });
+          return true;
+        } else {
+          this.$messager.alert({
+            title: "提示信息",
+            icon: "warning",
+            msg: "请至少选中一条记录!"
+          });
+          return false;
+        }
       },
       refresh() {
         console.log("refresh");
@@ -226,13 +270,28 @@
         this.$validator.validateAll().then((valid) => {
           if (valid) {
             console.log("commit json data:" + JSON.stringify(this.menu));
-            this.$api.menu.menuAdd(this.menu).then((response) => {
-              console.log("--->", response.data);
-            }).catch(error => {
-              console.log("error", error);
-            });
+            if (this.menu.id) {
+              this.$api.menu.menuUpt(this.menu).then((response) => {
+                console.log("--->", response.data);
+                this.initData();
+                return true;
+              }).catch(error => {
+                console.log("error", error);
+                return false;
+              });
+            } else {
+              this.$api.menu.menuAdd(this.menu).then((response) => {
+                console.log("--->", response.data);
+                this.initData();
+                return true;
+              }).catch(error => {
+                console.log("error", error);
+                return false;
+              });
+            }
           }
-        })
+        });
+        return false;
       }
     }
   };

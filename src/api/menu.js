@@ -18,7 +18,30 @@ const menu = {
   menuAdd(param) {
     return axios.post(`${base.sq}/auth/menu`, param);
   },
-
+  /**
+   * 菜单详情
+   * @param param 菜单ID
+   * @returns {*}
+   */
+  menuDetail(param) {
+    return axios.get(`${base.sq}/auth/menu/detail/` + param);
+  },
+  /**
+   * 菜单删除,https://blog.csdn.net/qq383366204/article/details/80268007
+   * @param param 菜单ID数组
+   * @returns {*}
+   */
+  menuDel(param) {
+    return axios.delete(`${base.sq}/auth/menu`, {data: param});
+  },
+  /**
+   * 菜单更新
+   * @param param 菜单ID数组
+   * @returns {*}
+   */
+  menuUpt(param) {
+    return axios.put(`${base.sq}/auth/menu`, param);
+  },
   // 其他接口…………
 };
 

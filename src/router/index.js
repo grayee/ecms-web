@@ -119,6 +119,7 @@ const whiteList = ['/', '/authredirect'];
  */
 
 router.beforeEach((to, from, next) => {
+  console.log(store.getters.token);
   if (store.getters.token) { // 判断是否有token，从vuex中取出
     if (to.path === '/login') {
       next({path: '/'})

@@ -6,10 +6,8 @@
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-      <p class="login-box-msg">管理员登录</p>
-
+      <p class="login-box-msg" v-if="msg">{{msg}}</p>
       <form ref="form" :model="loginForm" novalidate="novalidate" class="bv-form">
-
         <div class="form-group has-feedback">
           <input type="text" v-model="loginForm.username" name="username" v-validate="'required'"
                  class="form-control" placeholder="请输入登录邮箱/登录名" data-bv-field="username">
@@ -79,13 +77,10 @@
           </div>
           <div class="col-xs-7">
             <div class="text-right">
-              <!--<a class="btn btn-social-icon btn-primary"><i class="fa fa-qq"></i></a>
+              <a class="btn btn-social-icon btn-primary"><i class="fa fa-qq"></i></a>
               <a class="btn btn-social-icon btn-success"><i class="fa fa-wechat"></i></a>
               <a class="btn btn-social-icon btn-warning"><i class="fa fa-weibo"></i></a>
-              <a class="btn btn-social-icon btn-info"><i class="fa fa-github"></i></a>-->
-              <a class="btn btn-social-icon btn-info"
-                 href="/oauth/login/github"><i
-                class="fa fa-github"></i></a>
+              <a class="btn btn-social-icon btn-info" href="/oauth/login/github"><i class="fa fa-github"></i></a>
             </div>
           </div>
         </div>
@@ -135,7 +130,11 @@
               });
               //window.location = "/admin";
             }).catch(error => {
-              console.log("error", error);
+              this.msg = error;
+              setTimeout(()=>{
+                this.msg = "Welcome to Login";
+              },3000);
+              console.log(error);
             });
           }else{
             console.log("validate form failed!");

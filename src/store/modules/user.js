@@ -67,13 +67,17 @@ const user = {
         //客户端公钥
         commit('SET_TOKEN', "Basic Y2xpZW50X2lkXzEyMzQ1Njc4OTA6Y2xpZW50X3NlY3JldF8xMjM0NTY3ODkw");
         login.logon(param).then(response => {
-          const result = response.data.data;
-          console.log("登陆信息：",JSON.stringify(result));
-          //登录成功后将token存储在cookie之中,这样下次打开页面或者刷新页面的时候能记住用户的登录状态，不用再去登录页面重新登录了
-          //Cookies.set('access_token'.result.access_token);
-          commit('SET_TOKEN', result.token_type + " " + result.access_token);
-          commit('SET_NAME', param.username);
+          const result = response.data;
+          console.log("登陆信息：",JSON.stringify(response.data));
+          if (result.code === 0) {
+            //登录成功后将token存储在cookie之中,这样下次打开页面或者刷新页面的时候能记住用户的登录状态，不用再去登录页面重新登录了
+            Cookies.set('access_token',result.data.access_token);
+            commit('SET_TOKEN', result.data.token_type + " " + result.data.access_token);
+            commit('SET_NAME', param.username);
             resolve();
+          }else{
+            reject(result.message);
+          }
         }).catch(error => {
           reject(error);
         });

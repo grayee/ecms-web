@@ -1,16 +1,19 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '@/store/index'
+const _import = require('./_import_dev');
+
 import HelloWorld from '@/components/HelloWorld'
 import Users from '@/components/User'
 import AdminLTE from '@/components/AdminLTE'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 import NaviMenuBar from '@/components/NaviMenuBar'
+import MainContent from '@/components/MainContent'
+
 import Orgnization from '@/view/Orgnization'
 import Company from '@/view/Company'
 import CompanyAdd from '@/view/CompanyAdd'
-
 import Department from '@/view/Department'
 import Position from '@/view/Position'
 import Employee from '@/view/Employee'
@@ -20,7 +23,6 @@ import Role from '@/view/Role'
 import UserAuthGrant from '@/view/UserAuthGrant'
 import RoleAuthGrant from '@/view/RoleAuthGrant'
 import OrgAuthGrant from '@/view/OrgAuthGrant'
-import MainContent from '@/components/MainContent'
 
 Vue.use(Router);
 
@@ -124,7 +126,7 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({path: '/'})
     } else {
-  /*    if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
+      if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetInfo').then(res => { // 拉取user_info
           const roles = res.data.role
           store.dispatch('GenerateRoutes', {roles}).then(() => { // 生成可访问的路由表
@@ -133,7 +135,7 @@ router.beforeEach((to, from, next) => {
           })
         }).catch(() => {
           store.dispatch('FedLogOut').then(() => {
-            next({path: '/login'})
+            next({path: '/'})
           })
         })
       } else {
@@ -144,7 +146,7 @@ router.beforeEach((to, from, next) => {
           next({path: '/', query: {noGoBack: true}})
         }
         // 可删 ↑
-      }*/
+      }
       next();
     }
   } else {

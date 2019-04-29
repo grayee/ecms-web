@@ -99,13 +99,13 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token).then(response => {
+        login.getUserinfo(state.token).then(response => {
           const data = response.data;
           commit('SET_ROLES', data.role);
           commit('SET_NAME', data.name);
           commit('SET_AVATAR', data.avatar);
-          commit('SET_UID', data.uid);
-          commit('SET_INTRODUCTION', data.introduction);
+          commit('SET_UID', data.id);
+          commit('SET_INTRODUCTION', data.info);
           resolve(response);
         }).catch(error => {
           reject(error);
@@ -119,7 +119,7 @@ const user = {
         commit('SET_CODE', code);
         loginByThirdparty(state.status, state.email, state.code, state.auth_type).then(response => {
           commit('SET_TOKEN', response.data.token);
-          Cookies.set('Admin-Token', response.data.token);
+          Cookies.set('access_token', response.data.token);
           resolve();
         }).catch(error => {
           reject(error);
@@ -133,7 +133,7 @@ const user = {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '');
           commit('SET_ROLES', []);
-          Cookies.remove('Admin-Token');
+          Cookies.remove('access_token');
           resolve();
         }).catch(error => {
           reject(error);
@@ -145,7 +145,7 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '');
-        Cookies.remove('Admin-Token');
+        Cookies.remove('access_token');
         alert("has logout");
         resolve();
       });

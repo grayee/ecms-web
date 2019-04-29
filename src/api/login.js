@@ -4,12 +4,12 @@ import qs from 'qs'; // 根据需求是否导入qs模块
 
 const login = {
   //获取用户信息
-  userinfo(param) {
-    return axios.post(`${base.sq}/userinfo`, param);
+  getUserinfo(param) {
+    return axios.get(`${base.sq}/userinfo`, param);
   },
   //登出
   logout(params) {
-    return axios.get(`${base.sq}/logout`, {
+    return axios.get(`${base.sq}/logout/oauth`, {
       params: params
     });
   },

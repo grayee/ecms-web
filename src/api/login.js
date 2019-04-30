@@ -9,7 +9,7 @@ const login = {
   },
   //登出
   logout(params) {
-    return axios.get(`${base.sq}/logout/oauth`, {
+    return axios.post(`${base.sq}/logout/oauth`, {
       params: params
     });
   },

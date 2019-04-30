@@ -10,7 +10,7 @@
             <span class="main-toggle fa fa-bars" @click="toggle()"></span>
           </div>
           <div style="margin-right: 20px;">
-            欢迎 {{this.$store.state.user.name}} 登陆，<router-link :to="{ path:'/'}"><span style="color: white; ">退出</span></router-link>
+            欢迎 {{this.$store.state.user.name}} 登陆，<a @click="logout()"><span style="color: white; ">退出</span></a>
           </div>
         </div>
       </div>
@@ -57,6 +57,13 @@
       toggle() {
         this.collapsed = !this.collapsed;
         this.width = this.collapsed ? 50 : 200;
+      },
+      logout() {
+        this.$store.dispatch("LogOut",this.$store.state).then(()=>{
+          this.$router.push({
+            path: '/'
+          });
+        });
       },
       onItemClick(item) {
         this.$router.push({

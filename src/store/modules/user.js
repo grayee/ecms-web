@@ -131,7 +131,7 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        login.logout(state.token).then(() => {
           commit('SET_TOKEN', '');
           commit('SET_ROLES', []);
           Cookies.remove('access_token');

@@ -26,6 +26,21 @@ import OrgAuthGrant from '@/view/OrgAuthGrant'
 
 Vue.use(Router);
 
+export const constantRouter = [
+  {path: '/login', component: Login, hidden: true},
+  {
+    path: '/pages', redirect: '/pages/p404', name: 'Pages',
+    component: {
+      render(c) {
+        return c('router-view')
+      }
+    },
+    children: [{path: '404', name: 'Page404', component: _import('errorPages/Page404')},
+      {path: '500', name: 'Page500', component: _import('errorPages/Page404')},
+    ]
+  }
+];
+
 const router = new Router({
   mode: 'history',
   routes: [
@@ -127,25 +142,26 @@ router.beforeEach((to, from, next) => {
       next({path: '/'})
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
-        store.dispatch('GetInfo').then(res => { // 拉取user_info
-          const roles = res.data.role
-          store.dispatch('GenerateRoutes', {roles}).then(() => { // 生成可访问的路由表
+        store.dispatch('GetUserInfo').then(res => { // 拉取user_info
+          console.log("用户信息：" + JSON.stringify(res.data));
+          // 在这个时候进行获取后台权限及菜单
+          store.dispatch('GetMenus', store.getters.token).then((menus) => {
+            // 把这个菜单信息注册为路由信息
+            //this.$router.addRoutes(response);
+            //console.log(this.$store.state.user.menus);
+            //console.log(this.$store.getters.menus);
+          });
+     /*     store.dispatch('GenerateRoutes', {roles}).then(() => { // 生成可访问的路由表
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
             next({...to}) // hack方法 确保addRoutes已完成
-          })
+          })*/
         }).catch(() => {
           store.dispatch('FedLogOut').then(() => {
             next({path: '/'})
           })
         })
       } else {
-        // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
-        if (hasPermission(store.getters.roles, to.meta.role)) {
-          next()//
-        } else {
-          next({path: '/', query: {noGoBack: true}})
-        }
-        // 可删 ↑
+          next()
       }
       next();
     }

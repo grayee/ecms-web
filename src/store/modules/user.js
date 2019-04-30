@@ -71,8 +71,9 @@ const user = {
           console.log("登陆信息：",JSON.stringify(response.data));
           if (result.code === 0) {
             //登录成功后将token存储在cookie之中,这样下次打开页面或者刷新页面的时候能记住用户的登录状态，不用再去登录页面重新登录了
-            Cookies.set('access_token',result.data.access_token);
-            commit('SET_TOKEN', result.data.token_type + " " + result.data.access_token);
+            let bearerToken = result.data.token_type + " " + result.data.access_token;
+            Cookies.set('access_token', bearerToken);
+            commit('SET_TOKEN', bearerToken);
             commit('SET_NAME', param.username);
             resolve();
           }else{
@@ -97,11 +98,11 @@ const user = {
       });
     },
     // 获取用户信息
-    GetInfo({ commit, state }) {
+    GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         login.getUserinfo(state.token).then(response => {
-          const data = response.data;
-          commit('SET_ROLES', data.role);
+          const data = response.data.data;
+          commit('SET_ROLES', data.roles);
           commit('SET_NAME', data.name);
           commit('SET_AVATAR', data.avatar);
           commit('SET_UID', data.id);

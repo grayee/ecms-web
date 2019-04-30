@@ -118,7 +118,7 @@
           if (valid) {
             this.$store.dispatch("LoginByUsername",this.loginForm).then(() => {
               // 在这个时候进行获取后台权限及菜单
-             // this.$store.dispatch('GetMenus', this.loginForm.username);
+             // this.$store.dispatch('getMenus', this.loginForm.username);
               // 除了登录路由、和系统消息路由，这个跟路由是一个欢迎路由，是静态路由
               this.$router.push({
                 path: '/admin'

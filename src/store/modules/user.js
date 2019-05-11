@@ -91,7 +91,7 @@ const user = {
           const result = response.data.data;
           console.log("菜单数据：", JSON.stringify(result));
           commit('SET_MENUS', result);
-          resolve(response.data.data);
+          resolve(result);
         }).catch(error => {
           reject(error);
         });

@@ -134,7 +134,7 @@
     data() {
       return {
         data: null,
-        footerData: null,
+        footerData: [],
         selection: {},
         loading: false,
         pagePosition: "bottom",
@@ -157,10 +157,10 @@
     },
     created() {
       this.initData();
-      this.footerData = {
+      this.footerData = [{
         text: "汇总信息:",
         path: 99
-      };
+      }];
     },
     methods: {
       initData() {

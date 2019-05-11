@@ -1,62 +1,42 @@
 import {constantRouter} from '../../router';
 
-function getNowRouter(asyncRouterMap, to) {
-  return asyncRouterMap.some(route => {
-    if (to.path.indexOf(route.path) !== -1) {
-      return true;
-    } else if (route.children && route.children.length) { //如果有孩子就遍历孩子
-      return getNowRouter(route.children, to)
-    }
-  })
-}
-
 const permission = {
   state: {
-    routers: constantRouter,
-    addRouters: [],
-    siderbar_routers: [],
+    routers: constantRouter
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
-      state.addRouters = routers;
-      //state.routers = constantRouterMap.concat(routers);
-    },
-    SET_NOW_ROUTERS: (state, to) => {
-      // 递归访问 accessedRouters，找到包含to 的那个路由对象，设置给siderbar_routers
-      console.log(state.addRouters);
-      state.addRouters.forEach(e => {
-        if (e.children && e.children.length) {
-          if (getNowRouter(e.children, to) === true)
-            state.siderbar_routers = e;
-        }
-      })
+      state.routers.concat(routers);
     }
   },
   actions: {
     GenerateRoutes({commit}, data) {
       return new Promise(resolve => {
         const {menus} = data;
-        let accessedRouters = menus.map((menu)=>{
-          const router = {};
-          router.name = menu.id;
-          router.path = menu.path;
-          router.component = "";
-          return router;
-        });
+        let accessedRouters = [];
+        getRouterByMenu(menus, accessedRouters);
         console.log(accessedRouters);
         commit('SET_ROUTERS', accessedRouters);
         resolve();
       })
-    },
-
-    getNowRoutes({commit}, data) {
-      return new Promise(resolve => {
-        //data => to
-        commit('SET_NOW_ROUTERS', data);
-        resolve();
-      })
-    },
+    }
   },
 };
+
+
+function getRouterByMenu(menus, routers) {
+    menus.forEach((menu) => {
+      if (menu.children && menu.children.length) {
+        getRouterByMenu(menu.children, routers);
+      }else{
+        const router = {};
+        router.name = menu.id;
+        router.path = menu.path;
+        router.component = menu.component;
+        routers.push(router)
+      }
+    });
+  return routers;
+}
 
 export default permission;

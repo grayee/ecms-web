@@ -52,4 +52,4 @@ const demoData = function (options) {
 };
 
 // Mock.mock( url, post/get , 返回的数据)；
-Mock.mock('http://localhost:8080/ecms/org/company/list', 'post', demoData);
+//Mock.mock('http://localhost:8080/ecms/org/company/list', 'post', demoData);

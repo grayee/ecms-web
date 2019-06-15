@@ -17,11 +17,11 @@
           collect('field') -- 获取关于当前field的所有错误信息(list)
           has('field') -- 当前filed是否有错误(true/false)
           -->
-          <div v-show="errors.has('username')"  class="error">{{ errors.first('username') }}</div>
+          <div v-show="errors.has('username')" class="error">{{ errors.first('username') }}</div>
         </div>
 
         <div class="form-group has-feedback">
-          <input type="password" v-model="loginForm.password" name="password"  v-validate="'required'"
+          <input type="password" v-model="loginForm.password" name="password" v-validate="'required'"
                  class="form-control" placeholder="请输入密码">
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           <div v-show="errors.has('password')" class="error">{{ errors.first('password') }}</div>
@@ -56,7 +56,7 @@
             <div class="checkbox pull-right">
               <a href="#">忘记密码</a>
               <span>&nbsp;/&nbsp;</span>
-              <a href="#/register" class="text-center">注册</a>
+              <a href="/register" class="text-center">注册</a>
             </div>
           </div>
           <!-- /.col -->
@@ -64,7 +64,7 @@
 
         <div class="row">
           <div class="col-xs-12">
-            <button type="button" class="btn btn-danger btn-block btn-flat" @click="handleLogin('loginForm')">登 录</button>
+            <button type="button" class="btn btn-danger btn-block btn-flat" @click="handleLogin()">登 录</button>
           </div>
         </div>
 
@@ -113,30 +113,24 @@
       console.log("login view load finished!");
     },
     methods: {
-      handleLogin: function (message) {
+      handleLogin: function () {
         this.$validator.validateAll().then((valid) => {
           if (valid) {
-            this.$store.dispatch("LoginByUsername",this.loginForm).then(() => {
-              // 在这个时候进行获取后台权限及菜单
-             // this.$store.dispatch('getMenus', this.loginForm.username);
+            this.$store.dispatch("LoginByUsername", this.loginForm).then(() => {
               // 除了登录路由、和系统消息路由，这个跟路由是一个欢迎路由，是静态路由
-              this.$router.push({
-                path: '/admin'
-              });
-              //window.location = "/admin";
+              this.$router.push({path: '/'});
             }).catch(error => {
               this.msg = error;
-              setTimeout(()=>{
+              setTimeout(() => {
                 this.msg = "Welcome to Login";
-              },3000);
-              console.log(error);
+              }, 3000);
+              console.log("login failed with error:", error);
             });
-          }else{
-            console.log("validate form failed!");
+          } else {
+            console.log("validate login form field failed!");
             return false;
           }
         });
-        console.log("登录信息："+message);
       }
     }
   }
@@ -144,9 +138,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.checkbox{
-  width: 100%;
-  height: 100%;
-  border: none;
-}
+  .checkbox {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
 </style>

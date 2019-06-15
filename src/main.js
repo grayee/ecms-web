@@ -45,6 +45,8 @@ const i18n = new VueI18n({
 
 import api from './api' // 导入api接口
 Vue.prototype.$api = api; // 将api挂载到vue的原型上
+//login
+import './login.js'
 
 // 引入mockjs
 import './mock/mock'

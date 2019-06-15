@@ -1,12 +1,14 @@
-import {constantRouter} from '../../router';
+import {asyncRouter} from '../../router';
+
+const _import = require('../../router/_import_dev');
 
 const permission = {
   state: {
-    routers: constantRouter
+    addRouters: asyncRouter,
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
-      state.routers.concat(routers);
+      state.addRouters[0].children = asyncRouter[0].children.concat(routers);
     }
   },
   actions: {
@@ -15,27 +17,30 @@ const permission = {
         const {menus} = data;
         let accessedRouters = [];
         getRouterByMenu(menus, accessedRouters);
-        console.log(accessedRouters);
         commit('SET_ROUTERS', accessedRouters);
         resolve();
       })
     }
   },
+  getters: {
+    addRouters: state => state.addRouters
+  }
 };
 
-
 function getRouterByMenu(menus, routers) {
-    menus.forEach((menu) => {
-      if (menu.children && menu.children.length) {
-        getRouterByMenu(menu.children, routers);
-      }else{
-        const router = {};
-        router.name = menu.id;
-        router.path = menu.path;
-        router.component = menu.component;
-        routers.push(router)
+  menus.forEach((menu) => {
+    if (menu.children && menu.children.length) {
+      getRouterByMenu(menu.children, routers);
+    } else {
+      const router = {};
+      router.name = menu.text;
+      router.path = menu.path;
+      if (menu.attributes.component) {
+        router.components = _import(menu.attributes.component);
       }
-    });
+      routers.push(router)
+    }
+  });
   return routers;
 }
 

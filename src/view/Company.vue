@@ -59,20 +59,11 @@
               </div>
             </template>
 
-            <DataGrid style="height:100%"
-                      :pagination="true"
-                      :lazy="true"
-                      :pageList="pageList"
-                      :data="data"
-                      :total="total"
-                      :loading="loading"
-                      :pageNumber="pageNumber"
-                      :pageSize="pageSize"
-                      :pagePosition="pagePosition"
-                      :pageLinks="5"
+            <DataGrid style="height:100%" :pagination="true" :lazy="true" :pageList="pageList"
+                      :data="data" :total="total" :loading="loading" :pageNumber="pageNumber"
+                      :pageSize="pageSize" :pagePosition="pagePosition" :pageLinks="5"
                       :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
-                      @pageChange="onPageChange($event)"
-                      :selectionMode="'multiple'"
+                      @pageChange="onPageChange($event)" :selectionMode="'multiple'"
                       @selectionChange="selected($event)">
 
               <div slot="tpl" slot-scope="{datagrid}">
@@ -150,7 +141,7 @@
     data() {
       return {
         total: 0,
-        pageNumber: 1,
+        pageNumber: 0,
         pageSize: 20,
         data: [],
         checkedIds: [],
@@ -163,14 +154,14 @@
           {
             id: 1,
             title: "公司编码",
-            field: "code",
+            field: "companyNo",
             width: "5%",
             show: true
           },
           {
             id: 2,
             title: "公司名称",
-            field: "name",
+            field: "companyName",
             width: "10%",
             show: true
           }, {
@@ -188,7 +179,7 @@
           }, {
             id: 5,
             title: "公司邮编",
-            field: "postcode",
+            field: "postalCode",
             width: "8%",
             show: true
           }, {
@@ -200,7 +191,7 @@
           }, {
             id: 7,
             title: "联系电话",
-            field: "telPhone",
+            field: "tel",
             width: "12%",
             show: true
           }, {
@@ -219,7 +210,7 @@
           }, {
             id: 10,
             title: "注册时间",
-            field: "createTime",
+            field: "createDate",
             width: "8%",
             sortable: true,
             show: false
@@ -312,22 +303,16 @@
       },
       loadPage(pageNumber, pageSize) {
         this.loading = true;
-        setTimeout(() => {
-          this.$api.company.companyList({
-              pageNumber: 1,
-              pageSize: 20
-            }
-          ).then((response) => {
-            //console.log("--->", response.data);
-            let result = response.data;
-            this.total = result.total;
-            this.pageNumber = result.pageNumber;
-            this.data = result.rows;
-            this.loading = false;
-          }).catch(error => {
-            console.log("error", error);
-          });
-        }, 1000);
+        this.$api.company.companyList({pageNumber: 1,pageSize: 20}).then((response) => {
+          //console.log("--->", response.data);
+          let result = response.data.data;
+          this.total = result.totalCount;
+          this.pageNumber = result.pageNo;
+          this.data = result.content;
+          this.loading = false;
+        }).catch(error => {
+          console.log("error", error);
+        });
       },
       remove() {
         if (this.checkedIds.length <= 0) {
@@ -357,7 +342,7 @@
       },
       toAdd() {
         this.$router.push({
-          path: '/admin/company/add'
+          path: '/company/add'
         });
       },
       onRowClick(row) {

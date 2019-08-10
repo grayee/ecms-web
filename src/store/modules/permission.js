@@ -28,17 +28,26 @@ const permission = {
 };
 
 function getRouterByMenu(menus, routers) {
+  function getRouter(menu) {
+    const router = {};
+    router.name = menu.text;
+    router.path = menu.path;
+    if (menu.attributes.component) {
+      router.components = _import(menu.attributes.component);
+    }
+    return router;
+  }
+
   menus.forEach((menu) => {
     if (menu.children && menu.children.length) {
       getRouterByMenu(menu.children, routers);
     } else {
-      const router = {};
-      router.name = menu.text;
-      router.path = menu.path;
-      if (menu.attributes.component) {
-        router.components = _import(menu.attributes.component);
+      routers.push(getRouter(menu));
+      if (menu.attributes.pageBtn) {
+        menu.attributes.pageBtn.forEach(btn => {
+          routers.push(getRouter(btn))
+        });
       }
-      routers.push(router)
     }
   });
   return routers;

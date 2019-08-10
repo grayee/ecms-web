@@ -12,21 +12,18 @@ const whiteList = ['/login','/register', '/authredirect'];
  */
 
 router.beforeEach((to, from, next) => {
-  console.log(store.getters.token);
+  console.log(store.getters.token+"<==>"+store.getters.roles);
   if (store.getters.token) { // 判断是否有token，从vuex中取出
     if (to.path === '/login') {
       next({path: '/'})
     } else {
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetUserInfo').then(res => { // 拉取user_info
-          console.log("用户信息：" + JSON.stringify(res.data));
           // 在这个时候进行获取后台权限及菜单
           store.dispatch('GetMenus', store.getters.token).then((menus) => {
             // 把这个菜单信息注册为路由信息
             store.dispatch('GenerateRoutes', {menus}).then(() => { // 生成可访问的路由表
-              console.log("添加前",router.options.routes);
               router.addRoutes(store.getters.addRouters); // 动态添加可访问路由表
-              console.log("添加后",router);
               next({...to}) // hack方法 确保addRoutes已完成
             })
           });

@@ -7,7 +7,7 @@ import Register from '@/components/Register'
 import MainContent from '@/components/MainContent'
 
 Vue.use(Router);
-//静态路由
+//静态路由/-默认路由(无需登录就可以使用)
 export const constantRouter = [
   {path: '/login', name: '登录', component: Login, hidden: true}, {path: '/register', component: Register},
   {

@@ -342,7 +342,7 @@
       },
       toAdd() {
         this.$router.push({
-          path: '/company/add'
+          path: '/org/company/add',component:this
         });
       },
       onRowClick(row) {

@@ -49,6 +49,7 @@
             <TreeGrid ref="t1"  style="height:80%" :data="data" idField="id" treeField="text" :footerData="footerData"
                        :showFooter="true" @selectionChange="selection=$event">
               <GridColumn field="text" title="菜单名称"></GridColumn>
+              <GridColumn field="type" title="菜单类型"></GridColumn>
               <GridColumn field="path" title="路径"></GridColumn>
               <GridColumn field="component" title="组件名称"></GridColumn>
               <GridColumn field="orderNo" title="排序编码"></GridColumn>
@@ -148,21 +149,24 @@
     methods: {
       initData() {
         this.getData().then(result => {
-          const mapChildren = function (result) {
+          const mapMenu = function (result) {
             result.map(value => {
               value.date = value.attributes.modifyDate;
-              value.type = value.attributes.menuType;
+              value.type = value.attributes.menuType == 1 ? "功能菜单" : value.attributes.menuType == 0 ? "目录" : "页面按钮";
               value.orderNo = value.attributes.orderNo;
               value.component = value.attributes.component;
+              if(value.attributes.pageBtn){
+                value.children = value.attributes.pageBtn;
+              }
               delete value.attributes;
               if (value.children) {
-                mapChildren(value.children);
+                mapMenu(value.children);
               }
               return value;
             });
             return result;
           };
-          const menuList = mapChildren(result);
+          const menuList = mapMenu(result);
           this.data = menuList;
           this.menus = JSON.parse(JSON.stringify(menuList))
         });

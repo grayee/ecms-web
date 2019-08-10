@@ -28,7 +28,7 @@ const permission = {
 };
 
 function getRouterByMenu(menus, routers) {
-  function getRouter(menu) {
+  const mapRouter = function (menu) {
     const router = {};
     router.name = menu.text;
     router.path = menu.path;
@@ -36,16 +36,16 @@ function getRouterByMenu(menus, routers) {
       router.components = _import(menu.attributes.component);
     }
     return router;
-  }
+  };
 
   menus.forEach((menu) => {
     if (menu.children && menu.children.length) {
       getRouterByMenu(menu.children, routers);
     } else {
-      routers.push(getRouter(menu));
+      routers.push(mapRouter(menu));
       if (menu.attributes.pageBtn) {
         menu.attributes.pageBtn.forEach(btn => {
-          routers.push(getRouter(btn))
+          routers.push(mapRouter(btn))
         });
       }
     }

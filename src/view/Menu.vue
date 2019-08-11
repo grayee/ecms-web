@@ -149,10 +149,14 @@
     methods: {
       initData() {
         this.getData().then(result => {
-          const mapMenu = function (result) {
+          const mapMenu =  (result)=> {
             result.map(value => {
               value.date = value.attributes.modifyDate;
-              value.type = value.attributes.menuType == 1 ? "功能菜单" : value.attributes.menuType == 0 ? "目录" : "页面按钮";
+              const menuTypeMap = {};
+               this.menuType.forEach(mt => {
+                 menuTypeMap[mt.value] = mt.text;
+              });
+              value.type =menuTypeMap[value.attributes.menuType];
               value.orderNo = value.attributes.orderNo;
               value.component = value.attributes.component;
               if(value.attributes.pageBtn){

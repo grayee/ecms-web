@@ -25,7 +25,7 @@
             <div class="main">
              <div>
                 <Label for="name" align="left">公司名称:</Label>
-                <TextBox inputId="name" name="name" v-model="company.name" v-validate="'required|min:5'"
+                <TextBox inputId="name" name="name" v-model="company.companyName" v-validate="'required|min:5'"
                          placeholder="请输入公司名称"/>
                 <div class="error">{{ errors.first('name') }}</div>
               </div>
@@ -38,7 +38,7 @@
 
                 <div>
                   <Label for="code" align="left">公司编号:</Label>
-                  <TextBox inputId="code" name="code" v-model="company.code" v-validate="'required|alpha_num'"
+                  <TextBox inputId="code" name="code" v-model="company.companyNo" v-validate="'required|alpha_num'"
                            placeholder="请输入公司编号"/>
                   <div class="error">{{ errors.first('code') }}</div>
                 </div>
@@ -57,7 +57,7 @@
               </div>
               <div>
                 <Label for="parentCompany" align="left">所属公司:</Label>
-                <ComboTree name='parentCompany' :data="companyList" v-model="company.parent" placeholder="-请选择-">
+                <ComboTree name='parentCompany' :data="companyList" v-model="company.parentId" placeholder="-请选择-">
                   <Tree slot="tree"></Tree>
                 </ComboTree>
                 <div class="error">{{ errors.first('parentCompany') }}</div>
@@ -91,12 +91,12 @@
       return {
         loading: false,
         company: {
-          name: null,
+          companyName: null,
           shortName: null,
-          code: null,
+          companyNo: null,
           email: null,
           companyType: null,
-          parent: null
+          parentId: null
         },
         companyType: [
           {value: 11, text: "总公司"},

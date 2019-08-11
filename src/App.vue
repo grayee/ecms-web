@@ -29,6 +29,12 @@
  .panel-header {
    padding: 1px 5px;
  }
+  .l-btn-text{
+    line-height: 24px
+  }
+  .textbox-label {
+    width: 120px;
+  }
   /* 错误提示信息样式*/
  .error {
    color: red;

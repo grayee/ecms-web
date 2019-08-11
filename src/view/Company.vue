@@ -21,23 +21,24 @@
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
           <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
             <div style="margin-bottom:10px">
-              <Label for="d2">日期： </Label>
-              <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
-              至
-              <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
-              <Label for="c1">条件1: </Label>
+              <Label for="name">公司编码:</Label>
+              <TextBox inputId="name"></TextBox>
+              <Label for="c1">公司名称: </Label>
               <ComboBox inputId="c1" :data="data"></ComboBox>
             </div>
             <div style="margin-bottom:10px">
               <div style="float: left">
-                <Label for="name">条件2:</Label>
-                <TextBox inputId="name"></TextBox>
-                <Label for="n1">条件3:</Label>
+
+                <Label for="n1">公司简称:</Label>
                 <NumberBox inputId="n1" :value="100" :spinners="true"></NumberBox>
-              </div>
-              <div style="float: right">
-                <LinkButton iconCls="icon-search" style="width:80px">查询</LinkButton>
-                <LinkButton iconCls="icon-cancel" style="width:80px"> 重置</LinkButton>
+
+                <Label for="d2">创建日期： </Label>
+                <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
+                至
+                <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
+                <Label/>
+                <LinkButton iconCls="icon-search" style="width:60px">查询</LinkButton>
+                <LinkButton iconCls="icon-cancel" style="width:60px"> 重置</LinkButton>
               </div>
             </div>
           </Panel>

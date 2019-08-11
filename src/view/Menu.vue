@@ -26,12 +26,11 @@
                 <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
                 至
                 <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
+                <Label for="d2"> </Label>
+                <LinkButton iconCls="icon-search" style="width:60px" @click="search()">查询</LinkButton>
+                <LinkButton iconCls="icon-cancel" style="width:60px" @click="reset()"> 重置</LinkButton>
+              </div>
 
-              </div>
-              <div style="float: right">
-                <LinkButton iconCls="icon-search" style="width:80px" @click="search()">查询</LinkButton>
-                <LinkButton iconCls="icon-cancel" style="width:80px" @click="reset()"> 重置</LinkButton>
-              </div>
             </div>
           </Panel>
 

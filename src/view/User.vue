@@ -19,31 +19,24 @@
         | Your Page Content Here |
         -------------------------->
       <Layout>
-
-        <LayoutPanel region="west" :bodyStyle="{padding:'3px'}" style="width:150px;">
-          <Tree :data="menuData" :checkbox="true"></Tree>
-        </LayoutPanel>
-
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
           <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
             <div style="margin-bottom:10px">
-              <Label for="d2" style="text-align: right">日期： </Label>
-              <DateBox inputId="d2" v-model="value" format="yyyy-MM-dd"></DateBox>
-              至
-              <DateBox inputId="d2" v-model="value" format="yyyy-MM-dd"></DateBox>
-              <Label for="c1" style="text-align: right">条件1: </Label>
-              <ComboBox inputId="c1" v-model="value" :data="data"></ComboBox>
+              <Label for="loginName" style="text-align: right">登录账号: </Label>
+              <TextBox inputId="loginName"></TextBox>
+              <Label for="username" style="text-align: right">真实姓名: </Label>
+              <TextBox inputId="username"></TextBox>
+              <Label for="userStatus" style="text-align: right">用户状态: </Label>
+              <ComboBox inputId="userStatus" v-model="value" :data="data"></ComboBox>
             </div>
             <div style="margin-bottom:10px">
               <div style="float: left">
-                <Label for="name" style="text-align: right">条件2:</Label>
-                <TextBox inputId="name"></TextBox>
-                <Label for="n1" style="text-align: right">条件3:</Label>
-                <NumberBox inputId="n1" :value="100" :spinners="true"></NumberBox>
-              </div>
-              <div style="float: right">
-                <LinkButton iconCls="icon-search" style="width:80px">查询</LinkButton>
-                <LinkButton iconCls="icon-cancel" style="width:80px"> 重置</LinkButton>
+                <Label for="name" style="text-align: right">所属机构:</Label>
+                <ComboBox inputId="c1" v-model="value" :data="data"></ComboBox>
+                <Label for="search" style="text-align: right"></Label>
+                <LinkButton inputId = "search" iconCls="icon-search" style="width:60px">查询</LinkButton>
+                <LinkButton iconCls="icon-cancel" style="width:60px"> 重置</LinkButton>
+
               </div>
             </div>
           </Panel>
@@ -76,7 +69,7 @@
                       :pagePosition="pagePosition"
                       :pageLinks="5"
                       :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
-                      @pageChange="onPageChange($event)">
+                      @pageChange="onPageChange($event)"  :selectionMode="'multiple'"  @selectionChange="selected($event)">
 
               <div slot="tpl" slot-scope="{datagrid}">
                 &nbsp;第
@@ -110,12 +103,12 @@
                 </template>
               </GridColumn>
 
-              <GridColumn field="inv" title="Inv No"></GridColumn>
-              <GridColumn field="name" title="Name"></GridColumn>
-              <GridColumn field="amount" title="Amount" align="right" sortable="true"></GridColumn>
-              <GridColumn field="price" title="Price" align="right" sortable="true"></GridColumn>
-              <GridColumn field="cost" title="Cost" align="right"></GridColumn>
-              <GridColumn field="note" title="Note"></GridColumn>
+              <GridColumn field="inv" title="用户ID"></GridColumn>
+              <GridColumn field="name" title="用户名"></GridColumn>
+              <GridColumn field="amount" title="登录账号" align="right" sortable="true"></GridColumn>
+              <GridColumn field="price" title="状态" align="right" sortable="true"></GridColumn>
+              <GridColumn field="cost" title="密码有效期" align="right"></GridColumn>
+              <GridColumn field="note" title="创建时间"></GridColumn>
             </DataGrid>
 
           </Panel>
@@ -139,26 +132,6 @@
         pageSize: 20,
         data: [],
         checkedIds:[],
-        menuData: [
-          {
-            text: "Item1",
-            children: [
-              {text: "Item11"},
-              {
-                text: "Item12",
-                state: "closed",
-                children: [
-                  {text: "Iteme121"},
-                  {text: "Iteme122"},
-                  {text: "Iteme123"}
-                ]
-              },
-              {text: "Item13"},
-              {text: "Item14"}
-            ]
-          },
-          {text: "Item2"}
-        ],
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
@@ -184,7 +157,7 @@
           this.pageNumber = result.pageNumber;
           this.data = result.rows;
           this.loading = false;
-        }, 1000);
+        }, 100);
       },
       getData(pageNumber, pageSize) {
         let total = 100000;
@@ -219,7 +192,14 @@
         }else{
           this.checkedIds = [];
         }
-      }
+      },
+      selected(event) {
+        this.checkedIds = [];
+        let _this = this;
+        event.forEach(function (item, i) {
+          _this.checkedIds.push(item.inv);
+        });
+      },
     }
   };
 </script>

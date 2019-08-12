@@ -69,7 +69,7 @@
             <div class="divRow">
               <div>
                 <Label for="linkMan" align="right">联系人:</Label>
-                <TextBox inputId="linkMan" name="tel" v-model="company.linkMan"
+                <TextBox inputId="linkMan" name="linkMan" v-model="company.linkMan"
                          v-validate="'required|max:5'" placeholder="请输入联系人"/>
                 <div class="error">{{ errors.first('linkMan') }}</div>
               </div>
@@ -77,7 +77,7 @@
               <div>
                 <Label for="tel" align="right">联系电话:</Label>
                 <TextBox inputId="tel" name="tel" v-model="company.tel"
-                         v-validate="'required|max:5'" placeholder="请输入联系电话"/>
+                         v-validate="'required|max:11'" placeholder="请输入联系电话"/>
                 <div class="error">{{ errors.first('tel') }}</div>
               </div>
             </div>
@@ -85,7 +85,7 @@
               <div class="divRow">
                 <div>
                   <Label for="webSite" align="right">公司网址:</Label>
-                  <TextBox inputId="webSite" name="tel" v-model="company.webSite"
+                  <TextBox inputId="webSite" name="webSite" v-model="company.webSite"
                            v-validate="'required|max:5'" placeholder="请输入公司网址"/>
                   <div class="error">{{ errors.first('webSite') }}</div>
                 </div>
@@ -245,7 +245,7 @@
   .divRow > div {
     width: 48%;
     float: left;
-    padding: 5px;
+    padding: 3px;
   }
   .formBtn{
     text-align:center;

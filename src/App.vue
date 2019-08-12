@@ -40,4 +40,8 @@
    color: red;
    font-size: 12px;
  }
+ /*标签右对齐*/
+  label {
+    text-align: right
+  }
 </style>

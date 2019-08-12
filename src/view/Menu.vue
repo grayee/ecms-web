@@ -73,23 +73,23 @@
                 <div class="error">{{ errors.first('menuParent') }}</div>
 
                 <Label for="menuName" align="right">菜单名称:</Label>
-                <TextBox inputId="menuName" name="menuName" v-model="menu.name" style="width:20em"
+                <TextBox inputId="menuName" name="menuName" v-model="menu.name" style="width:18em"
                          v-validate="'required|max:10'" placeholder="请输入菜单名称"></TextBox>
                 <span style="color: red; ">*</span>
                 <div class="error">{{ errors.first('menuName') }}</div>
 
                 <Label for="menuPath" align="right">菜单路径:</Label>
-                <TextBox inputId="menuPath" name="menuPath" v-model="menu.url" style="width:20em"
+                <TextBox inputId="menuPath" name="menuPath" v-model="menu.url" style="width:18em"
                          v-validate="'max:100'" placeholder="请输入菜单路径"></TextBox>
                 <div class="error">{{ errors.first('menuPath') }}</div>
 
                 <Label for="component" align="right">组件名称:</Label>
-                <TextBox inputId="component" name="component" v-model="menu.component" style="width:20em"
+                <TextBox inputId="component" name="component" v-model="menu.component" style="width:18em"
                          v-validate="'max:100'" placeholder="请输入组件名称"></TextBox>
                 <div class="error">{{ errors.first('component') }}</div>
 
                 <Label for="menuIcon" align="right">菜单图标:</Label>
-                <TextBox inputId="menuIcon" name="menuIcon" v-model="menu.icon" style="width:20em"
+                <TextBox inputId="menuIcon" name="menuIcon" v-model="menu.icon" style="width:18em"
                          v-validate="'required'" placeholder="请输入菜单图标样式"></TextBox>
                 <div class="error">{{ errors.first('menuIcon') }}</div>
 
@@ -100,7 +100,7 @@
 
                 <Label for="remark" align="right">备注信息:</Label>
                 <TextBox inputId="remark" name="remark" :multiline="true" v-model="menu.remark"
-                         style="width:63%;height:100px;"></TextBox>
+                         style="width:218px;height:100px;"></TextBox>
                 <div class="error">{{ errors.first('remark') }}</div>
               </Form>
             </div>
@@ -291,10 +291,6 @@
     color: red;
     font-size: 12px;
     margin: 4px 120px;
-  }
-
-  Label {
-    text-align: right
   }
 </style>
 <!--

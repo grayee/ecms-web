@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import app from './modules/app';
 import user from './modules/user';
 import permission from './modules/permission';
-
+import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex);
 
 /**
@@ -23,7 +23,18 @@ const store = new Vuex.Store({
     app,
     user,
     permission
-  }
+  },
+  plugins: [
+    createPersistedState({
+      storage: window.sessionStorage,
+      reducer(val) {
+        return {
+          // 只储存state中的user
+          user: val.roles
+        }
+      }
+    })
+  ]
 });
 
 export default store;

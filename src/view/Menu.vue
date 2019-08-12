@@ -19,14 +19,14 @@
           <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
             <div style="margin-bottom:10px">
               <div style="float: left">
-                <Label for="name">菜单名称:</Label>
+                <Label for="name" align="right">菜单名称:</Label>
                 <TextBox inputId="name"  v-model="menuName"></TextBox>
 
-                <Label for="d2">修改日期： </Label>
+                <Label for="d2" align="right">修改日期： </Label>
                 <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
                 至
                 <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
-                <Label for="d2"> </Label>
+                <Label/>
                 <LinkButton iconCls="icon-search" style="width:60px" @click="search()">查询</LinkButton>
                 <LinkButton iconCls="icon-cancel" style="width:60px" @click="reset()"> 重置</LinkButton>
               </div>
@@ -60,45 +60,45 @@
                   bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
             <div class="f-full" style="padding: 20px 60px 20px 20px">
               <Form ref="form" :model="menu">
-                <Label for="menuType" align="left">菜单类型:</Label>
+                <Label for="menuType" align="right">菜单类型:</Label>
                 <label v-for="(mt,index) in menuType" :key="index">
                   <input type="radio" :value='mt.value' v-model="menu.type">{{mt.text}} &nbsp;&nbsp;
                 </label>
                 <div class="error">{{ errors.first('menuType') }}</div>
 
-                <Label for="menuParent" align="left">上级菜单:</Label>
+                <Label for="menuParent" align="right">上级菜单:</Label>
                 <ComboTree name='menuParent' :data="menus" v-model="menu.parentId" placeholder="-请选择-">
                   <Tree slot="tree"></Tree>
                 </ComboTree>
                 <div class="error">{{ errors.first('menuParent') }}</div>
 
-                <Label for="menuName" align="left">菜单名称:</Label>
+                <Label for="menuName" align="right">菜单名称:</Label>
                 <TextBox inputId="menuName" name="menuName" v-model="menu.name" style="width:20em"
                          v-validate="'required|max:10'" placeholder="请输入菜单名称"></TextBox>
                 <span style="color: red; ">*</span>
                 <div class="error">{{ errors.first('menuName') }}</div>
 
-                <Label for="menuPath" align="left">菜单路径:</Label>
+                <Label for="menuPath" align="right">菜单路径:</Label>
                 <TextBox inputId="menuPath" name="menuPath" v-model="menu.url" style="width:20em"
                          v-validate="'max:100'" placeholder="请输入菜单路径"></TextBox>
                 <div class="error">{{ errors.first('menuPath') }}</div>
 
-                <Label for="component" align="left">组件名称:</Label>
+                <Label for="component" align="right">组件名称:</Label>
                 <TextBox inputId="component" name="component" v-model="menu.component" style="width:20em"
                          v-validate="'max:100'" placeholder="请输入组件名称"></TextBox>
                 <div class="error">{{ errors.first('component') }}</div>
 
-                <Label for="menuIcon" align="left">菜单图标:</Label>
+                <Label for="menuIcon" align="right">菜单图标:</Label>
                 <TextBox inputId="menuIcon" name="menuIcon" v-model="menu.icon" style="width:20em"
                          v-validate="'required'" placeholder="请输入菜单图标样式"></TextBox>
                 <div class="error">{{ errors.first('menuIcon') }}</div>
 
-                <Label for="orderNo" align="left">排序编码:</Label>
+                <Label for="orderNo" align="right">排序编码:</Label>
                 <NumberBox inputId="orderNo" name="orderNo" v-model="menu.orderNo" v-validate="'required'"
                            placeholder="请输入排序编码" :value="100" :spinners="true"></NumberBox>
                 <div class="error">{{ errors.first('orderNo') }}</div>
 
-                <Label for="remark" align="left">备注信息:</Label>
+                <Label for="remark" align="right">备注信息:</Label>
                 <TextBox inputId="remark" name="remark" :multiline="true" v-model="menu.remark"
                          style="width:63%;height:100px;"></TextBox>
                 <div class="error">{{ errors.first('remark') }}</div>
@@ -290,7 +290,7 @@
   .error {
     color: red;
     font-size: 12px;
-    margin: 4px 0 0 80px;
+    margin: 4px 120px;
   }
 
   Label {

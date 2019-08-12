@@ -15,7 +15,10 @@ const company = {
     return axios.get(`${base.sq}/org/company/detail/${id}`, {
       params: params
     });
-  }
+  },
+  companyDel(param) {
+    return axios.delete(`${base.sq}/org/company`, {data: param});
+  },
   // 其他接口…………
 };
 

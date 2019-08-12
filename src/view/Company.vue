@@ -21,18 +21,18 @@
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
           <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
             <div style="margin-bottom:10px">
-              <Label for="name">公司编码:</Label>
+              <Label for="name" align="right">公司编码:</Label>
               <TextBox inputId="name"></TextBox>
-              <Label for="c1">公司名称: </Label>
+              <Label for="c1" align="right">公司名称: </Label>
               <ComboBox inputId="c1" :data="data"></ComboBox>
             </div>
             <div style="margin-bottom:10px">
               <div style="float: left">
 
-                <Label for="n1">公司简称:</Label>
+                <Label for="n1" align="right">公司简称:</Label>
                 <NumberBox inputId="n1" :value="100" :spinners="true"></NumberBox>
 
-                <Label for="d2">创建日期： </Label>
+                <Label for="d2" align="right">创建日期： </Label>
                 <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
                 至
                 <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
@@ -150,7 +150,6 @@
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
-        selection: null,
         displayColumns: [
           {
             id: 1,
@@ -304,7 +303,7 @@
       },
       loadPage(pageNumber, pageSize) {
         this.loading = true;
-        this.$api.company.companyList({pageNumber: 1,pageSize: 20}).then((response) => {
+        this.$api.company.companyList({pageNumber: 1, pageSize: 20}).then((response) => {
           //console.log("--->", response.data);
           let result = response.data.data;
           this.total = result.totalCount;
@@ -316,7 +315,14 @@
         });
       },
       remove() {
-        if (this.checkedIds.length <= 0) {
+        if (this.checkedIds.length > 0) {
+          this.$api.company.companyDel(this.checkedIds).then((response) => {
+            console.log("--->", response);
+            this.loadPage(this.pageNumber, this.pageSize);
+          }).catch(error => {
+            console.log("error", error);
+          });
+        } else {
           this.$messager.alert({
             title: "提示信息",
             icon: "warning",
@@ -343,7 +349,7 @@
       },
       toAdd() {
         this.$router.push({
-          path: '/org/company/add',component:this
+          path: '/org/company/add', component: this
         });
       },
       onRowClick(row) {
@@ -391,7 +397,7 @@
     margin: 4px 0 0 80px;
   }
 
-  Label {
+  label {
     text-align: right;
     margin-left: 5px;
   }

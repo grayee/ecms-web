@@ -27,13 +27,13 @@
               <div>
                 <Label for="name" align="right">公司名称:</Label>
                 <TextBox inputId="name" name="name" v-model="company.companyName" v-validate="'required|min:5'"
-                         placeholder="请输入公司名称"/>
+                         style="width:18em" placeholder="请输入公司名称"/>
                 <div class="error">{{ errors.first('name') }}</div>
               </div>
               <div>
                 <Label for="shortName" align="right">公司简称:</Label>
                 <TextBox inputId="shortName" name="shortName" v-model="company.shortName"
-                         v-validate="'required|max:5'" placeholder="请输入公司简称"/>
+                         v-validate="'required|max:5'" style="width:18em" placeholder="请输入公司简称"/>
                 <div class="error">{{ errors.first('shortName') }}</div>
               </div>
             </div>
@@ -47,7 +47,7 @@
                 <div>
                   <Label for="email" align="right">电子邮件:</Label>
                   <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="company.email"
-                           placeholder="请输入邮件地址"></TextBox>
+                           style="width:18em" placeholder="请输入邮件地址"></TextBox>
                   <div class="error">{{ errors.first('email') }}</div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
               <div>
                 <Label for="linkMan" align="right">联系人:</Label>
                 <TextBox inputId="linkMan" name="linkMan" v-model="company.linkMan"
-                         v-validate="'required|max:5'" placeholder="请输入联系人"/>
+                         v-validate="'required|max:5'" style="width:18em" placeholder="请输入联系人"/>
                 <div class="error">{{ errors.first('linkMan') }}</div>
               </div>
 
@@ -86,13 +86,13 @@
                 <div>
                   <Label for="webSite" align="right">公司网址:</Label>
                   <TextBox inputId="webSite" name="webSite" v-model="company.webSite"
-                           v-validate="'required|max:5'" placeholder="请输入公司网址"/>
+                           v-validate="'required|max:5'" style="width:18em" placeholder="请输入公司网址"/>
                   <div class="error">{{ errors.first('webSite') }}</div>
                 </div>
                 <div>
                   <Label for="address" align="right">公司地址:</Label>
                   <TextBox inputId="t2" name="address"   v-model="company.address"
-                           v-validate="'required|max:5'" placeholder="请输入公司地址"></TextBox>
+                           v-validate="'required|max:5'" style="width:20em"  placeholder="请输入公司地址"></TextBox>
                   <div class="error">{{ errors.first('address') }}</div>
                 </div>
               </div>
@@ -139,78 +139,22 @@
           {value: 13, text: "本部"},
           {value: 20, text: "中支公司"}
         ],
-        companyList: [
-          {
-            id: 1,
-            text: "XX集团",
-            children: [
-              {
-                id: 11,
-                text: "北京分公司",
-                state: "closed",
-                children: [
-                  {
-                    id: 111,
-                    text: "海淀营业部"
-                  },
-                  {
-                    id: 112,
-                    text: "朝阳营业部"
-                  },
-                  {
-                    id: 113,
-                    text: "东城营业部"
-                  }
-                ]
-              },
-              {
-                id: 12,
-                text: "上海分公司",
-                children: [
-                  {
-                    id: 121,
-                    text: "浦东营业部"
-                  },
-                  {
-                    id: 122,
-                    text: "闽西营业部"
-                  },
-                  {
-                    id: 123,
-                    text: "上海滩营业部"
-                  }
-                ]
-              },
-              {
-                id: 13,
-                text: "河北分公司"
-              },
-              {
-                id: 14,
-                text: "石家庄营业部"
-              },
-              {
-                id: 15,
-                text: "邯郸营业部"
-              }
-            ]
-          }
-        ]
+        companyList: []
       };
     },
     created() {
-
+      this.getOrgRelation();
     },
     methods: {
-
-      edit() {
-        console.log("edit");
-      },
-      refresh() {
-        console.log("refresh");
-      },
-      print() {
-        console.log("add");
+      getOrgRelation(){
+        this.$api.org.getRelationTree('').then((response)=>{
+          console.log(response);
+          if(response.status===200){
+            this.companyList = response.data.data;
+          }
+        }).catch(error => {
+          console.log("error", error);
+        });
       },
       goBack() {
         this.$router.go(-1)
@@ -220,7 +164,10 @@
           if (valid) {
             console.log("commit json data:" + JSON.stringify(this.company))
             this.$api.company.companyAdd(this.company).then((response) => {
-              console.log("--->", response.data);
+              console.log(response);
+              this.$router.push({
+                path: '/org/company'
+              });
             }).catch(error => {
               console.log("error", error);
             });

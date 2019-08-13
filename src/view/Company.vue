@@ -27,8 +27,6 @@
               <ComboBox inputId="c1" :data="data"></ComboBox>
             </div>
             <div style="margin-bottom:10px">
-              <div style="float: left">
-
                 <Label for="n1" align="right">公司简称:</Label>
                 <NumberBox inputId="n1" :value="100" :spinners="true"></NumberBox>
 
@@ -39,7 +37,6 @@
                 <Label/>
                 <LinkButton iconCls="icon-search" style="width:60px">查询</LinkButton>
                 <LinkButton iconCls="icon-cancel" style="width:60px"> 重置</LinkButton>
-              </div>
             </div>
           </Panel>
 
@@ -396,12 +393,6 @@
   .error {
     margin: 4px 0 0 80px;
   }
-
-  label {
-    text-align: right;
-    margin-left: 5px;
-  }
-
   .dataList {
     display: flex;
     align-items: center;

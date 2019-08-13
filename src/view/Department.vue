@@ -21,24 +21,22 @@
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
           <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
             <div style="margin-bottom:10px">
-              <Label for="d2">日期： </Label>
-              <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
-              至
-              <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
-              <Label for="c1">条件1: </Label>
+              <Label for="name" align="right">公司编码:</Label>
+              <TextBox inputId="name"></TextBox>
+              <Label for="c1" align="right">公司名称: </Label>
               <ComboBox inputId="c1" :data="data"></ComboBox>
             </div>
             <div style="margin-bottom:10px">
-              <div style="float: left">
-                <Label for="name">条件2:</Label>
-                <TextBox inputId="name"></TextBox>
-                <Label for="n1">条件3:</Label>
-                <NumberBox inputId="n1" :value="100" :spinners="true"></NumberBox>
-              </div>
-              <div style="float: right">
-                <LinkButton iconCls="icon-search" style="width:80px">查询</LinkButton>
-                <LinkButton iconCls="icon-cancel" style="width:80px"> 重置</LinkButton>
-              </div>
+              <Label for="n1" align="right">公司简称:</Label>
+              <NumberBox inputId="n1" :value="100" :spinners="true"></NumberBox>
+
+              <Label for="d2" align="right">创建日期： </Label>
+              <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
+              至
+              <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
+              <Label/>
+              <LinkButton iconCls="icon-search" style="width:60px">查询</LinkButton>
+              <LinkButton iconCls="icon-cancel" style="width:60px"> 重置</LinkButton>
             </div>
           </Panel>
 
@@ -59,20 +57,11 @@
               </div>
             </template>
 
-            <DataGrid style="height:100%"
-                      :pagination="true"
-                      :lazy="true"
-                      :pageList="pageList"
-                      :data="data"
-                      :total="total"
-                      :loading="loading"
-                      :pageNumber="pageNumber"
-                      :pageSize="pageSize"
-                      :pagePosition="pagePosition"
-                      :pageLinks="5"
+            <DataGrid style="height:100%" :pagination="true" :lazy="true" :pageList="pageList"
+                      :data="data" :total="total" :loading="loading" :pageNumber="pageNumber"
+                      :pageSize="pageSize" :pagePosition="pagePosition" :pageLinks="5"
                       :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
-                      @pageChange="onPageChange($event)"
-                      :selectionMode="'multiple'"
+                      @pageChange="onPageChange($event)" :selectionMode="'multiple'"
                       @selectionChange="selected($event)">
 
               <div slot="tpl" slot-scope="{datagrid}">
@@ -150,7 +139,7 @@
     data() {
       return {
         total: 0,
-        pageNumber: 1,
+        pageNumber: 0,
         pageSize: 20,
         data: [],
         checkedIds: [],
@@ -158,19 +147,18 @@
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
-        selection: null,
         displayColumns: [
           {
             id: 1,
             title: "公司编码",
-            field: "code",
+            field: "companyNo",
             width: "5%",
             show: true
           },
           {
             id: 2,
             title: "公司名称",
-            field: "name",
+            field: "companyName",
             width: "10%",
             show: true
           }, {
@@ -188,7 +176,7 @@
           }, {
             id: 5,
             title: "公司邮编",
-            field: "postcode",
+            field: "postalCode",
             width: "8%",
             show: true
           }, {
@@ -200,7 +188,7 @@
           }, {
             id: 7,
             title: "联系电话",
-            field: "telPhone",
+            field: "tel",
             width: "12%",
             show: true
           }, {
@@ -219,7 +207,7 @@
           }, {
             id: 10,
             title: "注册时间",
-            field: "createTime",
+            field: "createDate",
             width: "8%",
             sortable: true,
             show: false
@@ -312,25 +300,26 @@
       },
       loadPage(pageNumber, pageSize) {
         this.loading = true;
-        setTimeout(() => {
-          this.$api.company.companyList({
-              pageNumber: 1,
-              pageSize: 20
-            }
-          ).then((response) => {
-            //console.log("--->", response.data);
-            let result = response.data;
-            this.total = result.total;
-            this.pageNumber = result.pageNumber;
-            this.data = result.rows;
-            this.loading = false;
+        this.$api.company.companyList({pageNumber: 1, pageSize: 20}).then((response) => {
+          //console.log("--->", response.data);
+          let result = response.data.data;
+          this.total = result.totalCount;
+          this.pageNumber = result.pageNo;
+          this.data = result.content;
+          this.loading = false;
+        }).catch(error => {
+          console.log("error", error);
+        });
+      },
+      remove() {
+        if (this.checkedIds.length > 0) {
+          this.$api.company.companyDel(this.checkedIds).then((response) => {
+            console.log("--->", response);
+            this.loadPage(this.pageNumber, this.pageSize);
           }).catch(error => {
             console.log("error", error);
           });
-        }, 1000);
-      },
-      remove() {
-        if (this.checkedIds.length <= 0) {
+        } else {
           this.$messager.alert({
             title: "提示信息",
             icon: "warning",
@@ -357,7 +346,7 @@
       },
       toAdd() {
         this.$router.push({
-          path: '/admin/company/add'
+          path: '/org/company/add', component: this
         });
       },
       onRowClick(row) {
@@ -403,11 +392,6 @@
 <style scoped>
   .error {
     margin: 4px 0 0 80px;
-  }
-
-  Label {
-    text-align: right;
-    margin-left: 5px;
   }
 
   .dataList {

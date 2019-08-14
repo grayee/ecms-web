@@ -10,7 +10,7 @@
       <form ref="form" :model="loginForm" novalidate="novalidate" class="bv-form">
         <div class="form-group has-feedback">
           <input type="text" v-model="loginForm.username" name="username" v-validate="'required'"
-                 class="form-control" placeholder="请输入登录邮箱/登录名" data-bv-field="username">
+                 class="form-control" @keyup.enter="handleLogin"  placeholder="请输入登录邮箱/登录名" data-bv-field="username">
           <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
           <!--
           errors.first('field') -- 获取关于当前field的第一个错误信息
@@ -22,7 +22,7 @@
 
         <div class="form-group has-feedback">
           <input type="password" v-model="loginForm.password" name="password" v-validate="'required'"
-                 class="form-control" placeholder="请输入密码">
+                 class="form-control" @keyup.enter="handleLogin" placeholder="请输入密码">
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           <div v-show="errors.has('password')" class="error">{{ errors.first('password') }}</div>
         </div>
@@ -64,7 +64,7 @@
 
         <div class="row">
           <div class="col-xs-12">
-            <button type="button" class="btn btn-danger btn-block btn-flat" @click="handleLogin()">登 录</button>
+            <button type="button" class="btn btn-danger btn-block btn-flat" @click="handleLogin">登 录</button>
           </div>
         </div>
 

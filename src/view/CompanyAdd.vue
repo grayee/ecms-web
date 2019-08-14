@@ -45,10 +45,10 @@
                   <div class="error">{{ errors.first('code') }}</div>
                 </div>
                 <div>
-                  <Label for="email" align="right">电子邮件:</Label>
-                  <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="company.email"
-                           style="width:18em" placeholder="请输入邮件地址"></TextBox>
-                  <div class="error">{{ errors.first('email') }}</div>
+                  <Label for="companyFlag" align="right">公司标识:</Label>
+                  <TextBox inputId="companyFlag" v-validate="'required'" name="companyFlag" v-model="company.companyFlag"
+                           style="width:18em" placeholder="请输入公司标识"></TextBox>
+                  <div class="error">{{ errors.first('companyFlag') }}</div>
                 </div>
             </div>
             <div class="divRow">
@@ -60,17 +60,31 @@
               </div>
               <div>
                 <Label for="parentCompany" align="right">所属公司:</Label>
-                <ComboTree name='parentCompany' :data="companyList" v-model="company.parentId" placeholder="-请选择-">
+                <ComboTree name='parentCompany' :data="companyList" v-model="company.parentId" @click=""  placeholder="-请选择-">
                   <Tree slot="tree"></Tree>
                 </ComboTree>
                 <div class="error">{{ errors.first('parentCompany') }}</div>
               </div>
             </div>
+              <div class="divRow">
+                <div>
+                  <Label for="fax" align="right">传真地址:</Label>
+                  <TextBox inputId="fax" name="fax" v-model="company.fax" v-validate="'required|alpha_num'"
+                           placeholder="请输入传真地址"/>
+                  <div class="error">{{ errors.first('fax') }}</div>
+                </div>
+                <div>
+                  <Label for="email" align="right">电子邮件:</Label>
+                  <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="company.email"
+                           style="width:18em" placeholder="请输入邮件地址"></TextBox>
+                  <div class="error">{{ errors.first('email') }}</div>
+                </div>
+              </div>
             <div class="divRow">
               <div>
                 <Label for="linkMan" align="right">联系人:</Label>
                 <TextBox inputId="linkMan" name="linkMan" v-model="company.linkMan"
-                         v-validate="'required|max:5'" style="width:18em" placeholder="请输入联系人"/>
+                         v-validate="'required|max:20'" style="width:18em" placeholder="请输入联系人"/>
                 <div class="error">{{ errors.first('linkMan') }}</div>
               </div>
 
@@ -86,20 +100,20 @@
                 <div>
                   <Label for="webSite" align="right">公司网址:</Label>
                   <TextBox inputId="webSite" name="webSite" v-model="company.webSite"
-                           v-validate="'required|max:5'" style="width:18em" placeholder="请输入公司网址"/>
+                           v-validate="'required|max:100'" style="width:18em" placeholder="请输入公司网址"/>
                   <div class="error">{{ errors.first('webSite') }}</div>
                 </div>
                 <div>
                   <Label for="address" align="right">公司地址:</Label>
                   <TextBox inputId="t2" name="address"   v-model="company.address"
-                           v-validate="'required|max:5'" style="width:20em"  placeholder="请输入公司地址"></TextBox>
+                           v-validate="'required|max:200'" style="width:20em"  placeholder="请输入公司地址"></TextBox>
                   <div class="error">{{ errors.first('address') }}</div>
                 </div>
               </div>
               <div class="divRow">
                 <div>
                   <Label for="remark" align="right">备注:</Label>
-                  <TextBox inputId="t2" name="remark" :multiline="true" :value="description"
+                  <TextBox inputId="t2" name="remark" :multiline="true"  v-model="company.remark" :value="description"
                            style="width:73%;height:120px;"></TextBox>
                   <div class="error">{{ errors.first('remark') }}</div>
                 </div>
@@ -125,14 +139,7 @@
     data() {
       return {
         loading: false,
-        company: {
-          companyName: null,
-          shortName: null,
-          companyNo: null,
-          email: null,
-          companyType: null,
-          parentId: null
-        },
+        company: {},
         companyType: [
           {value: 11, text: "总公司"},
           {value: 12, text: "分公司"},
@@ -162,12 +169,8 @@
       submitForm() {
         this.$validator.validateAll().then((valid) => {
           if (valid) {
-            console.log("commit json data:" + JSON.stringify(this.company))
             this.$api.company.companyAdd(this.company).then((response) => {
-              console.log(response);
-              this.$router.push({
-                path: '/org/company'
-              });
+              this.$router.push({path: '/org/company'});
             }).catch(error => {
               console.log("error", error);
             });

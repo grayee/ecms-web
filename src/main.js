@@ -23,6 +23,9 @@ import 'admin-lte/dist/js/pages/dashboard2'
 //AdminLTE for demo purposes
 import 'admin-lte/dist/js/demo'
 
+//时间格式化组件moment
+import moment from 'moment'
+
 //easy UI
 import 'vx-easyui/dist/themes/bootstrap/easyui.css';
 import 'vx-easyui/dist/themes/icon.css';
@@ -58,7 +61,10 @@ Vue.use(VeeValidate, {
     zh_CN: zh_CN
   }
 });
-
+//全局过滤器
+Vue.filter('dateFmt', function(inputStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
+  return moment(inputStr).format(pattern);
+});
 
 const dictionary = {
   zh_CN: {

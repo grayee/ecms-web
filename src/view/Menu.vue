@@ -230,19 +230,8 @@
       },
       edit() {
         if (this.selection.id) {
-          console.log(this.selection);
           this.$api.menu.menuDetail(this.selection.id).then((response) => {
-            const result = response.data.data;
-            this.menu.id = result.id;
-            this.menu.parentId = result.parentId;
-            this.menu.name = result.name;
-            this.menu.type = result.type;
-            this.menu.url = result.url;
-            this.menu.component = result.component;
-            this.menu.orderNo = result.orderNo;
-            this.menu.remark = result.remark;
-            this.menu.icon = result.icon;
-            this.menu.version = result.version;
+            this.menu = response.data.data;
           }).catch(error => {
             console.log("get menu detail error", error);
           });

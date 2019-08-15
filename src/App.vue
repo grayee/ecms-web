@@ -29,6 +29,12 @@
  .panel-header {
    padding: 1px 5px;
  }
+ .panel {
+   height:100%;
+ }
+ .content{
+   min-height: 500px;
+ }
   .l-btn-text{
     line-height: 24px
   }

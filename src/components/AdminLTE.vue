@@ -189,12 +189,13 @@
 
   .main-body {
     background: #ecf0f5;
-    min-height: 400px;
+    min-height: 600px;
     width: 1000px;
   }
 
   .sidebar-body {
     background: #222d32;
+    min-height: 600px;
   }
 
   .sidebar-user {

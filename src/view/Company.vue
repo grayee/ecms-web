@@ -256,11 +256,11 @@
           if (field.endsWith("From")) {
             filter.property = field.substr(0, field.indexOf("From"));
             filter.operator = "greaterThanOrEqualTo";
-            filter.value = moment(this.company[field]).format('YYYY-MM-DD HH:mm:ss');
+            filter.value = moment(this.company[field]).startOf('day').format('YYYY-MM-DD HH:mm:ss');
           } else if (field.endsWith("To")) {
             filter.property = field.substr(0, field.indexOf("To"));
             filter.operator = "lessThanOrEqualTo";
-            filter.value = moment(this.company[field]).format('YYYY-MM-DD HH:mm:ss');
+            filter.value = moment(this.company[field]).endOf('day').format('YYYY-MM-DD HH:mm:ss');
           } else {
             filter.property = field;
             filter.operator = "like";
@@ -269,6 +269,9 @@
           filters.push(filter);
         }
         this.loadPage(this.pageNumber, this.pageSize, filters);
+      },
+      reset(){
+        this.company = {};
       },
       remove() {
         if (this.checkedIds.length > 0) {
@@ -287,7 +290,16 @@
         }
       },
       edit() {
-        console.log("edit");
+        if (this.checkedIds.length === 1) {
+          //path来匹配路由，然后通过query来传递参数
+          this.$router.push({path: '/org/company/add?id=' + this.checkedIds[0]});
+        } else {
+          this.$messager.alert({
+            title: "提示信息",
+            icon: "warning",
+            msg: "请至少选中一条记录!"
+          });
+        }
       },
       refresh() {
         location.reload();

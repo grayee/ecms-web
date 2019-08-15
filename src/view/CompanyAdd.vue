@@ -33,7 +33,7 @@
               <div>
                 <Label for="shortName" align="right">公司简称:</Label>
                 <TextBox inputId="shortName" name="shortName" v-model="company.shortName"
-                         v-validate="'required|max:5'" style="width:18em" placeholder="请输入公司简称"/>
+                         v-validate="'required|max:10'" style="width:18em" placeholder="请输入公司简称"/>
                 <div class="error">{{ errors.first('shortName') }}</div>
               </div>
             </div>
@@ -113,7 +113,7 @@
               <div class="divRow">
                 <div>
                   <Label for="remark" align="right">备注:</Label>
-                  <TextBox inputId="t2" name="remark" :multiline="true"  v-model="company.remark" :value="description"
+                  <TextBox inputId="t2" name="remark" :multiline="true"  v-model="company.remark"
                            style="width:73%;height:120px;"></TextBox>
                   <div class="error">{{ errors.first('remark') }}</div>
                 </div>
@@ -151,11 +151,18 @@
     },
     created() {
       this.getOrgRelation();
+      if (this.$route.query.id !=null) {
+        this.$api.company.companyDetail(this.$route.query.id).then((response) => {
+          this.company = response.data.data;
+          console.log(this.company);
+        }).catch(error => {
+          console.log("get menu detail error", error);
+        });
+      }
     },
     methods: {
       getOrgRelation(){
         this.$api.org.getRelationTree('').then((response)=>{
-          console.log(response);
           if(response.status===200){
             this.companyList = response.data.data;
           }

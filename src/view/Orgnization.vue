@@ -16,9 +16,9 @@
     <!-- Main content -->
     <section class="content container-fluid" style="background: rgb(255, 255, 255);padding:5px">
       <Layout>
-        <LayoutPanel region="west" :bodyStyle="{padding:'3px'}" style="width:150px;">
+        <LayoutPanel region="west" :bodyStyle="{padding:'3px'}" style="width:200px;">
           <Panel title="组织机构树" :bodyStyle="{padding:'3px',marginBottom:'5px',height: '100%'}">
-            <Tree :data="orgRelationData" :checkbox="false"></Tree>
+            <Tree :data="orgRelationData" :checkbox="false" @selectionChange="selected($event)"></Tree>
           </Panel>
         </LayoutPanel>
 
@@ -31,25 +31,20 @@
                 <div class="f-full" style="line-height:30px">详情</div>
                 <div>
                   <LinkButton iconCls="icon-add" :plain="true">新增</LinkButton>
-                  <LinkButton iconCls="icon-reload" :plain="true">刷新</LinkButton>
-                  <LinkButton iconCls="icon-remove" :plain="true">删除</LinkButton>
                   <LinkButton iconCls="icon-edit" :plain="true">编辑</LinkButton>
-                  <LinkButton iconCls="icon-print" :plain="true">打印</LinkButton>
-                  <LinkButton iconCls="icon-back" :plain="true"></LinkButton>
+                  <LinkButton iconCls="icon-remove" :plain="true">删除</LinkButton>
+                  <LinkButton iconCls="icon-reload" :plain="true">排序</LinkButton>
                 </div>
               </div>
             </template>
+            <ul class="list-group">
+              <li class="list-group-item">公司名称：的点点滴滴</li>
+              <li class="list-group-item">免费 Window 空间托管</li>
+              <li class="list-group-item">图像的数量</li>
+              <li class="list-group-item">24*7 支持</li>
+              <li class="list-group-item">每年更新成本</li>
+            </ul>
 
-            <DataList  :data="data"
-                      selectionMode="single"  @selectionChange="selection=$event">
-              <template slot-scope="scope">
-                  <ul >
-                    <li>1</li>
-                    <li>2</li>
-                    <li>3</li>
-                  </ul>
-              </template>
-            </DataList>
 
           </Panel>
         </LayoutPanel>
@@ -108,7 +103,7 @@
           this.pageNumber = result.pageNumber;
           this.data = result.rows;
           this.loading = false;
-        }, 1000);
+        }, 100);
       },
       getData(pageNumber, pageSize) {
         let total = 100000;
@@ -133,17 +128,9 @@
           rows: data
         };
       },
-      checkAll(event) {
-        if (event.currentTarget.checked) {
-          this.checkedIds = [];
-          let _this = this;
-          this.data.forEach(function (item, i) {
-            _this.checkedIds.push(item.inv);
-          });
-        } else {
-          this.checkedIds = [];
-        }
-      }
+      selected(event) {
+        console.log(event);
+      },
     }
   };
 </script>

@@ -18,7 +18,7 @@
       <Layout>
         <LayoutPanel region="west" :bodyStyle="{padding:'3px'}" style="width:200px;">
           <Panel title="组织机构树" :bodyStyle="{padding:'3px',marginBottom:'5px',height: '100%'}">
-            <Tree :data="orgRelationData" :checkbox="false" @selectionChange="selected($event)"></Tree>
+            <Tree ref="tree" :data="orgRelationData" :checkbox="false" @selectionChange="selected($event)"></Tree>
           </Panel>
         </LayoutPanel>
 
@@ -31,7 +31,7 @@
                 <div>
                   <MenuButton text="新增" :plain="true" iconCls="icon-add">
                     <Menu @itemClick="add($event)">
-                      <MenuItem v-for="(val,key,index) in subOrgTypes"  :value = "key" :text="val"></MenuItem>
+                      <MenuItem v-for="(val,index) in subOrgTypes"  :value = "val.value" :text="val.name"></MenuItem>
                     </Menu>
                   </MenuButton>
 
@@ -81,6 +81,7 @@
         this.$api.org.getRelationTree('').then((response) => {
           if (response.status === 200) {
             this.orgRelationData = response.data.data;
+            this.$refs.tree.selectNode(this.orgRelationData[0]);
           }
         }).catch(error => {
           console.log("error", error);
@@ -124,6 +125,9 @@
       },
       add(event) {
         console.log(event);
+        if (event === 1) {
+          this.$router.push({name: '/org/company/add', params: {pid: this.detailContent.id}});
+        }
       },
       selected(event) {
         this.$api.org.getOrgDetail(event.id).then((response) => {

@@ -60,7 +60,7 @@
               </div>
               <div>
                 <Label for="parentCompany" align="right">所属公司:</Label>
-                <ComboTree name='parentCompany' :data="companyList" v-model="company.parentId" @click=""  placeholder="-请选择-">
+                <ComboTree name='parentCompany' :data="companyList" v-model="company.parentId"  placeholder="-请选择-">
                   <Tree slot="tree"></Tree>
                 </ComboTree>
                 <div class="error">{{ errors.first('parentCompany') }}</div>
@@ -151,14 +151,6 @@
     },
     created() {
       this.getOrgRelation();
-      if (this.$route.query.id !=null) {
-        this.$api.company.companyDetail(this.$route.query.id).then((response) => {
-          this.company = response.data.data;
-          console.log(this.company);
-        }).catch(error => {
-          console.log("get menu detail error", error);
-        });
-      }
     },
     methods: {
       getOrgRelation(){
@@ -169,6 +161,21 @@
         }).catch(error => {
           console.log("error", error);
         });
+
+        if (this.$route.query.id !=null) {
+          //编辑
+          this.$api.company.companyDetail(this.$route.query.id).then((response) => {
+            this.company = response.data.data;
+            console.log(this.company);
+          }).catch(error => {
+            console.log("get menu detail error", error);
+          });
+        }
+        if (this.$route.params.pid != null) {
+          //组织机构新增
+          this.company.parentId = this.$route.params.pid;
+        }
+
       },
       goBack() {
         this.$router.go(-1)
@@ -177,7 +184,11 @@
         this.$validator.validateAll().then((valid) => {
           if (valid) {
             this.$api.company.companyAdd(this.company).then((response) => {
-              this.$router.push({path: '/org/company'});
+              if (this.$route.params.pid != null) {
+                this.$router.push({path: this.$route.path});
+              } else {
+                this.$router.push({path: '/org/company'});
+              }
             }).catch(error => {
               console.log("error", error);
             });

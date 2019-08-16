@@ -30,7 +30,7 @@ const permission = {
 function getRouterByMenu(menus, routers) {
   const mapRouter = function (menu) {
     const router = {};
-    router.name = menu.text;
+    router.name = menu.path;
     router.path = menu.path;
     if (menu.attributes.component) {
       router.components = _import(menu.attributes.component);

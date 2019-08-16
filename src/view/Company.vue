@@ -149,83 +149,13 @@
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
-        displayColumns: [
-          {
-            id: 1,
-            title: "公司编码",
-            field: "companyNo",
-            width: "5%",
-            show: true
-          },
-          {
-            id: 2,
-            title: "公司名称",
-            field: "companyName",
-            width: "10%",
-            show: true
-          }, {
-            id: 3,
-            title: "公司简称",
-            field: "shortName",
-            width: "8%",
-            show: true
-          }, {
-            id: 4,
-            title: "公司地址",
-            field: "address",
-            width: "12%",
-            show: true
-          }, {
-            id: 5,
-            title: "公司邮编",
-            field: "postalCode",
-            width: "8%",
-            show: true
-          }, {
-            id: 6,
-            title: "公司网址",
-            field: "webSite",
-            width: "12%",
-            show: true
-          }, {
-            id: 7,
-            title: "联系电话",
-            field: "tel",
-            width: "12%",
-            show: true
-          }, {
-            id: 8,
-            title: "邮件",
-            field: "email",
-            width: "12%",
-            show: true
-          }, {
-            id: 9,
-            title: "注册资本",
-            field: "registeredCapital",
-            width: "8%",
-            align: "right",
-            show: true
-          }, {
-            id: 10,
-            title: "注册时间",
-            field: "createDate",
-            width: "8%",
-            sortable: true,
-            show: false
-          }
-        ],
+        displayColumns: [],
         company: {},
         companyList: []
       };
     },
     created() {
       this.loadPage(this.pageNumber, this.pageSize);
-      this.displayColumns.forEach((item, i) => {
-        if (item.show) {
-          this.checkedFields.push(item.field);
-        }
-      });
     },
     methods: {
       onPageChange(event) {
@@ -244,13 +174,18 @@
           this.pageNumber = result.pageNo;
           this.data = result.content;
           this.loading = false;
+          this.displayColumns = result.extras.displayColumns;
+          this.displayColumns.forEach((item, i) => {
+            if (item.show) {
+              this.checkedFields.push(item.field);
+            }
+          });
         }).catch(error => {
           console.log("error", error);
         });
       },
       search() {
         let filters = [];
-        console.log(this.company);
         for (let field in this.company) {
           let filter = {};
           if (field.endsWith("From")) {

@@ -10,6 +10,13 @@ const org = {
   getRelationTree(param) {
     return axios.get(`${base.sq}/org/relation/tree`,param);
   },
+  /**
+   * 机构明细
+   * @param param ID
+   */
+  getOrgDetail(param) {
+    return axios.get(`${base.sq}/org/relation/detail/` + param);
+  },
   // 其他接口…………
 };
 

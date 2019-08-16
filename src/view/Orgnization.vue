@@ -25,12 +25,16 @@
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
 
           <Panel title="详情" :bodyStyle="{padding:'3px'}">
-
             <template slot="header">
               <div class="f-row">
                 <div class="f-full" style="line-height:30px">详情</div>
                 <div>
-                  <LinkButton iconCls="icon-add" :plain="true">新增</LinkButton>
+                  <MenuButton text="新增" :plain="true" iconCls="icon-add">
+                    <Menu @itemClick="add($event)">
+                      <MenuItem v-for="(val,key,index) in subOrgTypes"  :value = "key" :text="val"></MenuItem>
+                    </Menu>
+                  </MenuButton>
+
                   <LinkButton iconCls="icon-edit" :plain="true">编辑</LinkButton>
                   <LinkButton iconCls="icon-remove" :plain="true">删除</LinkButton>
                   <LinkButton iconCls="icon-reload" :plain="true">排序</LinkButton>
@@ -38,14 +42,8 @@
               </div>
             </template>
             <ul class="list-group">
-              <li class="list-group-item">公司名称：的点点滴滴</li>
-              <li class="list-group-item">免费 Window 空间托管</li>
-              <li class="list-group-item">图像的数量</li>
-              <li class="list-group-item">24*7 支持</li>
-              <li class="list-group-item">每年更新成本</li>
+              <li class="list-group-item" v-for="(org,index) in displayColumns" > <strong>{{org.title}}：</strong>{{detailContent[org.field]}}</li>
             </ul>
-
-
           </Panel>
         </LayoutPanel>
 
@@ -68,14 +66,10 @@
         data: [],
         checkedIds: [],
         orgRelationData: [],
-        pageList: [10, 20, 30, 40, 50],
-        loading: false,
-        pagePosition: "bottom",
-        pageOptions: [
-          {value: "bottom", text: "Bottom"},
-          {value: "top", text: "Top"},
-          {value: "both", text: "Both"}
-        ]
+        displayColumns:[],
+        detailContent:{},
+        subOrgTypes:[],
+        loading: false
       };
     },
     created() {
@@ -106,7 +100,7 @@
         }, 100);
       },
       getData(pageNumber, pageSize) {
-        let total = 100000;
+        let total = 1000;
         let data = [];
         let start = (pageNumber - 1) * pageSize;
         for (let i = start + 1; i <= start + pageSize; i++) {
@@ -128,9 +122,22 @@
           rows: data
         };
       },
-      selected(event) {
+      add(event) {
         console.log(event);
       },
+      selected(event) {
+        this.$api.org.getOrgDetail(event.id).then((response) => {
+          if (response.status === 200) {
+            let result = response.data.data;
+            this.displayColumns = result.extras.displayColumns;
+            this.detailContent = result.content;
+            this.subOrgTypes = result.extras.subOrgTypes;
+            console.log(this.subOrgTypes);
+          }
+        }).catch(error => {
+          console.log("error", error);
+        });
+      }
     }
   };
 </script>

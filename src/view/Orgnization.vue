@@ -31,18 +31,19 @@
                 <div>
                   <MenuButton text="新增" :plain="true" iconCls="icon-add">
                     <Menu @itemClick="add($event)">
-                      <MenuItem v-for="(val,index) in subOrgTypes"  :value = "val.value" :text="val.name"></MenuItem>
+                      <MenuItem v-for="(val,index) in subOrgTypes" :value="val.value" :text="val.name"></MenuItem>
                     </Menu>
                   </MenuButton>
 
-                  <LinkButton iconCls="icon-edit" :plain="true">编辑</LinkButton>
-                  <LinkButton iconCls="icon-remove" :plain="true">删除</LinkButton>
+                  <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
+                  <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
                   <LinkButton iconCls="icon-reload" :plain="true">排序</LinkButton>
                 </div>
               </div>
             </template>
             <ul class="list-group">
-              <li class="list-group-item" v-for="(org,index) in displayColumns" > <strong>{{org.title}}：</strong>{{detailContent[org.field]}}</li>
+              <li class="list-group-item" v-for="(org,index) in displayColumns"><strong>{{org.title}}：</strong>{{detailContent[org.field]}}
+              </li>
             </ul>
           </Panel>
         </LayoutPanel>
@@ -60,21 +61,17 @@
   export default {
     data() {
       return {
-        total: 0,
-        pageNumber: 1,
-        pageSize: 1,
-        data: [],
-        checkedIds: [],
+        selectedId: null,
         orgRelationData: [],
-        displayColumns:[],
-        detailContent:{},
-        subOrgTypes:[],
+        displayColumns: [],
+        detailContent: {},
+        subOrgTypes: [],
+        curOrgType: null,
         loading: false
       };
     },
     created() {
       this.getOrgRelation();
-      this.loadPage(this.pageNumber, this.pageSize);
     },
     methods: {
       getOrgRelation() {
@@ -87,56 +84,64 @@
           console.log("error", error);
         });
       },
-      onPageChange(event) {
-        this.loadPage(event.pageNumber, event.pageSize);
-      },
-      loadPage(pageNumber, pageSize) {
-        this.loading = true;
-        setTimeout(() => {
-          let result = this.getData(pageNumber, pageSize);
-          this.total = result.total;
-          this.pageNumber = result.pageNumber;
-          this.data = result.rows;
-          this.loading = false;
-        }, 100);
-      },
-      getData(pageNumber, pageSize) {
-        let total = 1000;
-        let data = [];
-        let start = (pageNumber - 1) * pageSize;
-        for (let i = start + 1; i <= start + pageSize; i++) {
-          let amount = Math.floor(Math.random() * 1000);
-          let price = Math.floor(Math.random() * 1000);
-          data.push({
-            inv: "Inv No " + i,
-            name: "Name " + i,
-            amount: amount,
-            price: price,
-            cost: amount * price,
-            note: "Note " + i
-          });
-        }
-        return {
-          total: total,
-          pageNumber: pageNumber,
-          pageSize: pageSize,
-          rows: data
-        };
-      },
       add(event) {
-        console.log(event);
-        if (event === 1) {
-          this.$router.push({name: '/org/company/add', params: {pid: this.detailContent.id}});
+        let urlName;
+        switch (event) {
+          case 1:
+            urlName = "/org/company/add";
+            break;
+          case 2:
+            urlName = "/org/department/add";
+            break;
+          case 3:
+            urlName = "/org/position/add";
+            break;
+          case 4:
+            urlName = "/org/employee/add";
+            break;
+          case 5:
+            urlName = "/org/role/add";
+            break;
+          default:
+            urlName = "/org/company/add";
+            break;
         }
+        this.$router.push({name: urlName, params: {pid: this.selectedId}});
+      },
+      edit() {
+        let urlPath;
+        switch (this.curOrgType) {
+          case 1:
+            urlPath = "/org/company/add";
+            break;
+          case 2:
+            urlPath = "/org/department/add";
+            break;
+          case 3:
+            urlPath = "/org/position/add";
+            break;
+          case 4:
+            urlPath = "/org/employee/add";
+            break;
+          case 5:
+            urlPath = "/org/role/add";
+            break;
+          default:
+            urlPath = "/org/company/add";
+            break;
+        }
+        //path来匹配路由，然后通过query来传递参数
+        this.$router.push({path: urlPath + '?orgId=' + this.detailContent.id});
       },
       selected(event) {
-        this.$api.org.getOrgDetail(event.id).then((response) => {
+        this.selectedId = event.id;
+        this.$api.org.getOrgDetail(this.selectedId).then((response) => {
           if (response.status === 200) {
             let result = response.data.data;
             this.displayColumns = result.extras.displayColumns;
             this.detailContent = result.content;
             this.subOrgTypes = result.extras.subOrgTypes;
-            console.log(this.subOrgTypes);
+            this.curOrgType = result.extras.curOrgType;
           }
         }).catch(error => {
           console.log("error", error);
@@ -151,7 +156,8 @@
   .panel-header {
     background-color: #f5f5f5;
   }
-  .panel{
+
+  .panel {
     min-height: 600px;
   }
 </style>

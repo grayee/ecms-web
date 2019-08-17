@@ -150,8 +150,7 @@
         loading: false,
         pagePosition: "bottom",
         displayColumns: [],
-        company: {},
-        companyList: []
+        company: {}
       };
     },
     created() {

@@ -5,10 +5,10 @@ const org = {
 
   /**
    * 获取机构关系树
-   * @param param 用户名
+   * @param param 机构类型
    */
   getRelationTree(param) {
-    return axios.get(`${base.sq}/org/relation/tree`,param);
+    return axios.get(`${base.sq}/org/relation/tree/` + param);
   },
   /**
    * 机构明细

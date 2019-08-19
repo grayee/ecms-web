@@ -204,13 +204,12 @@
         }
         this.loadPage(this.pageNumber, this.pageSize, filters);
       },
-      reset(){
+      reset() {
         this.company = {};
       },
       remove() {
         if (this.checkedIds.length > 0) {
           this.$api.company.companyDel(this.checkedIds).then((response) => {
-            console.log("--->", response);
             this.loadPage(this.pageNumber, this.pageSize);
           }).catch(error => {
             console.log("error", error);

@@ -18,110 +18,112 @@
       <!--------------------------
         | Your Page Content Here |
         -------------------------->
-      <Layout style="height:100%" >
+      <Layout style="height:100%">
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
 
           <Form ref="form" :model="company" :labelAlign="right">
             <div class="main">
-            <div class="divRow">
-              <div>
-                <Label for="name" align="right">公司名称:</Label>
-                <TextBox inputId="name" name="name" v-model="company.companyName" v-validate="'required|min:5'"
-                         style="width:18em" placeholder="请输入公司名称"/>
-                <div class="error">{{ errors.first('name') }}</div>
+              <div class="divRow">
+                <div>
+                  <Label for="name" align="right">公司名称:</Label>
+                  <TextBox inputId="name" name="name" v-model="company.companyName" v-validate="'required|min:5'"
+                           style="width:18em" data-vv-as="公司名称" placeholder="请输入公司名称"/>
+                  <div class="error">{{ errors.first('name') }}</div>
+                </div>
+                <div>
+                  <Label for="shortName" align="right">公司简称:</Label>
+                  <TextBox inputId="shortName" name="shortName" v-model="company.shortName"
+                           v-validate="'required|max:10'" style="width:18em" data-vv-as="公司简称" placeholder="请输入公司简称"/>
+                  <div class="error">{{ errors.first('shortName') }}</div>
+                </div>
               </div>
-              <div>
-                <Label for="shortName" align="right">公司简称:</Label>
-                <TextBox inputId="shortName" name="shortName" v-model="company.shortName"
-                         v-validate="'required|max:10'" style="width:18em" placeholder="请输入公司简称"/>
-                <div class="error">{{ errors.first('shortName') }}</div>
-              </div>
-            </div>
-            <div class="divRow">
+              <div class="divRow">
                 <div>
                   <Label for="code" align="right">公司编号:</Label>
                   <TextBox inputId="code" name="code" v-model="company.companyNo" v-validate="'required|alpha_num'"
-                           placeholder="请输入公司编号"/>
+                           data-vv-as="公司编号" placeholder="请输入公司编号"/>
                   <div class="error">{{ errors.first('code') }}</div>
                 </div>
                 <div>
                   <Label for="companyFlag" align="right">公司标识:</Label>
-                  <TextBox inputId="companyFlag" v-validate="'required'" name="companyFlag" v-model="company.companyFlag"
-                           style="width:18em" placeholder="请输入公司标识"></TextBox>
+                  <TextBox inputId="companyFlag" v-validate="'required'" name="companyFlag"
+                           v-model="company.companyFlag"
+                           style="width:18em" data-vv-as="公司标识" placeholder="请输入公司标识"></TextBox>
                   <div class="error">{{ errors.first('companyFlag') }}</div>
                 </div>
-            </div>
-            <div class="divRow">
-              <div>
-                <Label for="hero" align="right">公司类型:</Label>
-                <ComboBox inputId='companyType' name="companyType" :data="companyType" v-validate="'required'"
-                          v-model="company.companyType"></ComboBox>
-                <div class="error">{{ errors.first('companyType') }}</div>
               </div>
-              <div>
-                <Label for="parentCompany" align="right">所属公司:</Label>
-                <ComboTree name='parentCompany' :data="companyList" v-model="company.parentId"  placeholder="-请选择-">
-                  <Tree slot="tree"></Tree>
-                </ComboTree>
-                <div class="error">{{ errors.first('parentCompany') }}</div>
+              <div class="divRow">
+                <div>
+                  <Label for="hero" align="right">公司类型:</Label>
+                  <ComboBox inputId='companyType' name="companyType" :data="companyType" v-validate="'required'"
+                            data-vv-as="公司类型" v-model="company.companyType"></ComboBox>
+                  <div class="error">{{ errors.first('companyType') }}</div>
+                </div>
+                <div>
+                  <Label for="parentCompany" align="right">所属公司:</Label>
+                  <ComboTree name='parentCompany' :data="companyList" v-model="company.parentId" placeholder="-请选择-">
+                    <Tree slot="tree"></Tree>
+                  </ComboTree>
+                  <div class="error">{{ errors.first('parentCompany') }}</div>
+                </div>
               </div>
-            </div>
               <div class="divRow">
                 <div>
                   <Label for="fax" align="right">传真地址:</Label>
                   <TextBox inputId="fax" name="fax" v-model="company.fax" v-validate="'required|alpha_num'"
-                           placeholder="请输入传真地址"/>
+                           data-vv-as="传真地址" placeholder="请输入传真地址"/>
                   <div class="error">{{ errors.first('fax') }}</div>
                 </div>
                 <div>
                   <Label for="email" align="right">电子邮件:</Label>
                   <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="company.email"
-                           style="width:18em" placeholder="请输入邮件地址"></TextBox>
+                           style="width:18em" data-vv-as="电子邮件" placeholder="请输入邮件地址"></TextBox>
                   <div class="error">{{ errors.first('email') }}</div>
                 </div>
               </div>
-            <div class="divRow">
-              <div>
-                <Label for="linkMan" align="right">联系人:</Label>
-                <TextBox inputId="linkMan" name="linkMan" v-model="company.linkMan"
-                         v-validate="'required|max:20'" style="width:18em" placeholder="请输入联系人"/>
-                <div class="error">{{ errors.first('linkMan') }}</div>
-              </div>
+              <div class="divRow">
+                <div>
+                  <Label for="linkMan" align="right">联系人:</Label>
+                  <TextBox inputId="linkMan" name="linkMan" v-model="company.linkMan"
+                           v-validate="'required|max:20'" style="width:18em" data-vv-as="联系人" placeholder="请输入联系人"/>
+                  <div class="error">{{ errors.first('linkMan') }}</div>
+                </div>
 
-              <div>
-                <Label for="tel" align="right">联系电话:</Label>
-                <TextBox inputId="tel" name="tel" v-model="company.tel"
-                         v-validate="'required|max:11'" placeholder="请输入联系电话"/>
-                <div class="error">{{ errors.first('tel') }}</div>
+                <div>
+                  <Label for="mobilePhone" align="right">联系人电话:</Label>
+                  <TextBox inputId="mobilePhone" name="mobilePhone"  v-model="company.mobilePhone"
+                           v-validate="'required|max:11'"  data-vv-as="联系人电话" placeholder="请输入联系人电话"/>
+                  <div class="error">{{ errors.first('mobilePhone') }}</div>
+                </div>
               </div>
-            </div>
 
               <div class="divRow">
                 <div>
                   <Label for="webSite" align="right">公司网址:</Label>
                   <TextBox inputId="webSite" name="webSite" v-model="company.webSite"
-                           v-validate="'required|max:100'" style="width:18em" placeholder="请输入公司网址"/>
+                           v-validate="'required|max:100'" style="width:18em" data-vv-as="公司网址" placeholder="请输入公司网址"/>
                   <div class="error">{{ errors.first('webSite') }}</div>
                 </div>
                 <div>
                   <Label for="address" align="right">公司地址:</Label>
-                  <TextBox inputId="t2" name="address"   v-model="company.address"
-                           v-validate="'required|max:200'" style="width:20em"  placeholder="请输入公司地址"></TextBox>
+                  <TextBox inputId="t2" name="address" v-model="company.address"
+                           v-validate="'required|max:200'" style="width:20em" data-vv-as="公司地址"
+                           placeholder="请输入公司地址"></TextBox>
                   <div class="error">{{ errors.first('address') }}</div>
                 </div>
               </div>
               <div class="divRow">
                 <div>
                   <Label for="remark" align="right">备注:</Label>
-                  <TextBox inputId="t2" name="remark" :multiline="true"  v-model="company.remark"
+                  <TextBox inputId="t2" name="remark" :multiline="true" v-model="company.remark"
                            style="width:73%;height:120px;"></TextBox>
                   <div class="error">{{ errors.first('remark') }}</div>
                 </div>
               </div>
-            <div class="formBtn">
-              <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
-              <LinkButton style="width:60px" @click="goBack()">取消</LinkButton>
-            </div>
+              <div class="formBtn">
+                <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
+                <LinkButton style="width:60px" @click="goBack()">取消</LinkButton>
+              </div>
             </div>
           </Form>
 
@@ -141,10 +143,10 @@
         loading: false,
         company: {},
         companyType: [
-          {value: 11, text: "总公司"},
-          {value: 12, text: "分公司"},
-          {value: 13, text: "本部"},
-          {value: 20, text: "中支公司"}
+          {value: 0, text: "总公司"},
+          {value: 1, text: "分公司"},
+          {value: 2, text: "中支公司"},
+          {value: 3, text: "本部"}
         ],
         companyList: []
       };
@@ -153,14 +155,13 @@
       this.getOrgRelation();
     },
     methods: {
-      getOrgRelation(){
-        this.$api.org.getRelationTree('').then((response)=>{
-          if(response.status===200){
+      getOrgRelation() {
+        this.$api.org.getRelationTree('1').then((response) => {
+          if (response.status === 200) {
             this.companyList = response.data.data;
-            console.log(this.companyList);
           }
           return true;
-        }).then((result)=>{
+        }).then((result) => {
           if (this.$route.query.id != null || this.$route.query.orgId != null) {
             let detailId = this.$route.query.id;
             if (detailId == null || this.$route.query.orgId != null) {
@@ -174,7 +175,7 @@
             });
           }
           if (this.$route.params.pid != null) {
-            this.company={};
+            this.company = {};
             //组织机构新增
             this.company.parentId = this.$route.params.pid;
           }
@@ -189,7 +190,7 @@
         this.$validator.validateAll().then((valid) => {
           if (valid) {
             this.$api.company.companyAdd(this.company).then((response) => {
-              if (this.$route.params.pid != null|| this.$route.query.orgId != null) {
+              if (this.$route.params.pid != null || this.$route.query.orgId != null) {
                 this.$router.go(-1);
               } else {
                 this.$router.push({path: '/org/company'});
@@ -209,19 +210,23 @@
   .error {
     margin: 2px 120px;
   }
-  .main{
+
+  .main {
     padding: 20px;
   }
-  .divRow{
+
+  .divRow {
     overflow: auto;
   }
+
   .divRow > div {
     width: 48%;
     float: left;
     padding: 3px;
   }
-  .formBtn{
-    text-align:center;
+
+  .formBtn {
+    text-align: center;
     clear: both;
     padding: 20px;
   }

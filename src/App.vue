@@ -23,7 +23,7 @@
   /* sasyUI 输入框样式控制 */
   .f-field {
     width: 12em;
-    height: 24px;
+    height: 26px;
   }
   /* easyui panel头部高度样式 */
  .panel-header {

@@ -25,10 +25,10 @@
             <div class="main">
               <div class="divRow">
                 <div>
-                  <Label for="name" align="right">公司名称:</Label>
-                  <TextBox inputId="name" name="name" v-model="company.companyName" v-validate="'required|min:5'"
+                  <Label for="companyName" align="right">公司名称:</Label>
+                  <TextBox inputId="companyName" name="companyName" v-model="company.companyName" v-validate="'required|min:5'"
                            style="width:18em" data-vv-as="公司名称" placeholder="请输入公司名称"/>
-                  <div class="error">{{ errors.first('name') }}</div>
+                  <div class="error">{{ errors.first('companyName') }}</div>
                 </div>
                 <div>
                   <Label for="shortName" align="right">公司简称:</Label>
@@ -39,10 +39,10 @@
               </div>
               <div class="divRow">
                 <div>
-                  <Label for="code" align="right">公司编号:</Label>
-                  <TextBox inputId="code" name="code" v-model="company.companyNo" v-validate="'required|alpha_num'"
+                  <Label for="companyNo" align="right">公司编号:</Label>
+                  <TextBox inputId="companyNo" name="companyNo" v-model="company.companyNo" v-validate="'alpha_num'"
                            data-vv-as="公司编号" placeholder="请输入公司编号"/>
-                  <div class="error">{{ errors.first('code') }}</div>
+                  <div class="error">{{ errors.first('companyNo') }}</div>
                 </div>
                 <div>
                   <Label for="companyFlag" align="right">公司标识:</Label>
@@ -91,8 +91,8 @@
 
                 <div>
                   <Label for="mobilePhone" align="right">联系人电话:</Label>
-                  <TextBox inputId="mobilePhone" name="mobilePhone"  v-model="company.mobilePhone"
-                           v-validate="'required|max:11'"  data-vv-as="联系人电话" placeholder="请输入联系人电话"/>
+                  <TextBox inputId="mobilePhone" name="mobilePhone" v-model="company.mobilePhone"
+                           v-validate="'required|max:11'" data-vv-as="联系人电话" placeholder="请输入联系人电话"/>
                   <div class="error">{{ errors.first('mobilePhone') }}</div>
                 </div>
               </div>
@@ -110,6 +110,14 @@
                            v-validate="'required|max:200'" style="width:20em" data-vv-as="公司地址"
                            placeholder="请输入公司地址"></TextBox>
                   <div class="error">{{ errors.first('address') }}</div>
+                </div>
+              </div>
+              <div class="divRow">
+                <div>
+                  <Label for="telPhone" align="right">座机电话:</Label>
+                  <TextBox inputId="telPhone" name="telPhone" v-model="company.telPhone"
+                           v-validate="'required|max:100'" style="width:18em" data-vv-as="座机电话" placeholder="请输入座机电话"/>
+                  <div class="error">{{ errors.first('telPhone') }}</div>
                 </div>
               </div>
               <div class="divRow">
@@ -189,15 +197,19 @@
       submitForm() {
         this.$validator.validateAll().then((valid) => {
           if (valid) {
-            this.$api.company.companyAdd(this.company).then((response) => {
-              if (this.$route.params.pid != null || this.$route.query.orgId != null) {
+            if (this.$route.query.id != null || this.$route.query.orgId != null) {
+              this.$api.company.companyUpt(this.company).then((response) => {
                 this.$router.go(-1);
-              } else {
-                this.$router.push({path: '/org/company'});
-              }
-            }).catch(error => {
-              console.log("error", error);
-            });
+              }).catch(error => {
+                this.$messager.alert({title: "错误信息", icon: "error", msg: error.data.message});
+              });
+            } else {
+              this.$api.company.companyAdd(this.company).then((response) => {
+                this.$router.go(-1);
+              }).catch(error => {
+                this.$messager.alert({title: "错误信息", icon: "error", msg: error.data.message});
+              });
+            }
           }
         })
       }

@@ -62,8 +62,21 @@ Vue.use(VeeValidate, {
   }
 });
 //全局过滤器
-Vue.filter('dateFmt', function(inputStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
-  return moment(inputStr).format(pattern);
+Vue.filter('dateFmt', function (inputDate, mod = 0, pattern = 'YYYY-MM-DD HH:mm:ss') {
+  let dateTime = moment(inputDate).format(pattern);
+  switch (mod) {
+    case 0:
+      dateTime = moment(inputDate).startOf('day').format(pattern);
+      break;
+    case 1:
+      dateTime = moment(inputDate).endOf('day').format(pattern);
+      break;
+  }
+  return dateTime;
+});
+
+Vue.filter('parseToDate', function (inputStr,pattern = 'YYYY-MM-DD HH:mm:ss') {
+  return moment(inputStr,pattern).toDate();
 });
 
 const dictionary = {

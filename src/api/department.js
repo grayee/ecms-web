@@ -10,6 +10,10 @@ const department = {
   departmentAdd(param) {
     return axios.post(`${base.sq}/org/department`, param);
   },
+  //部门新增
+  departmentUpt(param) {
+    return axios.put(`${base.sq}/org/department`, param);
+  },
   //部门详情,演示
   departmentDetail(id, params) {
     return axios.get(`${base.sq}/org/department/detail/${id}`, {

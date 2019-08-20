@@ -18,110 +18,83 @@
       <!--------------------------
         | Your Page Content Here |
         -------------------------->
-      <Layout style="height:100%" >
+      <Layout style="height:100%">
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
 
           <Form ref="form" :model="department" :labelAlign="right">
             <div class="main">
-            <div class="divRow">
-              <div>
-                <Label for="name" align="right">部门名称:</Label>
-                <TextBox inputId="name" name="name" v-model="department.departmentName" v-validate="'required|min:5'"
-                         style="width:18em" placeholder="请输入部门名称"/>
-                <div class="error">{{ errors.first('name') }}</div>
-              </div>
-              <div>
-                <Label for="shortName" align="right">部门简称:</Label>
-                <TextBox inputId="shortName" name="shortName" v-model="department.shortName"
-                         v-validate="'required|max:10'" style="width:18em" placeholder="请输入部门简称"/>
-                <div class="error">{{ errors.first('shortName') }}</div>
-              </div>
-            </div>
-            <div class="divRow">
-                <div>
-                  <Label for="code" align="right">部门编号:</Label>
-                  <TextBox inputId="code" name="code" v-model="department.departmentNo" v-validate="'required|alpha_num'"
-                           placeholder="请输入部门编号"/>
-                  <div class="error">{{ errors.first('code') }}</div>
-                </div>
-                <div>
-                  <Label for="departmentFlag" align="right">部门标识:</Label>
-                  <TextBox inputId="departmentFlag" v-validate="'required'" name="departmentFlag" v-model="department.departmentFlag"
-                           style="width:18em" placeholder="请输入部门标识"></TextBox>
-                  <div class="error">{{ errors.first('departmentFlag') }}</div>
-                </div>
-            </div>
-            <div class="divRow">
-              <div>
-                <Label for="hero" align="right">部门类型:</Label>
-                <ComboBox inputId='departmentType' name="departmentType" :data="departmentType" v-validate="'required'"
-                          v-model="department.departmentType"></ComboBox>
-                <div class="error">{{ errors.first('departmentType') }}</div>
-              </div>
-              <div>
-                <Label for="parentdepartment" align="right">所属部门:</Label>
-                <ComboTree name='parentdepartment' :data="departmentList" v-model="department.parentId"  placeholder="-请选择-">
-                  <Tree slot="tree"></Tree>
-                </ComboTree>
-                <div class="error">{{ errors.first('parentdepartment') }}</div>
-              </div>
-            </div>
               <div class="divRow">
                 <div>
-                  <Label for="fax" align="right">传真地址:</Label>
-                  <TextBox inputId="fax" name="fax" v-model="department.fax" v-validate="'required|alpha_num'"
-                           placeholder="请输入传真地址"/>
-                  <div class="error">{{ errors.first('fax') }}</div>
+                  <Label for="deptName" align="right">部门名称:</Label>
+                  <TextBox inputId="deptName" name="deptName" v-model="department.deptName"
+                           v-validate="'required|min:5'"
+                           style="width:18em" data-vv-as="部门名称" placeholder="请输入部门名称"/>
+                  <div class="error">{{ errors.first('deptName') }}</div>
                 </div>
                 <div>
-                  <Label for="email" align="right">电子邮件:</Label>
-                  <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="department.email"
-                           style="width:18em" placeholder="请输入邮件地址"></TextBox>
-                  <div class="error">{{ errors.first('email') }}</div>
+                  <Label for="deptFlag" align="right">部门标识:</Label>
+                  <TextBox inputId="deptFlag" v-validate="'required'" name="deptFlag" v-model="department.deptFlag"
+                           style="width:18em" data-vv-as="部门标识" placeholder="请输入部门标识"></TextBox>
+                  <div class="error">{{ errors.first('deptFlag') }}</div>
                 </div>
               </div>
-            <div class="divRow">
-              <div>
-                <Label for="linkMan" align="right">联系人:</Label>
-                <TextBox inputId="linkMan" name="linkMan" v-model="department.linkMan"
-                         v-validate="'required|max:20'" style="width:18em" placeholder="请输入联系人"/>
-                <div class="error">{{ errors.first('linkMan') }}</div>
-              </div>
-
-              <div>
-                <Label for="tel" align="right">联系电话:</Label>
-                <TextBox inputId="tel" name="tel" v-model="department.tel"
-                         v-validate="'required|max:11'" placeholder="请输入联系电话"/>
-                <div class="error">{{ errors.first('tel') }}</div>
-              </div>
-            </div>
-
               <div class="divRow">
                 <div>
-                  <Label for="webSite" align="right">部门网址:</Label>
-                  <TextBox inputId="webSite" name="webSite" v-model="department.webSite"
-                           v-validate="'required|max:100'" style="width:18em" placeholder="请输入部门网址"/>
-                  <div class="error">{{ errors.first('webSite') }}</div>
+                  <Label for="deptNo" align="right">部门编码:</Label>
+                  <TextBox inputId="code" name="deptNo" v-model="department.deptNo" placeholder="请输入部门编码"/>
+                  <div class="error">{{ errors.first('deptNo') }}</div>
                 </div>
                 <div>
-                  <Label for="address" align="right">部门地址:</Label>
-                  <TextBox inputId="t2" name="address"   v-model="department.address"
-                           v-validate="'required|max:200'" style="width:20em"  placeholder="请输入部门地址"></TextBox>
-                  <div class="error">{{ errors.first('address') }}</div>
+                  <Label for="deptLevel" align="right">部门级别:</Label>
+                  <TextBox inputId="deptLevel" v-validate="'required'" name="deptLevel" v-model="department.deptLevel"
+                           style="width:18em" data-vv-as="部门级别" placeholder="部门级别"></TextBox>
+                  <div class="error">{{ errors.first('deptLevel') }}</div>
                 </div>
               </div>
+              <div class="divRow">
+                <div>
+                  <Label for="deptType" align="right">部门类型:</Label>
+                  <ComboBox inputId='deptType' name="deptType" :data="departmentType" v-validate="'required'"
+                            v-model="department.deptType"></ComboBox>
+                  <div class="error">{{ errors.first('departmentType') }}</div>
+                </div>
+                <div>
+                  <Label for="parentId" align="right">所属机构:</Label>
+                  <ComboTree name='parentId' :data="departmentList" v-model="department.parentId" placeholder="-请选择-">
+                    <Tree slot="tree"></Tree>
+                  </ComboTree>
+                  <div class="error">{{ errors.first('parentId') }}</div>
+                </div>
+              </div>
+              <div class="divRow">
+                <div>
+                  <Label for="deptLeader" align="right">部门领导:</Label>
+                  <TextBox inputId="deptLeader" name="deptLeader" v-model="department.deptLeader"
+                           v-validate="'required|max:20'" style="width:18em" data-vv-as="部门领导" placeholder="请输入部门领导"/>
+                  <div class="error">{{ errors.first('deptLeader') }}</div>
+                </div>
+
+                <div>
+                  <Label for="foundDate" align="right">成立时间:</Label>
+                  <DateBox inputId="foundDate" format="yyyy-MM-dd" name="foundDate"
+                           v-model="department.foundDate" data-vv-as="成立时间" placeholder="请输入成立时间"></DateBox>
+
+                  <div class="error">{{ errors.first('foundDate') }}</div>
+                </div>
+              </div>
+
               <div class="divRow">
                 <div>
                   <Label for="remark" align="right">备注:</Label>
-                  <TextBox inputId="t2" name="remark" :multiline="true"  v-model="department.remark"
+                  <TextBox inputId="t2" name="remark" :multiline="true" v-model="department.remark"
                            style="width:73%;height:120px;"></TextBox>
                   <div class="error">{{ errors.first('remark') }}</div>
                 </div>
               </div>
-            <div class="formBtn">
-              <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
-              <LinkButton style="width:60px" @click="goBack()">取消</LinkButton>
-            </div>
+              <div class="formBtn">
+                <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
+                <LinkButton style="width:60px" @click="goBack()">取消</LinkButton>
+              </div>
             </div>
           </Form>
 
@@ -153,14 +126,14 @@
       this.getOrgRelation();
     },
     methods: {
-      getOrgRelation(){
-        this.$api.org.getRelationTree('').then((response)=>{
-          if(response.status===200){
+      getOrgRelation() {
+        this.$api.org.getRelationTree('').then((response) => {
+          if (response.status === 200) {
             this.departmentList = response.data.data;
             console.log(this.departmentList);
           }
           return true;
-        }).then((result)=>{
+        }).then((result) => {
           if (this.$route.query.id != null || this.$route.query.orgId != null) {
             let detailId = this.$route.query.id;
             if (detailId == null || this.$route.query.orgId != null) {
@@ -169,12 +142,13 @@
             //编辑
             this.$api.department.departmentDetail(detailId).then((response) => {
               this.department = response.data.data;
+              this.department.foundDate = Vue.filter('parseToDate')(this.department.foundDate);
             }).catch(error => {
               console.log("get menu detail error", error);
             });
           }
           if (this.$route.params.pid != null) {
-            this.department={};
+            this.department = {};
             //组织机构新增
             this.department.parentId = this.$route.params.pid;
           }
@@ -188,15 +162,21 @@
       submitForm() {
         this.$validator.validateAll().then((valid) => {
           if (valid) {
-            this.$api.department.departmentAdd(this.department).then((response) => {
-              if (this.$route.params.pid != null|| this.$route.query.orgId != null) {
+            let dateFmt = Vue.filter('dateFmt');
+            this.department.foundDate = dateFmt(this.department.foundDate);
+            if (this.$route.query.id != null || this.$route.query.orgId != null) {
+              this.$api.department.departmentUpt(this.department).then((response) => {
                 this.$router.go(-1);
-              } else {
-                this.$router.push({path: '/org/department'});
-              }
-            }).catch(error => {
-              console.log("error", error);
-            });
+              }).catch(error => {
+                this.$messager.alert({title: "错误信息", icon: "error", msg: error.data.message});
+              });
+            } else {
+              this.$api.department.departmentAdd(this.department).then((response) => {
+                this.$router.go(-1);
+              }).catch(error => {
+                this.$messager.alert({title: "错误信息", icon: "error", msg: error.data.message});
+              });
+            }
           }
         })
       }
@@ -209,19 +189,23 @@
   .error {
     margin: 2px 120px;
   }
-  .main{
+
+  .main {
     padding: 20px;
   }
-  .divRow{
+
+  .divRow {
     overflow: auto;
   }
+
   .divRow > div {
     width: 48%;
     float: left;
     padding: 3px;
   }
-  .formBtn{
-    text-align:center;
+
+  .formBtn {
+    text-align: center;
     clear: both;
     padding: 20px;
   }

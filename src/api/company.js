@@ -10,6 +10,10 @@ const company = {
   companyAdd(param) {
     return axios.post(`${base.sq}/org/company`, param);
   },
+  //公司更新
+  companyUpt(param) {
+    return axios.put(`${base.sq}/org/company`, param);
+  },
   //公司详情,演示
   companyDetail(id, params) {
     return axios.get(`${base.sq}/org/company/detail/${id}`, {

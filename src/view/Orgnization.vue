@@ -133,6 +133,35 @@
         //path来匹配路由，然后通过query来传递参数
         this.$router.push({path: urlPath + '?orgId=' + this.detailContent.id});
       },
+      remove(){
+        let orgId = this.detailContent.id;
+        switch (this.curOrgType) {
+          case 1:
+            this.$api.company.companyDel([orgId]).then((response) => {
+              if (response.status === 200) {
+                this.getOrgRelation();
+              }
+            }).catch(error => {
+              this.$messager.alert({title: "错误信息", icon: "error", msg: error.data.message});
+            });
+            break;
+          case 2:
+
+            break;
+          case 3:
+
+            break;
+          case 4:
+
+            break;
+          case 5:
+
+            break;
+          default:
+
+            break;
+        }
+      },
       selected(event) {
         this.selectedId = event.id;
         this.$api.org.getOrgDetail(this.selectedId).then((response) => {

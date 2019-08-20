@@ -136,7 +136,6 @@
 
 <!-- 2.行为 :处理逻辑-->
 <script>
-  let moment = require("moment");
   export default {
     data() {
       return {
@@ -185,16 +184,17 @@
       },
       search() {
         let filters = [];
+        let dateFmt = Vue.filter('dateFmt');
         for (let field in this.company) {
           let filter = {};
           if (field.endsWith("From")) {
             filter.property = field.substr(0, field.indexOf("From"));
             filter.operator = "greaterThanOrEqualTo";
-            filter.value = moment(this.company[field]).startOf('day').format('YYYY-MM-DD HH:mm:ss');
+            filter.value = dateFmt(this.company[field]);
           } else if (field.endsWith("To")) {
             filter.property = field.substr(0, field.indexOf("To"));
             filter.operator = "lessThanOrEqualTo";
-            filter.value = moment(this.company[field]).endOf('day').format('YYYY-MM-DD HH:mm:ss');
+            filter.value =  dateFmt(this.company[field],1);
           } else {
             filter.property = field;
             filter.operator = "like";

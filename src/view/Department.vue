@@ -35,7 +35,8 @@
                 <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateFrom"
                          v-model="department.createDateFrom"></DateBox>
                 至
-                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateTo" v-model="department.createDateTo"></DateBox>
+                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateTo"
+                         v-model="department.createDateTo"></DateBox>
                 <Label/>
 
                 <LinkButton iconCls="icon-search" style="width:60px" @click="search()">查询</LinkButton>
@@ -136,7 +137,6 @@
 
 <!-- 2.行为 :处理逻辑-->
 <script>
-  let moment = require("moment");
   export default {
     data() {
       return {
@@ -185,16 +185,17 @@
       },
       search() {
         let filters = [];
+        let dateFmt = Vue.filter('dateFmt');
         for (let field in this.department) {
           let filter = {};
           if (field.endsWith("From")) {
             filter.property = field.substr(0, field.indexOf("From"));
             filter.operator = "greaterThanOrEqualTo";
-            filter.value = moment(this.department[field]).startOf('day').format('YYYY-MM-DD HH:mm:ss');
+            filter.value = dateFmt(this.department[field]);
           } else if (field.endsWith("To")) {
             filter.property = field.substr(0, field.indexOf("To"));
             filter.operator = "lessThanOrEqualTo";
-            filter.value = moment(this.department[field]).endOf('day').format('YYYY-MM-DD HH:mm:ss');
+            filter.value = dateFmt(this.department[field], 1);
           } else {
             filter.property = field;
             filter.operator = "like";
@@ -204,7 +205,7 @@
         }
         this.loadPage(this.pageNumber, this.pageSize, filters);
       },
-      reset(){
+      reset() {
         this.department = {};
       },
       remove() {

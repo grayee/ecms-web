@@ -10,6 +10,10 @@ const position = {
   positionAdd(param) {
     return axios.post(`${base.sq}/org/position`, param);
   },
+  //岗位更新
+  positionUpt(param) {
+    return axios.put(`${base.sq}/org/position`, param);
+  },
   //岗位详情,演示
   positionDetail(id, params) {
     return axios.get(`${base.sq}/org/position/detail/${id}`, {

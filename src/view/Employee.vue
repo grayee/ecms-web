@@ -20,26 +20,28 @@
       <Layout>
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
           <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
-            <div style="margin-bottom:10px">
-              <Label for="d2">日期： </Label>
-              <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
-              至
-              <DateBox inputId="d2" format="yyyy-MM-dd"></DateBox>
-              <Label for="c1">条件1: </Label>
-              <ComboBox inputId="c1" :data="data"></ComboBox>
-            </div>
-            <div style="margin-bottom:10px">
-              <div style="float: left">
-                <Label for="name">条件2:</Label>
-                <TextBox inputId="name"></TextBox>
-                <Label for="n1">条件3:</Label>
-                <NumberBox inputId="n1" :value="100" :spinners="true"></NumberBox>
+            <Form :model="employee" :labelWidth="120" labelAlign="right">
+              <div style="margin-bottom:10px">
+                <Label for="name" align="right">员工编码：</Label>
+                <TextBox inputId="employeeNo" name="employeeNo" v-model="employee.employeeNo"></TextBox>
+                <Label for="c1" align="right">员工名称：</Label>
+                <TextBox inputId="employeeName" name="employeeName" v-model="employee.employeeName"></TextBox>
               </div>
-              <div style="float: right">
-                <LinkButton iconCls="icon-search" style="width:80px">查询</LinkButton>
-                <LinkButton iconCls="icon-cancel" style="width:80px"> 重置</LinkButton>
+              <div style="margin-bottom:10px">
+                <Label for="n1" align="right">员工简称：</Label>
+                <TextBox inputId="shortName" name="shortName" v-model="employee.shortName"></TextBox>
+
+                <Label for="d2" align="right">创建日期： </Label>
+                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateFrom"
+                         v-model="employee.createDateFrom"></DateBox>
+                至
+                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateTo" v-model="employee.createDateTo"></DateBox>
+                <Label/>
+
+                <LinkButton iconCls="icon-search" style="width:60px" @click="search()">查询</LinkButton>
+                <LinkButton iconCls="icon-cancel" style="width:60px" @click="reset()"> 重置</LinkButton>
               </div>
-            </div>
+            </Form>
           </Panel>
 
           <Panel title="列表" :bodyStyle="{padding:'3px'}">
@@ -59,20 +61,11 @@
               </div>
             </template>
 
-            <DataGrid style="height:100%"
-                      :pagination="true"
-                      :lazy="true"
-                      :pageList="pageList"
-                      :data="data"
-                      :total="total"
-                      :loading="loading"
-                      :pageNumber="pageNumber"
-                      :pageSize="pageSize"
-                      :pagePosition="pagePosition"
-                      :pageLinks="5"
+            <DataGrid style="height:100%" :pagination="true" :lazy="true" :pageList="pageList"
+                      :data="data" :total="total" :loading="loading" :pageNumber="pageNumber"
+                      :pageSize="pageSize" :pagePosition="pagePosition" :pageLinks="5"
                       :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
-                      @pageChange="onPageChange($event)"
-                      :selectionMode="'multiple'"
+                      @pageChange="onPageChange($event)" :selectionMode="'multiple'"
                       @selectionChange="selected($event)">
 
               <div slot="tpl" slot-scope="{datagrid}">
@@ -108,16 +101,13 @@
               </GridColumn>
 
               <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
-                          v-if="column.show" :align="column.align" :sortable="column.sortable"
-                          :width="column.width">
+                          v-if="column.show" :align="column.align" :sortable="column.sortable" :width="column.width">
               </GridColumn>
             </DataGrid>
           </Panel>
 
-          <Dialog ref="d2"
-                  :title="'调整显示列'"
-                  :dialogStyle="{width:'300px',height:'500px'}" :draggable="true" :closed="true"
-                  :modal="true">
+          <Dialog ref="d2" :title="'调整显示列'" :dialogStyle="{width:'300px',height:'500px'}" :draggable="true"
+                  :closed="true" :modal="true">
 
             <DataList style="width:100%;height:410px;" :data="displayColumns"
                       selectionMode="multiple" @rowClick="onRowClick($event)">
@@ -150,7 +140,7 @@
     data() {
       return {
         total: 0,
-        pageNumber: 1,
+        pageNumber: 0,
         pageSize: 20,
         data: [],
         checkedIds: [],
@@ -158,179 +148,73 @@
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
-        selection: null,
-        displayColumns: [
-          {
-            id: 1,
-            title: "公司编码",
-            field: "code",
-            width: "5%",
-            show: true
-          },
-          {
-            id: 2,
-            title: "公司名称",
-            field: "name",
-            width: "10%",
-            show: true
-          }, {
-            id: 3,
-            title: "公司简称",
-            field: "shortName",
-            width: "8%",
-            show: true
-          }, {
-            id: 4,
-            title: "公司地址",
-            field: "address",
-            width: "12%",
-            show: true
-          }, {
-            id: 5,
-            title: "公司邮编",
-            field: "postcode",
-            width: "8%",
-            show: true
-          }, {
-            id: 6,
-            title: "公司网址",
-            field: "webSite",
-            width: "12%",
-            show: true
-          }, {
-            id: 7,
-            title: "联系电话",
-            field: "telPhone",
-            width: "12%",
-            show: true
-          }, {
-            id: 8,
-            title: "邮件",
-            field: "email",
-            width: "12%",
-            show: true
-          }, {
-            id: 9,
-            title: "注册资本",
-            field: "registeredCapital",
-            width: "8%",
-            align: "right",
-            show: true
-          }, {
-            id: 10,
-            title: "注册时间",
-            field: "createTime",
-            width: "8%",
-            sortable: true,
-            show: false
-          }
-        ],
-        company: {
-          name: null,
-          shortName: null,
-          code: null,
-          email: null,
-          companyType: null,
-          parent: null
-        },
-        companyType: [
-          {value: 11, text: "总公司"},
-          {value: 12, text: "分公司"},
-          {value: 13, text: "本部"},
-          {value: 20, text: "中支公司"}
-        ],
-        companyList: [
-          {
-            id: 1,
-            text: "XX集团",
-            children: [
-              {
-                id: 11,
-                text: "北京分公司",
-                state: "closed",
-                children: [
-                  {
-                    id: 111,
-                    text: "海淀营业部"
-                  },
-                  {
-                    id: 112,
-                    text: "朝阳营业部"
-                  },
-                  {
-                    id: 113,
-                    text: "东城营业部"
-                  }
-                ]
-              },
-              {
-                id: 12,
-                text: "上海分公司",
-                children: [
-                  {
-                    id: 121,
-                    text: "浦东营业部"
-                  },
-                  {
-                    id: 122,
-                    text: "闽西营业部"
-                  },
-                  {
-                    id: 123,
-                    text: "上海滩营业部"
-                  }
-                ]
-              },
-              {
-                id: 13,
-                text: "河北分公司"
-              },
-              {
-                id: 14,
-                text: "石家庄营业部"
-              },
-              {
-                id: 15,
-                text: "邯郸营业部"
-              }
-            ]
-          }
-        ]
+        displayColumns: [],
+        employee: {}
       };
     },
     created() {
       this.loadPage(this.pageNumber, this.pageSize);
-      this.displayColumns.forEach((item, i) => {
-        if (item.show) {
-          this.checkedFields.push(item.field);
-        }
-      });
     },
     methods: {
       onPageChange(event) {
         this.loadPage(event.pageNumber, event.pageSize);
       },
-      loadPage(pageNumber, pageSize) {
+      loadPage(pageNumber, pageSize, filters) {
         this.loading = true;
-        setTimeout(() => {
-          this.$api.company.companyList({
-              pageNumber: 1,
-              pageSize: 20
+        this.$api.employee.employeeList({
+          pageNo: pageNumber,
+          pageSize: pageSize,
+          queryFilters: filters
+        }).then((response) => {
+          //console.log("--->", response.data);
+          let result = response.data.data;
+          this.total = result.totalCount;
+          this.pageNumber = result.pageNo;
+          this.data = result.content;
+          this.loading = false;
+          this.displayColumns = result.extras.displayColumns;
+          this.displayColumns.forEach((item, i) => {
+            if (item.show) {
+              this.checkedFields.push(item.field);
             }
-          ).then((response) => {
-            //console.log("--->", response.data);
-            let result = response.data;
-            this.total = result.total;
-            this.pageNumber = result.pageNumber;
-            this.data = result.rows;
-            this.loading = false;
+          });
+        }).catch(error => {
+          console.log("error", error);
+        });
+      },
+      search() {
+        let filters = [];
+        let dateFmt = Vue.filter('dateFmt');
+        for (let field in this.employee) {
+          let filter = {};
+          if (field.endsWith("From")) {
+            filter.property = field.substr(0, field.indexOf("From"));
+            filter.operator = "greaterThanOrEqualTo";
+            filter.value = dateFmt(this.employee[field]);
+          } else if (field.endsWith("To")) {
+            filter.property = field.substr(0, field.indexOf("To"));
+            filter.operator = "lessThanOrEqualTo";
+            filter.value =  dateFmt(this.employee[field],1);
+          } else {
+            filter.property = field;
+            filter.operator = "like";
+            filter.value = this.employee[field];
+          }
+          filters.push(filter);
+        }
+        this.loadPage(this.pageNumber, this.pageSize, filters);
+      },
+      reset() {
+        this.employee = {};
+      },
+      remove() {
+        if (this.checkedIds.length > 0) {
+          this.$api.employee.employeeDel(this.checkedIds).then((response) => {
+            this.loadPage(this.pageNumber, this.pageSize);
           }).catch(error => {
             console.log("error", error);
           });
-        }, 1000);
-      },
-      remove() {
-        if (this.checkedIds.length <= 0) {
+        } else {
           this.$messager.alert({
             title: "提示信息",
             icon: "warning",
@@ -339,7 +223,16 @@
         }
       },
       edit() {
-        console.log("edit");
+        if (this.checkedIds.length === 1) {
+          //path来匹配路由，然后通过query来传递参数
+          this.$router.push({path: '/org/employee/add?id=' + this.checkedIds[0]});
+        } else {
+          this.$messager.alert({
+            title: "提示信息",
+            icon: "warning",
+            msg: "请至少选中一条记录!"
+          });
+        }
       },
       refresh() {
         location.reload();
@@ -356,9 +249,7 @@
         this.$router.go(-1);
       },
       toAdd() {
-        this.$router.push({
-          path: '/admin/company/add'
-        });
+        this.$router.push({path: '/org/employee/add'});
       },
       onRowClick(row) {
         if (this.checkedFields.indexOf(row.field) > -1) {
@@ -403,11 +294,6 @@
 <style scoped>
   .error {
     margin: 4px 0 0 80px;
-  }
-
-  Label {
-    text-align: right;
-    margin-left: 5px;
   }
 
   .dataList {

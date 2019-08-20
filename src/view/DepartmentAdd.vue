@@ -127,7 +127,7 @@
     },
     methods: {
       getOrgRelation() {
-        this.$api.org.getRelationTree('').then((response) => {
+        this.$api.org.getRelationTree('2').then((response) => {
           if (response.status === 200) {
             this.departmentList = response.data.data;
             console.log(this.departmentList);

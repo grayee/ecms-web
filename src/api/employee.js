@@ -10,6 +10,10 @@ const employee = {
   employeeAdd(param) {
     return axios.post(`${base.sq}/org/employee`, param);
   },
+  //员工更新
+  employeeUpt(param) {
+    return axios.put(`${base.sq}/org/employee`, param);
+  },
   //员工详情,演示
   employeeDetail(id, params) {
     return axios.get(`${base.sq}/org/employee/detail/${id}`, {

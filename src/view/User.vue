@@ -1,4 +1,3 @@
-<!-- 组织管理视图 -->
 <!-- 1.模板 :html 结构-->
 <template>
   <!-- Content Wrapper. Contains page content -->
@@ -7,7 +6,7 @@
     <section class="content-header" style="padding: 0px 15px 0 15px;">
       <ol id="nav_title" class="breadcrumb" style="position: static; float: none;">
         <li class="active">
-          <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;首页
+          <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;权限管理
         </li>
         <li class="active">用户管理</li>
       </ol>
@@ -21,24 +20,30 @@
       <Layout>
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
           <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
-            <div style="margin-bottom:10px">
-              <Label for="loginName" style="text-align: right">登录账号: </Label>
-              <TextBox inputId="loginName"></TextBox>
-              <Label for="username" style="text-align: right">真实姓名: </Label>
-              <TextBox inputId="username"></TextBox>
-              <Label for="userStatus" style="text-align: right">用户状态: </Label>
-              <ComboBox inputId="userStatus" v-model="value" :data="data"></ComboBox>
-            </div>
-            <div style="margin-bottom:10px">
-              <div style="float: left">
+            <Form :model="user" :labelWidth="120" labelAlign="right">
+              <div style="margin-bottom:10px">
+                <Label for="username" align="right">登录账号：</Label>
+                <TextBox inputId="username" name="username" v-model="user.username"></TextBox>
+                <Label for="username" align="right">用户名：</Label>
+                <TextBox inputId="username" name="username" v-model="user.username"></TextBox>
+                <Label for="userStatus" style="text-align: right">用户状态: </Label>
+                <ComboBox inputId="userStatus" v-model="value" :data="data"></ComboBox>
+              </div>
+              <div style="margin-bottom:10px">
                 <Label for="name" style="text-align: right">所属机构:</Label>
                 <ComboBox inputId="c1" v-model="value" :data="data"></ComboBox>
-                <Label for="search" style="text-align: right"></Label>
-                <LinkButton inputId = "search" iconCls="icon-search" style="width:60px">查询</LinkButton>
-                <LinkButton iconCls="icon-cancel" style="width:60px"> 重置</LinkButton>
 
+                <Label for="d2" align="right">创建日期： </Label>
+                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateFrom"
+                         v-model="user.createDateFrom"></DateBox>
+                至
+                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateTo" v-model="user.createDateTo"></DateBox>
+                <Label/>
+
+                <LinkButton iconCls="icon-search" style="width:60px" @click="search()">查询</LinkButton>
+                <LinkButton iconCls="icon-cancel" style="width:60px" @click="reset()"> 重置</LinkButton>
               </div>
-            </div>
+            </Form>
           </Panel>
 
           <Panel title="列表" :bodyStyle="{padding:'3px'}">
@@ -47,29 +52,23 @@
               <div class="f-row">
                 <div class="f-full" style="line-height:30px">列表</div>
                 <div>
-                  <LinkButton iconCls="icon-add" :plain="true">新增</LinkButton>
-                  <LinkButton iconCls="icon-reload" :plain="true">刷新</LinkButton>
-                  <LinkButton iconCls="icon-remove" :plain="true">删除</LinkButton>
-                  <LinkButton iconCls="icon-edit" :plain="true">编辑</LinkButton>
-                  <LinkButton iconCls="icon-print" :plain="true">打印</LinkButton>
-                  <LinkButton iconCls="icon-back" :plain="true"></LinkButton>
+                  <LinkButton iconCls="icon-add" :plain="true" @click="toAdd()">新增</LinkButton>
+                  <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
+                  <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
+                  <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
+                  <LinkButton iconCls="icon-print" :plain="true" @click="print()">打印</LinkButton>
+                  <LinkButton iconCls="icon-back" :plain="true" @click="goBack()"></LinkButton>
+                  <LinkButton iconCls="icon-filter" :plain="true" @click="$refs.d2.open()">调整显示列</LinkButton>
                 </div>
               </div>
             </template>
 
-            <DataGrid style="height:100%"
-                      :pagination="true"
-                      :lazy="true"
-                      :pageList="pageList"
-                      :data="data"
-                      :total="total"
-                      :loading="loading"
-                      :pageNumber="pageNumber"
-                      :pageSize="pageSize"
-                      :pagePosition="pagePosition"
-                      :pageLinks="5"
+            <DataGrid style="height:100%" :pagination="true" :lazy="true" :pageList="pageList"
+                      :data="data" :total="total" :loading="loading" :pageNumber="pageNumber"
+                      :pageSize="pageSize" :pagePosition="pagePosition" :pageLinks="5"
                       :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
-                      @pageChange="onPageChange($event)"  :selectionMode="'multiple'"  @selectionChange="selected($event)">
+                      @pageChange="onPageChange($event)" :selectionMode="'multiple'"
+                      @selectionChange="selected($event)">
 
               <div slot="tpl" slot-scope="{datagrid}">
                 &nbsp;第
@@ -87,14 +86,14 @@
 
               <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
                 <template slot="header" slot-scope="scope">
-                  <input type="checkbox" @click="checkAll($event)" />
+                  <input type="checkbox" @click="checkAll($event)"/>
                 </template>
                 <template slot="body" slot-scope="scope">
-                  <input type="checkbox" v-model="checkedIds" :value="scope.row.inv"/>
+                  <input type="checkbox" v-model="checkedIds" :value="scope.row.id"/>
                 </template>
               </GridColumn>
 
-              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="5%">
+              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
                 <template slot="header" slot-scope="scope">
                   <span>序</span>
                 </template>
@@ -103,18 +102,33 @@
                 </template>
               </GridColumn>
 
-              <GridColumn field="inv" title="用户ID"></GridColumn>
-              <GridColumn field="name" title="用户名"></GridColumn>
-              <GridColumn field="amount" title="登录账号" align="right" sortable="true"></GridColumn>
-              <GridColumn field="price" title="状态" align="right" sortable="true"></GridColumn>
-              <GridColumn field="cost" title="密码有效期" align="right"></GridColumn>
-              <GridColumn field="note" title="创建时间"></GridColumn>
+              <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
+                          v-if="column.show" :align="column.align" :sortable="column.sortable" :width="column.width">
+              </GridColumn>
             </DataGrid>
-
           </Panel>
+
+          <Dialog ref="d2" :title="'调整显示列'" :dialogStyle="{width:'300px',height:'500px'}" :draggable="true"
+                  :closed="true" :modal="true">
+
+            <DataList style="width:100%;height:410px;" :data="displayColumns"
+                      selectionMode="multiple" @rowClick="onRowClick($event)">
+              <template slot-scope="scope">
+                <div class="dataList">
+                  <input type="checkbox" :value="scope.row.field" :id="scope.row.id" v-model="checkedFields"
+                         style="margin-bottom: 3px"/>
+                  <label :for="scope.row.id">{{scope.row.title}}</label>
+                </div>
+              </template>
+            </DataList>
+
+            <div class="dialog-button">
+              <LinkButton style="width:60px" @click="submitForm($refs.d2)">确认</LinkButton>
+              <LinkButton style="width:60px" @click="$refs.d2.close()">取消</LinkButton>
+            </div>
+          </Dialog>
+
         </LayoutPanel>
-
-
       </Layout>
     </section>
     <!-- /.content -->
@@ -128,18 +142,16 @@
     data() {
       return {
         total: 0,
-        pageNumber: 1,
+        pageNumber: 0,
         pageSize: 20,
         data: [],
-        checkedIds:[],
+        checkedIds: [],
+        checkedFields: [],
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         pagePosition: "bottom",
-        pageOptions: [
-          {value: "bottom", text: "Bottom"},
-          {value: "top", text: "Top"},
-          {value: "both", text: "Both"}
-        ]
+        displayColumns: [],
+        user: {}
       };
     },
     created() {
@@ -149,65 +161,149 @@
       onPageChange(event) {
         this.loadPage(event.pageNumber, event.pageSize);
       },
-      loadPage(pageNumber, pageSize) {
+      loadPage(pageNumber, pageSize, filters) {
         this.loading = true;
-        setTimeout(() => {
-          let result = this.getData(pageNumber, pageSize);
-          this.total = result.total;
-          this.pageNumber = result.pageNumber;
-          this.data = result.rows;
+        this.$api.user.userList({
+          pageNo: pageNumber,
+          pageSize: pageSize,
+          queryFilters: filters
+        }).then((response) => {
+          //console.log("--->", response.data);
+          let result = response.data.data;
+          this.total = result.totalCount;
+          this.pageNumber = result.pageNo;
+          this.data = result.content;
           this.loading = false;
-        }, 100);
+          this.displayColumns = result.extras.displayColumns;
+          this.displayColumns.forEach((item, i) => {
+            if (item.show) {
+              this.checkedFields.push(item.field);
+            }
+          });
+        }).catch(error => {
+          console.log("error", error);
+        });
       },
-      getData(pageNumber, pageSize) {
-        let total = 100000;
-        let data = [];
-        let start = (pageNumber - 1) * pageSize;
-        for (let i = start + 1; i <= start + pageSize; i++) {
-          let amount = Math.floor(Math.random() * 1000);
-          let price = Math.floor(Math.random() * 1000);
-          data.push({
-            inv: "Inv No " + i,
-            name: "Name " + i,
-            amount: amount,
-            price: price,
-            cost: amount * price,
-            note: "Note " + i
+      search() {
+        let filters = [];
+        let dateFmt = Vue.filter('dateFmt');
+        for (let field in this.user) {
+          let filter = {};
+          if (field.endsWith("From")) {
+            filter.property = field.substr(0, field.indexOf("From"));
+            filter.operator = "greaterThanOrEqualTo";
+            filter.value = dateFmt(this.user[field]);
+          } else if (field.endsWith("To")) {
+            filter.property = field.substr(0, field.indexOf("To"));
+            filter.operator = "lessThanOrEqualTo";
+            filter.value =  dateFmt(this.user[field],1);
+          } else {
+            filter.property = field;
+            filter.operator = "like";
+            filter.value = this.user[field];
+          }
+          filters.push(filter);
+        }
+        this.loadPage(this.pageNumber, this.pageSize, filters);
+      },
+      reset() {
+        this.user = {};
+      },
+      remove() {
+        if (this.checkedIds.length > 0) {
+          this.$api.user.userDel(this.checkedIds).then((response) => {
+            this.loadPage(this.pageNumber, this.pageSize);
+          }).catch(error => {
+            console.log("error", error);
+          });
+        } else {
+          this.$messager.alert({
+            title: "提示信息",
+            icon: "warning",
+            msg: "请至少选中一条记录!"
           });
         }
-        return {
-          total: total,
-          pageNumber: pageNumber,
-          pageSize: pageSize,
-          rows: data
-        };
       },
-      checkAll(event){
-        if(event.currentTarget.checked){
-          this.checkedIds = [];
-          let _this = this;
-          this.data.forEach(function(item, i) {
-            _this.checkedIds.push(item.inv);
+      edit() {
+        if (this.checkedIds.length === 1) {
+          //path来匹配路由，然后通过query来传递参数
+          this.$router.push({path: '/org/user/add?id=' + this.checkedIds[0]});
+        } else {
+          this.$messager.alert({
+            title: "提示信息",
+            icon: "warning",
+            msg: "请至少选中一条记录!"
           });
-        }else{
-          this.checkedIds = [];
+        }
+      },
+      refresh() {
+        location.reload();
+      },
+      print() {
+        let printhtml = window.document.body.innerHTML; // 获取打印区域
+        let oldhtml = window.document.innerHTML; // 保存原始内容
+        document.innerHtml = printhtml; // 赋值打印
+        window.print();
+        document.innerHtml = oldhtml; // 还原页面
+        window.location.reload(); // 刷新解决页面无法点击
+      },
+      goBack() {
+        this.$router.go(-1);
+      },
+      toAdd() {
+        this.$router.push({path: '/org/user/add'});
+      },
+      onRowClick(row) {
+        if (this.checkedFields.indexOf(row.field) > -1) {
+          delete this.checkedIds[this.checkedFields.indexOf(row.field)];
+        } else {
+          this.checkedFields.push(row.field);
         }
       },
       selected(event) {
         this.checkedIds = [];
         let _this = this;
         event.forEach(function (item, i) {
-          _this.checkedIds.push(item.inv);
+          _this.checkedIds.push(item.id);
         });
       },
+      checkAll(event) {
+        if (event.currentTarget.checked) {
+          this.checkedIds = [];
+          let _this = this;
+          this.data.forEach(function (item, i) {
+            _this.checkedIds.push(item.id);
+          });
+        } else {
+          this.checkedIds = [];
+        }
+      },
+      submitForm(dialog) {
+        if (this.checkedFields.length <= 0) {
+          alert("请至少选中一条数据");
+        } else {
+          this.displayColumns.forEach((column, index) => {
+            column.show = this.checkedFields.indexOf(column.field) > -1;
+          });
+          dialog.close();
+        }
+      }
     }
   };
 </script>
 
 <!-- 3.样式:解决样式     -->
 <style scoped>
-  .panel-header {
-    background-color: #f5f5f5;
+  .error {
+    margin: 4px 0 0 80px;
+  }
+
+  .dataList {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    height: 35px;
+    border-bottom: 1px solid #eee;
   }
 </style>
 <!--

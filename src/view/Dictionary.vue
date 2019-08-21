@@ -6,9 +6,9 @@
     <section class="content-header" style="padding: 0px 15px 0 15px;">
       <ol id="nav_title" class="breadcrumb" style="position: static; float: none;">
         <li class="active">
-          <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;权限管理
+          <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;系统管理
         </li>
-        <li class="active">用户管理</li>
+        <li class="active">数据字典管理</li>
       </ol>
     </section>
 
@@ -20,24 +20,18 @@
       <Layout>
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
           <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
-            <Form :model="user" :labelWidth="120" labelAlign="right">
+            <Form :model="dictionary" :labelWidth="120" labelAlign="right">
+
               <div style="margin-bottom:10px">
-                <Label for="loginId" align="right">登录账号：</Label>
-                <TextBox inputId="loginId" name="loginId" v-model="user.loginId"></TextBox>
-                <Label for="username" align="right">用户名：</Label>
-                <TextBox inputId="username" name="username" v-model="user.username"></TextBox>
-                <Label for="userStatus" style="text-align: right">用户状态: </Label>
-                <ComboBox inputId="userStatus" v-model="value" :data="data"></ComboBox>
-              </div>
-              <div style="margin-bottom:10px">
-                <Label for="name" style="text-align: right">所属机构:</Label>
-                <ComboBox inputId="c1" v-model="value" :data="data"></ComboBox>
+                <Label for="name" align="right">字典编码：</Label>
+                <TextBox inputId="dictionaryNo" name="dictionaryNo" v-model="dictionary.dictionaryNo"></TextBox>
 
                 <Label for="d2" align="right">创建日期： </Label>
                 <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateFrom"
-                         v-model="user.createDateFrom"></DateBox>
+                         v-model="dictionary.createDateFrom"></DateBox>
                 至
-                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateTo" v-model="user.createDateTo"></DateBox>
+                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateTo"
+                         v-model="dictionary.createDateTo"></DateBox>
                 <Label/>
 
                 <LinkButton iconCls="icon-search" style="width:60px" @click="search()">查询</LinkButton>
@@ -53,12 +47,10 @@
                 <div class="f-full" style="line-height:30px">列表</div>
                 <div>
                   <LinkButton iconCls="icon-add" :plain="true" @click="toAdd()">新增</LinkButton>
-                  <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
-                  <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
                   <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
-                  <LinkButton iconCls="icon-print" :plain="true" @click="print()">打印</LinkButton>
+                  <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
+                  <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
                   <LinkButton iconCls="icon-back" :plain="true" @click="goBack()"></LinkButton>
-                  <LinkButton iconCls="icon-filter" :plain="true" @click="$refs.d2.open()">调整显示列</LinkButton>
                 </div>
               </div>
             </template>
@@ -108,63 +100,35 @@
             </DataGrid>
           </Panel>
 
-          <Dialog ref="d2" :title="'调整显示列'" :dialogStyle="{width:'300px',height:'500px'}" :draggable="true"
-                  :closed="true" :modal="true">
 
-            <DataList style="width:100%;height:410px;" :data="displayColumns"
-                      selectionMode="multiple" @rowClick="onRowClick($event)">
-              <template slot-scope="scope">
-                <div class="dataList">
-                  <input type="checkbox" :value="scope.row.field" :id="scope.row.id" v-model="checkedFields"
-                         style="margin-bottom: 3px"/>
-                  <label :for="scope.row.id">{{scope.row.title}}</label>
-                </div>
-              </template>
-            </DataList>
-
-            <div class="dialog-button">
-              <LinkButton style="width:60px" @click="submitForm($refs.d2)">确认</LinkButton>
-              <LinkButton style="width:60px" @click="$refs.d2.close()">取消</LinkButton>
-            </div>
-          </Dialog>
-
-          <Dialog ref="d1" :title="userDialogTitle" :dialogStyle="{width:'480px',height:'400px'}"
+          <Dialog ref="d1" :title="dictDialogTitle" :dialogStyle="{width:'480px',height:'380px'}"
                   bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
             <div class="f-full" style="padding: 20px 60px 20px 20px">
-              <p>
-                友情提示：密码至少为6位，只能为数字、字母、下划线，不能使用中文。
-              </p>
-              <Form ref="form" :model="user">
-                <Label for="username" align="right">用户姓名:</Label>
-                <ComboTree name='username' :data="data" v-model="user.username" placeholder="-请选择-">
-                  <Tree slot="tree"></Tree>
-                </ComboTree>
-                <div class="error">{{ errors.first('username') }}</div>
-
-                <Label for="loginId" align="right">登录账号:</Label>
-                <TextBox inputId="loginId" name="loginId" v-model="user.loginId" style="width:14em"
-                         v-validate="'required|max:10'" data-vv-as="登录账号" placeholder="请输入登录账号" iconCls="icon-man"></TextBox>
+              <Form ref="form" :model="dictionary">
+                <Label for="name" align="right">类型名称:</Label>
+                <TextBox inputId="name" name="name" v-model="dictionary.name" style="width:18em"
+                         v-validate="'required|max:10'" data-vv-as="类型名称" placeholder="请输入类型名称"></TextBox>
                 <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('loginId') }}</div>
+                <div class="error">{{ errors.first('name') }}</div>
 
-                <Label for="password" align="right">登录密码:</Label>
-                <PasswordBox inputId="password" v-model="user.password" style="width:14em" v-validate="'required|min:6'"
-                             data-vv-as="登录密码" placeholder="请输入登录密码:"></PasswordBox>
-                <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('password') }}</div>
+                <Label for="code" align="right">类型编码:</Label>
+                <TextBox inputId="code" name="code" v-model="dictionary.code" style="width:18em"
+                         v-validate="'required|max:30'" data-vv-as="类型编码"  placeholder="请输入类型编码"></TextBox>
+                <div class="error">{{ errors.first('code') }}</div>
 
-                <Label for="pwdConfirm" align="right">确认密码:</Label>
-                <PasswordBox inputId="pwdConfirm" v-model="user.password" style="width:14em" placeholder="请确认登录密码:"></PasswordBox>
-                <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('pwdConfirm') }}</div>
-
-                <Label for="enableStatus" align="right">是否启用:</Label>
+                <Label for="system" align="right">是否内置:</Label>
                 <label>
-                  <input type="radio" name="enableStatus" id="e1" value="1" v-model="user.enableStatus" checked> 是
+                  <input type="radio" name="system" id="e1" value="1" v-model="dictionary.system" checked> 是
                 </label>
                 <label>
-                  <input type="radio" name="enableStatus" id="e0" value="0" v-model="user.enableStatus" >否
+                  <input type="radio" name="system" id="e0" value="0" v-model="dictionary.system">否
                 </label>
+                <div></div>
+
+                <Label for="description" align="right">描述信息:</Label>
+                <TextBox inputId="description" name="description" :multiline="true" v-model="dictionary.description"
+                         style="width:218px;height:100px;"></TextBox>
+                <div class="error">{{ errors.first('description') }}</div>
               </Form>
             </div>
             <div class="dialog-button">
@@ -196,8 +160,8 @@
         loading: false,
         pagePosition: "bottom",
         displayColumns: [],
-        user: {},
-        userDialogTitle:""
+        dictionary: {},
+        dictDialogTitle: ""
       };
     },
     created() {
@@ -209,7 +173,7 @@
       },
       loadPage(pageNumber, pageSize, filters) {
         this.loading = true;
-        this.$api.user.userList({
+        this.$api.dict.dictionaryList({
           pageNo: pageNumber,
           pageSize: pageSize,
           queryFilters: filters
@@ -233,31 +197,31 @@
       search() {
         let filters = [];
         let dateFmt = Vue.filter('dateFmt');
-        for (let field in this.user) {
+        for (let field in this.dictionary) {
           let filter = {};
           if (field.endsWith("From")) {
             filter.property = field.substr(0, field.indexOf("From"));
             filter.operator = "greaterThanOrEqualTo";
-            filter.value = dateFmt(this.user[field]);
+            filter.value = dateFmt(this.dictionary[field]);
           } else if (field.endsWith("To")) {
             filter.property = field.substr(0, field.indexOf("To"));
             filter.operator = "lessThanOrEqualTo";
-            filter.value =  dateFmt(this.user[field],1);
+            filter.value = dateFmt(this.dictionary[field], 1);
           } else {
             filter.property = field;
             filter.operator = "like";
-            filter.value = this.user[field];
+            filter.value = this.dictionary[field];
           }
           filters.push(filter);
         }
         this.loadPage(this.pageNumber, this.pageSize, filters);
       },
       reset() {
-        this.user = {};
+        this.dictionary = {};
       },
       remove() {
         if (this.checkedIds.length > 0) {
-          this.$api.user.userDel(this.checkedIds).then((response) => {
+          this.$api.dict.dictionaryDel(this.checkedIds).then((response) => {
             this.loadPage(this.pageNumber, this.pageSize);
           }).catch(error => {
             console.log("error", error);
@@ -272,14 +236,8 @@
       },
       edit() {
         if (this.checkedIds.length === 1) {
-          this.userDialogTitle = "用户编辑";
-          this.$api.user.userDetail(this.checkedIds[0]).then((response) => {
-            this.user = response.data.data;
-          }).catch(error => {
-            console.log("get menu detail error", error);
-          });
-
-          this.$refs.d1.open();
+          //path来匹配路由，然后通过query来传递参数
+          this.$router.push({path: '/org/dict/add?id=' + this.checkedIds[0]});
         } else {
           this.$messager.alert({
             title: "提示信息",
@@ -303,8 +261,8 @@
         this.$router.go(-1);
       },
       toAdd() {
-        this.user={};
-        this.userDialogTitle = "用户新增";
+        this.dictionary = {};
+        this.dictDialogTitle = "字典类型新增";
         this.$refs.d1.open();
       },
       onRowClick(row) {
@@ -332,24 +290,19 @@
           this.checkedIds = [];
         }
       },
-      submitForm(dialog) {
-        if (this.checkedFields.length <= 0) {
-          alert("请至少选中一条数据");
-        } else {
-          this.displayColumns.forEach((column, index) => {
-            column.show = this.checkedFields.indexOf(column.field) > -1;
-          });
-          dialog.close();
-        }
-      },
       confirm() {
         this.$validator.validateAll().then((valid) => {
           if (valid) {
-            console.log("commit json data:" + JSON.stringify(this.user));
-            if (this.user.id) {
+            console.log("commit json data:" + JSON.stringify(this.dictionary));
+            if (this.dictionary.id) {
 
             } else {
-
+              this.$api.dict.dictionaryAdd(this.menu).then((response) => {
+                this.loadPage(event.pageNumber, event.pageSize);
+                this.$refs.d1.close();
+              }).catch(error => {
+                console.log("error", error);
+              });
             }
           }
         });
@@ -365,6 +318,7 @@
     font-size: 12px;
     margin: 4px 120px;
   }
+
   .dataList {
     display: flex;
     align-items: center;
@@ -373,3 +327,6 @@
     border-bottom: 1px solid #eee;
   }
 </style>
+<!--
+https://www.cnblogs.com/wyguo/p/3556049.html
+-->

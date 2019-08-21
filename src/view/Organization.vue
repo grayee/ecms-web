@@ -187,7 +187,7 @@
   }
 
   .panel {
-    min-height: 600px;
+    min-height: 500px;
   }
 </style>
 <!--

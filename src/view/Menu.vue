@@ -56,7 +56,7 @@
             </TreeGrid>
           </Panel>
 
-          <Dialog ref="d1" :title="'添加菜单'" :dialogStyle="{width:'480px',height:'500px'}"
+          <Dialog ref="d1" :title="menuDialogTitle" :dialogStyle="{width:'480px',height:'500px'}"
                   bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
             <div class="f-full" style="padding: 20px 60px 20px 20px">
               <Form ref="form" :model="menu">
@@ -135,7 +135,8 @@
           {value: 2, text: "页面按钮"},
         ],
         menuName:null,
-        menus: null
+        menus: null,
+        menuDialogTitle:""
       };
     },
     created() {
@@ -188,16 +189,8 @@
         this.$refs.t1.doFilter({field:'text',op:'equal',value:this.menuName});
       },
       add() {
-        this.menu = {
-          name: null,
-          url: null,
-          component: null,
-          orderNo: null,
-          type: 1,
-          icon: null,
-          parentId: null,
-          remark: null
-        };
+        this.menu = {};
+        this.menuDialogTitle="新增菜单";
         if (this.selection) {
           this.menu.parentId = this.selection.id;
           this.$refs.d1.open();
@@ -229,6 +222,7 @@
         }
       },
       edit() {
+        this.menuDialogTitle="编辑菜单";
         if (this.selection.id) {
           this.$api.menu.menuDetail(this.selection.id).then((response) => {
             this.menu = response.data.data;

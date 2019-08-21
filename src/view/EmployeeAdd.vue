@@ -32,10 +32,10 @@
                   <div class="error">{{ errors.first('employeeName') }}</div>
                 </div>
                 <div>
-                  <Label for="shortName" align="right">英文名称:</Label>
-                  <TextBox inputId="shortName" name="shortName" v-model="employee.shortName"
+                  <Label for="englishName" align="right">英文名称:</Label>
+                  <TextBox inputId="englishName" name="englishName" v-model="employee.englishName"
                            v-validate="'required|max:10'" style="width:18em" data-vv-as="英文名称" placeholder="请输入英文名称"/>
-                  <div class="error">{{ errors.first('shortName') }}</div>
+                  <div class="error">{{ errors.first('englishName') }}</div>
                 </div>
               </div>
               <div class="divRow">
@@ -47,9 +47,12 @@
                 </div>
                 <div>
                   <Label for="sex" align="right">性别:</Label>
-                  <ComboBox inputId="sex" v-validate="'required'" name="sex" :data="sex"
-                            v-model="employee.sex" data-vv-as="性别" placeholder="性别"></ComboBox>
-                  <div class="error">{{ errors.first('sex') }}</div>
+                    <label>
+                      <input type="radio" name="sex" id="male" value="male" v-model="employee.sex" checked> 男
+                    </label>
+                    <label>
+                      <input type="radio" name="sex" id="female" value="female" v-model="employee.sex" >女
+                    </label>
                 </div>
               </div>
               <div class="divRow">
@@ -83,27 +86,20 @@
               </div>
               <div class="divRow">
                 <div>
-                  <Label for="linkMan" align="right">联系人:</Label>
-                  <TextBox inputId="linkMan" name="linkMan" v-model="employee.linkMan"
-                           v-validate="'required|max:20'" style="width:18em" data-vv-as="联系人" placeholder="请输入联系人"/>
-                  <div class="error">{{ errors.first('linkMan') }}</div>
-                </div>
-
-                <div>
                   <Label for="mobilePhone" align="right">手机号码:</Label>
                   <TextBox inputId="mobilePhone" name="mobilePhone" v-model="employee.mobilePhone"
                            v-validate="'required|max:11'" data-vv-as="手机号码" placeholder="请输入手机号码"/>
                   <div class="error">{{ errors.first('mobilePhone') }}</div>
                 </div>
-              </div>
-
-              <div class="divRow">
                 <div>
                   <Label for="postalCode" align="right">邮编:</Label>
                   <TextBox inputId="postalCode" name="postalCode" v-model="employee.postalCode"
                            v-validate="'required|max:100'" style="width:18em" data-vv-as="邮编" placeholder="请输入邮编"/>
                   <div class="error">{{ errors.first('postalCode') }}</div>
                 </div>
+              </div>
+
+              <div class="divRow">
                 <div>
                   <Label for="address" align="right">联系地址:</Label>
                   <TextBox inputId="t2" name="address" v-model="employee.address"

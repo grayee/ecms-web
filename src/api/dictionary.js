@@ -23,6 +23,9 @@ const dictionary = {
   dictionaryDel(param) {
     return axios.delete(`${base.sq}/sys/dict`, {data: param});
   },
+  getValueTree(param){
+    return axios.get(`${base.sq}/sys/dict/tree/`+param);
+  }
   // 其他接口…………
 };
 

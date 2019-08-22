@@ -50,6 +50,7 @@
                   <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
                   <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
                   <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
+                  <LinkButton iconCls="icon-edit" :plain="true" @click="editDetail()">详细</LinkButton>
                   <LinkButton iconCls="icon-back" :plain="true" @click="goBack()"></LinkButton>
                 </div>
               </div>
@@ -116,15 +117,6 @@
                          v-validate="'required|max:30'" data-vv-as="类型编码"  placeholder="请输入类型编码"></TextBox>
                 <div class="error">{{ errors.first('code') }}</div>
 
-                <Label for="system" align="right">是否内置:</Label>
-                <label>
-                  <input type="radio" name="system" id="e1" value="1" v-model="dictionary.system" checked> 是
-                </label>
-                <label>
-                  <input type="radio" name="system" id="e0" value="0" v-model="dictionary.system">否
-                </label>
-                <div></div>
-
                 <Label for="description" align="right">描述信息:</Label>
                 <TextBox inputId="description" name="description" :multiline="true" v-model="dictionary.description"
                          style="width:218px;height:100px;"></TextBox>
@@ -161,7 +153,8 @@
         pagePosition: "bottom",
         displayColumns: [],
         dictionary: {},
-        dictDialogTitle: ""
+        dictDialogTitle: "",
+        selection:{}
       };
     },
     created() {
@@ -236,14 +229,19 @@
       },
       edit() {
         if (this.checkedIds.length === 1) {
-          //path来匹配路由，然后通过query来传递参数
-          this.$router.push({path: '/org/dict/add?id=' + this.checkedIds[0]});
+          this.dictDialogTitle = "字典类型编辑";
+          this.dictionary =this.selection;
+          delete this.dictionary.isSystem;
+          this.$refs.d1.open();
         } else {
-          this.$messager.alert({
-            title: "提示信息",
-            icon: "warning",
-            msg: "请至少选中一条记录!"
-          });
+          this.$messager.alert({title: "提示信息", icon: "warning",msg: "请至少选中一条记录!"});
+        }
+      },
+      editDetail(){
+        if (this.checkedIds.length === 1) {
+          this.$router.push({path: '/sys/dict/add?id=' + this.checkedIds[0]});
+        } else {
+          this.$messager.alert({title: "提示信息", icon: "warning",msg: "请至少选中一条记录!"});
         }
       },
       refresh() {
@@ -261,7 +259,6 @@
         this.$router.go(-1);
       },
       toAdd() {
-        this.dictionary = {};
         this.dictDialogTitle = "字典类型新增";
         this.$refs.d1.open();
       },
@@ -273,6 +270,7 @@
         }
       },
       selected(event) {
+        this.selection =event[0];
         this.checkedIds = [];
         let _this = this;
         event.forEach(function (item, i) {
@@ -297,7 +295,7 @@
             if (this.dictionary.id) {
 
             } else {
-              this.$api.dict.dictionaryAdd(this.menu).then((response) => {
+              this.$api.dict.dictionaryAdd(this.dictionary).then((response) => {
                 this.loadPage(event.pageNumber, event.pageSize);
                 this.$refs.d1.close();
               }).catch(error => {

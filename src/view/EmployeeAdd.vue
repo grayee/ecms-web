@@ -138,7 +138,7 @@
     data() {
       return {
         loading: false,
-        employee: {},
+        employee: {sex:"male"},
         employeeType: [
           {value: 0, text: "非正式"},
           {value: 1, text: "正式"},
@@ -176,7 +176,6 @@
             });
           }
           if (this.$route.params.pid != null) {
-            this.employee = {};
             //组织机构新增
             this.employee.parentId = this.$route.params.pid;
           }

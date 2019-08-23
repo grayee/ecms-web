@@ -303,7 +303,8 @@
         this.$router.go(-1);
       },
       toAdd() {
-        this.user={};
+        this.user = {};
+        this.user.enableStatus = 1;
         this.userDialogTitle = "用户新增";
         this.$refs.d1.open();
       },

@@ -20,7 +20,7 @@
         -------------------------->
       <Layout>
 
-        <LayoutPanel region="west" :bodyStyle="{padding:'3px'}" style="width:150px;">
+        <LayoutPanel region="west" :split="true"  title="角色Tree" :bodyStyle="{padding:'3px'}" style="width:150px;">
           <Tree :data="menuData" :checkbox="true"></Tree>
         </LayoutPanel>
 

@@ -16,10 +16,8 @@
     <!-- Main content -->
     <section class="content container-fluid" style="background: rgb(255, 255, 255);padding:5px">
       <Layout>
-        <LayoutPanel region="west" :bodyStyle="{padding:'3px'}" style="width:200px;">
-          <Panel title="组织机构树" :bodyStyle="{padding:'3px',marginBottom:'5px',height: '100%'}">
+        <LayoutPanel region="west" :split="true" :bodyStyle="{padding:'3px'}" title="组织机构树" style="width:200px;">
             <Tree ref="tree" :data="orgRelationData" :checkbox="false" @selectionChange="selected($event)"></Tree>
-          </Panel>
         </LayoutPanel>
 
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">

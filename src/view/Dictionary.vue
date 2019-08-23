@@ -23,8 +23,8 @@
             <Form :model="dictionary" :labelWidth="120" labelAlign="right">
 
               <div style="margin-bottom:10px">
-                <Label for="name" align="right">字典编码：</Label>
-                <TextBox inputId="dictionaryNo" name="dictionaryNo" v-model="dictionary.dictionaryNo"></TextBox>
+                <Label for="code" align="right">字典编码：</Label>
+                <TextBox inputId="code" name="code" v-model="dictionary.code"></TextBox>
 
                 <Label for="d2" align="right">创建日期： </Label>
                 <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateFrom"
@@ -60,7 +60,7 @@
                       :data="data" :total="total" :loading="loading" :pageNumber="pageNumber"
                       :pageSize="pageSize" :pagePosition="pagePosition" :pageLinks="5"
                       :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
-                      @pageChange="onPageChange($event)" :selectionMode="'multiple'"
+                      @pageChange="onPageChange($event)" :selectionMode="'multiple'" @rowDblClick="editDetail($event)"
                       @selectionChange="selected($event)">
 
               <div slot="tpl" slot-scope="{datagrid}">
@@ -237,7 +237,10 @@
           this.$messager.alert({title: "提示信息", icon: "warning",msg: "请至少选中一条记录!"});
         }
       },
-      editDetail(){
+      editDetail(event){
+        if (event) {
+          this.checkedIds.push(event.id);
+        }
         if (this.checkedIds.length === 1) {
           this.$router.push({path: '/sys/dict/add?id=' + this.checkedIds[0]});
         } else {
@@ -293,7 +296,12 @@
           if (valid) {
             console.log("commit json data:" + JSON.stringify(this.dictionary));
             if (this.dictionary.id) {
-
+              this.$api.dict.dictionaryUpt(this.dictionary).then((response) => {
+                this.loadPage(event.pageNumber, event.pageSize);
+                this.$refs.d1.close();
+              }).catch(error => {
+                console.log("error", error);
+              });
             } else {
               this.$api.dict.dictionaryAdd(this.dictionary).then((response) => {
                 this.loadPage(event.pageNumber, event.pageSize);

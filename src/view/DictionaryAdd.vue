@@ -40,7 +40,7 @@
                 <div class="divRow">
                   <div>
                     <Label for="code" align="right">编码:</Label>
-                    <TextBox inputId="code" name="code" v-model="dictValue.code" v-validate="'required|min:5'"
+                    <TextBox inputId="code" name="code" v-model="dictValue.code" v-validate="'required|max:10'"
                              style="width:18em" data-vv-as="编码" placeholder="请输入编码"/>
                     <div class="error">{{ errors.first('code') }}</div>
                   </div>
@@ -52,6 +52,15 @@
                     <TextBox inputId="name" name="name" v-model="dictValue.name"
                              v-validate="'required|max:10'" style="width:18em" data-vv-as="名称" placeholder="请输入名称"/>
                     <div class="error">{{ errors.first('name') }}</div>
+                  </div>
+                </div>
+
+                <div class="divRow">
+                  <div>
+                    <Label for="value" align="right">字典值:</Label>
+                    <TextBox inputId="value" name="value" v-model="dictValue.value"
+                             v-validate="'required|max:10'" style="width:18em" data-vv-as="字典值" placeholder="请输入字典值"/>
+                    <div class="error">{{ errors.first('value') }}</div>
                   </div>
                 </div>
 
@@ -87,6 +96,7 @@
 
                 <div class="formBtn">
                   <LinkButton style="width:60px" @click="submitForm()">保存</LinkButton>
+                  <LinkButton style="width:60px" @click="goBack()">返回</LinkButton>
                 </div>
               </div>
             </Form>
@@ -106,10 +116,7 @@
       return {
         selectedId: null,
         dictValues: [],
-        displayColumns: [],
         dictValue: {},
-        subOrgTypes: [],
-        curOrgType: null,
         loading: false
       };
     },
@@ -118,37 +125,40 @@
     },
     methods: {
       getValueTree() {
-        this.$api.dict.getValueTree(this.$route.query.id ).then((response) => {
+        this.$api.dict.getValueTree(this.$route.query.id).then((response) => {
           if (response.status === 200) {
             this.dictValues = response.data.data;
-            console.log(this.dictValues);
-            //this.$refs.tree.selectNode(this.dictValues[0]);
           }
         }).catch(error => {
           console.log("error", error);
         });
       },
-      add(event) {
-        let urlName;
-        this.$router.push({name: urlName, params: {pid: this.selectedId}});
+      add() {
+        this.dictValue = {};
+        this.dictValue.enableStatus = 1;
       },
       remove() {
-        let orgId = this.dictValue.id;
-
+        if(this.dictValue.id){
+          this.$api.dict.dictValueDel(this.dictValue.id).then((response) => {
+            if (response.status === 200) {
+              this.getValueTree();
+              this.add();
+            }
+          }).catch(error => {
+            console.log("error", error);
+          });
+        }else{
+          this.$messager.alert({ title: "提示信息", icon: "warning", msg: "请至少选中一条记录!" });
+        }
       },
       selected(event) {
         this.selectedId = event.id;
-        this.$api.org.getOrgDetail(this.selectedId).then((response) => {
-          if (response.status === 200) {
-            let result = response.data.data;
-            this.displayColumns = result.extras.displayColumns;
-            this.dictValue = result.content;
-            this.subOrgTypes = result.extras.subOrgTypes;
-            this.curOrgType = result.extras.curOrgType;
-          }
-        }).catch(error => {
-          console.log("error", error);
-        });
+        if (event.attributes) {
+          this.dictValue = event.attributes.meta;
+        } else {
+          this.dictValue = {};
+          this.dictValue.enableStatus = 1;
+        }
       },
       goBack() {
         this.$router.go(-1);
@@ -156,7 +166,25 @@
       submitForm() {
         this.$validator.validateAll().then((valid) => {
           if (valid) {
-
+            if (this.dictValue.id) {
+              this.$api.dict.dictValueUpt(this.$route.query.id, this.dictValue).then((response) => {
+                if (response.status === 200) {
+                  this.getValueTree();
+                  this.add();
+                }
+              }).catch(error => {
+                console.log("error", error);
+              });
+            } else {
+              this.$api.dict.dictValueAdd(this.$route.query.id, this.dictValue).then((response) => {
+                if (response.status === 200) {
+                  this.getValueTree();
+                  this.add();
+                }
+              }).catch(error => {
+                console.log("error", error);
+              });
+            }
           }
         })
       }

@@ -10,9 +10,17 @@ const dictionary = {
   dictionaryAdd(param) {
     return axios.post(`${base.sq}/sys/dict`, param);
   },
+  //字典值新增
+  dictValueAdd(type, param) {
+    return axios.post(`${base.sq}/sys/dict/` + type, param);
+  },
   //字典更新
   dictionaryUpt(param) {
     return axios.put(`${base.sq}/sys/dict`, param);
+  },
+  //字典值更新
+  dictValueUpt(type,param) {
+    return axios.put(`${base.sq}/sys/dict/`+type, param);
   },
   //字典详情,演示
   dictionaryDetail(id, params) {
@@ -22,6 +30,9 @@ const dictionary = {
   },
   dictionaryDel(param) {
     return axios.delete(`${base.sq}/sys/dict`, {data: param});
+  },
+  dictValueDel(param) {
+    return axios.delete(`${base.sq}/sys/dict/` + param);
   },
   getValueTree(param){
     return axios.get(`${base.sq}/sys/dict/tree/`+param);

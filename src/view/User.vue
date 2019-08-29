@@ -52,11 +52,21 @@
               <div class="f-row">
                 <div class="f-full" style="line-height:30px">列表</div>
                 <div>
+                  <LinkButton iconCls="icon-add" :plain="true" @click="toRef()">关联</LinkButton>
                   <LinkButton iconCls="icon-add" :plain="true" @click="toAdd()">新增</LinkButton>
                   <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
                   <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
                   <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
-                  <LinkButton iconCls="icon-print" :plain="true" @click="print()">打印</LinkButton>
+
+                  <MenuButton text="授权管理" :plain="true" iconCls="icon-add">
+                    <Menu @itemClick="add($event)">
+                      <MenuItem   text="授权角色"></MenuItem>
+                      <MenuItem   text="数据授权"></MenuItem>
+                      <MenuItem   text="功能授权"></MenuItem>
+                    </Menu>
+                  </MenuButton>
+
+
                   <LinkButton iconCls="icon-back" :plain="true" @click="goBack()"></LinkButton>
                   <LinkButton iconCls="icon-filter" :plain="true" @click="$refs.d2.open()">调整显示列</LinkButton>
                 </div>
@@ -302,11 +312,14 @@
       goBack() {
         this.$router.go(-1);
       },
-      toAdd() {
+      toRef() {
         this.user = {};
         this.user.enableStatus = 1;
-        this.userDialogTitle = "用户新增";
+        this.userDialogTitle = "用户关联";
         this.$refs.d1.open();
+      },
+      toAdd() {
+        this.$router.push({path: '/auth/user/add'});
       },
       onRowClick(row) {
         if (this.checkedFields.indexOf(row.field) > -1) {

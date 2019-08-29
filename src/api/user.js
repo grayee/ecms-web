@@ -23,6 +23,9 @@ const user = {
   userDel(param) {
     return axios.delete(`${base.sq}/au/user`, {data: param});
   },
+  getRoleTree(param) {
+    return axios.get(`${base.sq}/au/role/tree/`);
+  }
   // 其他接口…………
 };
 

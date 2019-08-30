@@ -41,7 +41,7 @@
                 <LinkButton iconCls="icon-add" :plain="true" @click="add()">新增</LinkButton>
                 <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
                 <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
-                <LinkButton iconCls="icon-edit" :plain="true" @click="edit()&&$refs.d1.open()">编辑</LinkButton>
+                <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
                 <LinkButton iconCls="icon-back" :plain="true" @click="go(-1)"></LinkButton>
               </div>
             </template>

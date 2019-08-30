@@ -109,7 +109,7 @@
         this.$api.user.getRoleTree('').then((response) => {
           if (response.status === 200) {
             this.orgRelationData = response.data.data;
-            this.$refs.tree.selectNode(this.orgRelationData[0]);
+            this.$refs.tree.selectNode(this.orgRelationData[0].children[0]);
           }
         }).catch(error => {
           console.log("error", error);

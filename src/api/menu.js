@@ -8,7 +8,7 @@ const menu = {
    * @param param 用户名
    */
   getMenuTree(param) {
-    return axios.get(`${base.sq}/auth/menu`);
+    return axios.get(`${base.sq}/auth/menu/tree`);
   },
   /**
    * 菜单新增
@@ -42,6 +42,38 @@ const menu = {
   menuUpt(param) {
     return axios.put(`${base.sq}/auth/menu`, param);
   },
+
+  /**
+   * 获取资源树
+   * @param param 用户名
+   */
+  getResourceTree(param) {
+    return axios.get(`${base.sq}/auth/resource/tree`);
+  },
+  /**
+   * 资源新增权限
+   * @param id 资源id
+   * @param param 权限
+   */
+  resourceAddPermission(id, param) {
+    return axios.post(`${base.sq}/auth/resource/permission/` + id, param);
+  },
+  /**
+   * 资源删除权限
+   * @param id 资源id
+   * @param param 权限
+   */
+  permissionDel(param) {
+    return axios.delete(`${base.sq}/auth/resource/permission`, {data: param});
+  },
+  /**
+   * 更新权限
+   * @param param 权限信息
+   * @returns {IDBRequest | Promise<void>}
+   */
+  permissionUpt(param) {
+    return axios.put(`${base.sq}/auth/resource/permission`, param);
+  }
   // 其他接口…………
 };
 

@@ -32,9 +32,9 @@
                   <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
                   <MenuButton text="授权管理" :plain="true" iconCls="icon-add">
                     <Menu @itemClick="add($event)">
-                      <MenuItem   text="关联用户"></MenuItem>
-                      <MenuItem   text="数据授权"></MenuItem>
-                      <MenuItem   text="功能授权"></MenuItem>
+                      <MenuItem text="关联用户"></MenuItem>
+                      <MenuItem text="数据授权"></MenuItem>
+                      <MenuItem text="功能授权"></MenuItem>
                     </Menu>
                   </MenuButton>
                 </div>
@@ -44,6 +44,19 @@
               <li class="list-group-item" v-for="(org,index) in displayColumns"><strong>{{org.title}}：</strong>{{detailContent[org.field]}}
               </li>
             </ul>
+
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <Tabs style="height:250px">
+                  <TabPanel :title="'功能权限'">
+                    <p>Tab Panel1</p>
+                  </TabPanel>
+                  <TabPanel :title="'数据权限'">
+                    <p>Tab Panel2</p>
+                  </TabPanel>
+                </Tabs>
+              </div>
+            </div>
           </Panel>
 
           <Panel :bodyStyle="{padding:'3px'}">
@@ -80,6 +93,45 @@
               <GridColumn field="createDate" title="创建时间" align="center"></GridColumn>
             </DataGrid>
           </Panel>
+
+          <Dialog ref="d1" :title="roleDialogTitle" :dialogStyle="{width:'480px',height:'365px'}"
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+            <div class="f-full" style="padding: 20px 60px 20px 20px">
+              <Form ref="form" :model="role">
+                <Label for="name" align="right">角色名称:</Label>
+                <TextBox inputId="name" name="name" v-model="role.name" style="width:18em"
+                         v-validate="'required|max:10'" data-vv-as="角色名称" placeholder="请输入角色名称"></TextBox>
+                <span style="color: red; ">*</span>
+                <div class="error">{{ errors.first('name') }}</div>
+
+                <Label for="value" align="right">角色编码:</Label>
+                <TextBox inputId="value" name="value" v-model="role.value" style="width:18em"
+                         v-validate="'required|max:30'" data-vv-as="角色编码" placeholder="请输入角色编码"></TextBox>
+                <div class="error">{{ errors.first('value') }}</div>
+
+                <div>
+                  <Label for="enableStatus" align="right">状态:</Label>
+                  <label>
+                    <input type="radio" name="enableStatus" id="e1" value="1" v-model="role.enableStatus" checked>
+                    启用
+                  </label>
+                  <label>
+                    <input type="radio" name="enableStatus" id="e0" value="0" v-model="role.enableStatus"> 禁用
+                  </label>
+                </div>
+
+                <Label for="remark" align="right">备注信息:</Label>
+                <TextBox inputId="remark" name="remark" :multiline="true" v-model="role.remark"
+                         style="width:218px;height:100px;"></TextBox>
+                <div class="error">{{ errors.first('remark') }}</div>
+              </Form>
+            </div>
+            <div class="dialog-button">
+              <LinkButton style="width:60px" @click="confirm()&&$refs.d1.close()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="$refs.d1.close()">取消</LinkButton>
+            </div>
+          </Dialog>
+
         </LayoutPanel>
       </Layout>
     </section>
@@ -93,19 +145,21 @@
   export default {
     data() {
       return {
-        selectedId: null,
+        selection: null,
         orgRelationData: [],
         displayColumns: [],
         detailContent: {},
-        users:[],
+        users: [],
+        roleDialogTitle: "",
+        role: {},
         loading: false
       };
     },
     created() {
-      this.getOrgRelation();
+      this.getTreeData();
     },
     methods: {
-      getOrgRelation() {
+      getTreeData() {
         this.$api.user.getRoleTree('').then((response) => {
           if (response.status === 200) {
             this.orgRelationData = response.data.data;
@@ -115,24 +169,39 @@
           console.log("error", error);
         });
       },
-      add(event) {
-        let urlName;
-
-        this.$router.push({name: urlName, params: {pid: this.selectedId}});
+      add() {
+        this.role = {};
+        this.roleDialogTitle = "新增角色";
+        if (this.selection.id) {
+          this.role.enableStatus = 1;
+          this.$refs.d1.open();
+        } else {
+          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
+        }
       },
       edit() {
-        let urlPath;
-
-        //path来匹配路由，然后通过query来传递参数
-        this.$router.push({path: urlPath + '?orgId=' + this.detailContent.id});
+        this.roleDialogTitle = "编辑角色";
+        if (this.selection.id) {
+          this.role =this.detailContent;
+          this.$refs.d1.open();
+        } else {
+          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
+        }
       },
-      remove(){
-        let orgId = this.detailContent.id;
-
+      remove() {
+        if (this.selection) {
+          this.$api.user.roleDel([this.detailContent.id]).then((response) => {
+            this.getTreeData();
+          }).catch(error => {
+            console.log("error", error);
+          });
+        } else {
+          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
+        }
       },
       selected(event) {
-        this.selectedId = event.id;
-        this.$api.org.getOrgDetail(this.selectedId).then((response) => {
+        this.selection = event;
+        this.$api.org.getOrgDetail(this.selection.id).then((response) => {
           if (response.status === 200) {
             let result = response.data.data;
             this.displayColumns = result.extras.displayColumns;
@@ -142,6 +211,29 @@
         }).catch(error => {
           console.log("error", error);
         });
+      },
+      confirm() {
+        this.$validator.validateAll().then((valid) => {
+          if (valid) {
+            this.role.parentId = this.selection.id;
+            console.log("commit json data:" + JSON.stringify(this.role));
+            if (this.role.id) {
+              this.$api.user.roleUpt(this.role).then((response) => {
+                this.getTreeData();
+                this.$refs.d1.close();
+              }).catch(error => {
+                console.log("error", error);
+              });
+            } else {
+              this.$api.user.roleAdd(this.role).then((response) => {
+                this.getTreeData();
+                this.$refs.d1.close();
+              }).catch(error => {
+                console.log("error", error);
+              });
+            }
+          }
+        });
       }
     }
   };
@@ -149,6 +241,13 @@
 
 <!-- 3.样式:解决样式     -->
 <style scoped>
+
+  .error {
+    color: red;
+    font-size: 12px;
+    margin: 4px 120px;
+  }
+
   .panel-header {
     background-color: #f5f5f5;
   }

@@ -12,6 +12,7 @@ import menu from '@/api/menu';
 import user from '@/api/user';
 import org from '@/api/orgnization';
 import dict from '@/api/dictionary';
+import accounting from '@/api/accounting';
 // 其他模块的接口……
 
 // 导出接口
@@ -23,6 +24,7 @@ export default {
   employee,
   menu,
   org,
-  dict
+  dict,
+  accounting
   // ……
 }

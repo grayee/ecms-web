@@ -25,7 +25,18 @@ const user = {
   },
   getRoleTree(param) {
     return axios.get(`${base.sq}/au/role/tree/`);
-  }
+  },
+  //角色新增
+  roleAdd(param) {
+    return axios.post(`${base.sq}/au/role`, param);
+  },
+  //角色更新
+  roleUpt(param) {
+    return axios.put(`${base.sq}/au/role`, param);
+  },
+  roleDel(param) {
+    return axios.delete(`${base.sq}/au/role`, {data: param});
+  },
   // 其他接口…………
 };
 

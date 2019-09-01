@@ -16,8 +16,8 @@
     </div>
     <div class="f-row f-full">
       <div class="sidebar-body f-animate" :style="{width:width+'px'}">
-        <div v-if="!collapsed" class="sidebar-user">
-          导航菜单
+        <div v-if="!collapsed" class="sidebar-user" style="margin-left: 30px">
+          <router-link to="/dashboard">首页</router-link>
         </div>
         <SideMenu :data="menus" :border="false" :collapsed="collapsed" :animte="true"
                   @itemClick="onItemClick($event)"></SideMenu>
@@ -44,7 +44,18 @@
         title: 'AppLayout',
         width: 200,
         collapsed: false,
-        selectedMenu: null
+        selectedMenu: null,
+        tipContent: {
+          component: Vue.extend({
+            template: `
+            <Panel :border="false" style="width:100px">
+              <div style="text-align:center;padding:10px">
+               <a @click="logout()"><span style="color: white; ">退出</span>
+              </div>
+            </Panel>
+          `
+          })
+        }
       };
     },
     computed: {
@@ -82,6 +93,9 @@
     color: #b8c7ce;
   }
 
+  .sidemenu .tree-title {
+    margin: 8px 0;
+  }
   .sidemenu .accordion .accordion-header {
     background: #222d32;
     color: #b8c7ce;
@@ -200,7 +214,7 @@
 
   .sidebar-user {
     color: #fff;
-    padding: 20px;
+    padding: 10px;
     line-height: 20px;
   }
 

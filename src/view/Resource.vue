@@ -20,7 +20,7 @@
         -------------------------->
       <Layout style="min-height: 500px;">
         <LayoutPanel region="west" :split="true" title="资源树" :bodyStyle="{padding:'3px'}" style="width:200px">
-          <Tree ref="tree" :data="treeData" @selectionChange="treeSelected($event)"></Tree>
+          <Tree ref="tree" :data="treeData"  :selectLeafOnly="true" @selectionChange="treeSelected($event)"></Tree>
         </LayoutPanel>
 
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">

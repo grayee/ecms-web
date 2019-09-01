@@ -1,4 +1,3 @@
-<!-- 组织管理视图 -->
 <!-- 1.模板 :html 结构-->
 <template>
   <!-- Content Wrapper. Contains page content -->
@@ -21,26 +20,38 @@
       <Layout>
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
           <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
-            <div style="margin-bottom:10px">
-              <Label for="d2" style="text-align: right">日期： </Label>
-              <DateBox inputId="d2" v-model="value" format="yyyy-MM-dd"></DateBox>
-              至
-              <DateBox inputId="d2" v-model="value" format="yyyy-MM-dd"></DateBox>
-              <Label for="c1" style="text-align: right">条件1: </Label>
-              <ComboBox inputId="c1" v-model="value" :data="data"></ComboBox>
-            </div>
-            <div style="margin-bottom:10px">
-              <div style="float: left">
-                <Label for="name" style="text-align: right">条件2:</Label>
-                <TextBox inputId="name"></TextBox>
-                <Label for="n1" style="text-align: right">条件3:</Label>
-                <NumberBox inputId="n1" :value="100" :spinners="true"></NumberBox>
+            <Form :model="subject" :labelWidth="120" labelAlign="right">
+
+              <div style="margin-bottom:10px">
+                <Label for="subjectCode" align="right">科目编码：</Label>
+                <TextBox inputId="subjectCode" name="subjectCode" v-model="subject.subjectCode"></TextBox>
+
+                <Label for="subjectName" align="right">科目名称：</Label>
+                <TextBox inputId="subjectName" name="subjectName" v-model="subject.subjectName"></TextBox>
+
+                <Label for="balanceDir" style="text-align: right">余额方向: </Label>
+                <ComboBox inputId="balanceDir" name="balanceDir" v-model="subject.balanceDir"
+                          :data="[{value: 0, text: '借方'},{value: 1, text: '贷方'}]"></ComboBox>
               </div>
-              <div style="float: right">
-                <LinkButton iconCls="icon-search" style="width:80px">查询</LinkButton>
-                <LinkButton iconCls="icon-cancel" style="width:80px"> 重置</LinkButton>
+
+              <div style="margin-bottom:10px">
+
+                <Label for="subjectType" style="text-align: right">科目类型: </Label>
+                <ComboBox inputId="subjectType" name="subjectType" v-model="subject.subjectType"
+                          :data="subjectTypes"></ComboBox>
+
+                <Label for="d2" align="right">创建日期： </Label>
+                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateFrom"
+                         v-model="subject.createDateFrom"></DateBox>
+                至
+                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateTo"
+                         v-model="subject.createDateTo"></DateBox>
+                <Label/>
+
+                <LinkButton iconCls="icon-search" style="width:60px" @click="search()">查询</LinkButton>
+                <LinkButton iconCls="icon-cancel" style="width:60px" @click="reset()"> 重置</LinkButton>
               </div>
-            </div>
+            </Form>
           </Panel>
 
           <Panel title="列表" :bodyStyle="{padding:'3px'}">
@@ -49,29 +60,22 @@
               <div class="f-row">
                 <div class="f-full" style="line-height:30px">列表</div>
                 <div>
-                  <LinkButton iconCls="icon-add" :plain="true">新增</LinkButton>
-                  <LinkButton iconCls="icon-reload" :plain="true">刷新</LinkButton>
-                  <LinkButton iconCls="icon-remove" :plain="true">删除</LinkButton>
-                  <LinkButton iconCls="icon-edit" :plain="true">编辑</LinkButton>
-                  <LinkButton iconCls="icon-print" :plain="true">打印</LinkButton>
-                  <LinkButton iconCls="icon-back" :plain="true"></LinkButton>
+                  <LinkButton iconCls="icon-add" :plain="true" @click="toAdd()">新增</LinkButton>
+                  <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
+                  <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
+                  <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
+                  <LinkButton iconCls="icon-edit" :plain="true" @click="editDetail()">详细</LinkButton>
+                  <LinkButton iconCls="icon-back" :plain="true" @click="goBack()"></LinkButton>
                 </div>
               </div>
             </template>
 
-            <DataGrid style="height:100%"
-                      :pagination="true"
-                      :lazy="true"
-                      :pageList="pageList"
-                      :data="data"
-                      :total="total"
-                      :loading="loading"
-                      :pageNumber="pageNumber"
-                      :pageSize="pageSize"
-                      :pagePosition="pagePosition"
-                      :pageLinks="5"
+            <DataGrid style="height:100%" :pagination="true" :lazy="true" :pageList="pageList"
+                      :data="data" :total="total" :loading="loading" :pageNumber="pageNumber"
+                      :pageSize="pageSize" :pagePosition="pagePosition" :pageLinks="5"
                       :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
-                      @pageChange="onPageChange($event)">
+                      @pageChange="onPageChange($event)" :selectionMode="'multiple'" @rowDblClick="editDetail($event)"
+                      @selectionChange="selected($event)">
 
               <div slot="tpl" slot-scope="{datagrid}">
                 &nbsp;第
@@ -89,14 +93,14 @@
 
               <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
                 <template slot="header" slot-scope="scope">
-                  <input type="checkbox" @click="checkAll($event)" />
+                  <input type="checkbox" @click="checkAll($event)"/>
                 </template>
                 <template slot="body" slot-scope="scope">
-                  <input type="checkbox" v-model="checkedIds" :value="scope.row.inv"/>
+                  <input type="checkbox" v-model="checkedIds" :value="scope.row.id"/>
                 </template>
               </GridColumn>
 
-              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="5%">
+              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
                 <template slot="header" slot-scope="scope">
                   <span>序</span>
                 </template>
@@ -105,18 +109,41 @@
                 </template>
               </GridColumn>
 
-              <GridColumn field="inv" title="Inv No"></GridColumn>
-              <GridColumn field="name" title="Name"></GridColumn>
-              <GridColumn field="amount" title="Amount" align="right" sortable="true"></GridColumn>
-              <GridColumn field="price" title="Price" align="right" sortable="true"></GridColumn>
-              <GridColumn field="cost" title="Cost" align="right"></GridColumn>
-              <GridColumn field="note" title="Note"></GridColumn>
+              <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
+                          v-if="column.show" :align="column.align" :sortable="column.sortable" :width="column.width">
+              </GridColumn>
             </DataGrid>
-
           </Panel>
+
+
+          <Dialog ref="d1" :title="dictDialogTitle" :dialogStyle="{width:'480px',height:'380px'}"
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+            <div class="f-full" style="padding: 20px 60px 20px 20px">
+              <Form ref="form" :model="subject">
+                <Label for="name" align="right">类型名称:</Label>
+                <TextBox inputId="name" name="name" v-model="subject.name" style="width:18em"
+                         v-validate="'required|max:10'" data-vv-as="类型名称" placeholder="请输入类型名称"></TextBox>
+                <span style="color: red; ">*</span>
+                <div class="error">{{ errors.first('name') }}</div>
+
+                <Label for="code" align="right">类型编码:</Label>
+                <TextBox inputId="code" name="code" v-model="subject.code" style="width:18em"
+                         v-validate="'required|max:30'" data-vv-as="类型编码"  placeholder="请输入类型编码"></TextBox>
+                <div class="error">{{ errors.first('code') }}</div>
+
+                <Label for="description" align="right">描述信息:</Label>
+                <TextBox inputId="description" name="description" :multiline="true" v-model="subject.description"
+                         style="width:218px;height:100px;"></TextBox>
+                <div class="error">{{ errors.first('description') }}</div>
+              </Form>
+            </div>
+            <div class="dialog-button">
+              <LinkButton style="width:60px" @click="confirm()&&$refs.d1.close()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="$refs.d1.close()">取消</LinkButton>
+            </div>
+          </Dialog>
+
         </LayoutPanel>
-
-
       </Layout>
     </section>
     <!-- /.content -->
@@ -130,70 +157,188 @@
     data() {
       return {
         total: 0,
-        pageNumber: 1,
+        pageNumber: 0,
         pageSize: 20,
         data: [],
-        checkedIds:[],
+        checkedIds: [],
+        checkedFields: [],
         pageList: [10, 20, 30, 40, 50],
         loading: false,
+        filters : [],
         pagePosition: "bottom",
-        pageOptions: [
-          {value: "bottom", text: "Bottom"},
-          {value: "top", text: "Top"},
-          {value: "both", text: "Both"}
-        ]
+        displayColumns: [],
+        subject: {},
+        subjectTypes: [
+          {value: 0, text: "资产类"},
+          {value: 1, text: "负债类"},
+          {value: 2, text: "权益类"},
+          {value: 3, text: "共同类"},
+          {value: 4, text: "成本类"},
+          {value: 5, text:"损益类"}
+        ],
+        dictDialogTitle: "",
+        selection:{}
       };
     },
     created() {
-      this.loadPage(this.pageNumber, this.pageSize);
+      this.loadPage(this.pageNumber, this.pageSize,this.filters);
     },
     methods: {
       onPageChange(event) {
-        this.loadPage(event.pageNumber, event.pageSize);
+        this.loadPage(event.pageNumber, event.pageSize,this.filters);
       },
-      loadPage(pageNumber, pageSize) {
+      loadPage(pageNumber, pageSize, filters) {
         this.loading = true;
-        setTimeout(() => {
-          let result = this.getData(pageNumber, pageSize);
-          this.total = result.total;
-          this.pageNumber = result.pageNumber;
-          this.data = result.rows;
+        this.$api.accounting.subjectList({
+          pageNo: pageNumber,
+          pageSize: pageSize,
+          queryFilters: filters
+        }).then((response) => {
+          //console.log("--->", response.data);
+          let result = response.data.data;
+          this.total = result.totalCount;
+          this.pageNumber = result.pageNo;
+          this.data = result.content;
           this.loading = false;
-        }, 1000);
+          this.displayColumns = result.extras.displayColumns;
+          this.displayColumns.forEach((item, i) => {
+            if (item.show) {
+              this.checkedFields.push(item.field);
+            }
+          });
+        }).catch(error => {
+          console.log("error", error);
+        });
       },
-      getData(pageNumber, pageSize) {
-        let total = 100000;
-        let data = [];
-        let start = (pageNumber - 1) * pageSize;
-        for (let i = start + 1; i <= start + pageSize; i++) {
-          let amount = Math.floor(Math.random() * 1000);
-          let price = Math.floor(Math.random() * 1000);
-          data.push({
-            inv: "Inv No " + i,
-            name: "Name " + i,
-            amount: amount,
-            price: price,
-            cost: amount * price,
-            note: "Note " + i
+      search() {
+        let dateFmt = Vue.filter('dateFmt');
+        let eqFields = ["subjectType","balanceDir"];
+        this.filters =[];
+        for (let field in this.subject) {
+          let filter = {};
+          if (field.endsWith("From")) {
+            filter.property = field.substr(0, field.indexOf("From"));
+            filter.operator = "greaterThanOrEqualTo";
+            filter.value = dateFmt(this.subject[field]);
+          } else if (field.endsWith("To")) {
+            filter.property = field.substr(0, field.indexOf("To"));
+            filter.operator = "lessThanOrEqualTo";
+            filter.value = dateFmt(this.subject[field], 1);
+          }  else{
+            filter.property = field;
+            filter.operator = "like";
+            if (eqFields.indexOf(field) > -1) {
+              filter.operator = "equal";
+            }
+            filter.value = this.subject[field];
+          }
+          this.filters.push(filter);
+        }
+        this.loadPage(this.pageNumber, this.pageSize, this.filters);
+      },
+      reset() {
+        this.subject = {};
+      },
+      remove() {
+        if (this.checkedIds.length > 0) {
+          this.$api.dict.subjectDel(this.checkedIds).then((response) => {
+            this.loadPage(this.pageNumber, this.pageSize);
+          }).catch(error => {
+            console.log("error", error);
+          });
+        } else {
+          this.$messager.alert({
+            title: "提示信息",
+            icon: "warning",
+            msg: "请至少选中一条记录!"
           });
         }
-        return {
-          total: total,
-          pageNumber: pageNumber,
-          pageSize: pageSize,
-          rows: data
-        };
       },
-      checkAll(event){
-        if(event.currentTarget.checked){
+      edit() {
+        if (this.checkedIds.length === 1) {
+          this.dictDialogTitle = "字典类型编辑";
+          this.subject =this.selection;
+          delete this.subject.isSystem;
+          this.$refs.d1.open();
+        } else {
+          this.$messager.alert({title: "提示信息", icon: "warning",msg: "请至少选中一条记录!"});
+        }
+      },
+      editDetail(event){
+        if (event) {
+          this.checkedIds.push(event.id);
+        }
+        if (this.checkedIds.length === 1) {
+          this.$router.push({path: '/sys/dict/add?id=' + this.checkedIds[0]});
+        } else {
+          this.$messager.alert({title: "提示信息", icon: "warning",msg: "请至少选中一条记录!"});
+        }
+      },
+      refresh() {
+        location.reload();
+      },
+      print() {
+        let printhtml = window.document.body.innerHTML; // 获取打印区域
+        let oldhtml = window.document.innerHTML; // 保存原始内容
+        document.innerHtml = printhtml; // 赋值打印
+        window.print();
+        document.innerHtml = oldhtml; // 还原页面
+        window.location.reload(); // 刷新解决页面无法点击
+      },
+      goBack() {
+        this.$router.go(-1);
+      },
+      toAdd() {
+        this.dictDialogTitle = "字典类型新增";
+        this.$refs.d1.open();
+      },
+      onRowClick(row) {
+        if (this.checkedFields.indexOf(row.field) > -1) {
+          delete this.checkedIds[this.checkedFields.indexOf(row.field)];
+        } else {
+          this.checkedFields.push(row.field);
+        }
+      },
+      selected(event) {
+        this.selection =event[0];
+        this.checkedIds = [];
+        let _this = this;
+        event.forEach(function (item, i) {
+          _this.checkedIds.push(item.id);
+        });
+      },
+      checkAll(event) {
+        if (event.currentTarget.checked) {
           this.checkedIds = [];
           let _this = this;
-          this.data.forEach(function(item, i) {
-            _this.checkedIds.push(item.inv);
+          this.data.forEach(function (item, i) {
+            _this.checkedIds.push(item.id);
           });
-        }else{
+        } else {
           this.checkedIds = [];
         }
+      },
+      confirm() {
+        this.$validator.validateAll().then((valid) => {
+          if (valid) {
+            console.log("commit json data:" + JSON.stringify(this.subject));
+            if (this.subject.id) {
+              this.$api.dict.subjectUpt(this.subject).then((response) => {
+                this.loadPage(event.pageNumber, event.pageSize);
+                this.$refs.d1.close();
+              }).catch(error => {
+                console.log("error", error);
+              });
+            } else {
+              this.$api.dict.subjectAdd(this.subject).then((response) => {
+                this.loadPage(event.pageNumber, event.pageSize);
+                this.$refs.d1.close();
+              }).catch(error => {
+                console.log("error", error);
+              });
+            }
+          }
+        });
       }
     }
   };
@@ -201,8 +346,18 @@
 
 <!-- 3.样式:解决样式     -->
 <style scoped>
-  .panel-header {
-    background-color: #f5f5f5;
+  .error {
+    color: red;
+    font-size: 12px;
+    margin: 4px 120px;
+  }
+
+  .dataList {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    height: 35px;
+    border-bottom: 1px solid #eee;
   }
 </style>
 <!--

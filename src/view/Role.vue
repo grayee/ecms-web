@@ -31,10 +31,10 @@
                   <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
                   <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
                   <MenuButton text="授权管理" :plain="true" iconCls="icon-add">
-                    <Menu @itemClick="add($event)">
-                      <MenuItem text="关联用户"></MenuItem>
-                      <MenuItem text="数据授权"></MenuItem>
-                      <MenuItem text="功能授权"></MenuItem>
+                    <Menu @itemClick="grant($event)">
+                      <MenuItem value="1" text="关联用户"></MenuItem>
+                      <MenuItem value="2" text="功能授权"></MenuItem>
+                      <MenuItem value="3" text="数据授权"></MenuItem>
                     </Menu>
                   </MenuButton>
                 </div>
@@ -132,6 +132,94 @@
             </div>
           </Dialog>
 
+
+          <Dialog ref="d2" :title="roleDialogTitle" :dialogStyle="{width:'600px',height:'400px'}"
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+            <div class="f-full" style="padding: 2px 2px">
+
+              <Panel :bodyStyle="{padding:'3px',height:'288px'}">
+                <template slot="header">
+                  <div class="f-row">
+                    <div class="f-full" style="line-height:25px">用户列表</div>
+                    <TextBox iconCls="icon-search"></TextBox>
+                  </div>
+                </template>
+                <DataGrid style="height:100%" :pagination="true" :lazy="true" :pageList="pageList"
+                          :data="refUsers" :total="total" :loading="loading" :pageNumber="pageNumber"
+                          :pageSize="pageSize" :pagePosition="pagePosition" :pageLinks="5"
+                          :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
+                          @pageChange="onPageChange($event)" :selectionMode="'multiple'"
+                          @selectionChange="refUserSelected($event)">
+
+                  <div slot="tpl" slot-scope="{datagrid}">
+                    &nbsp;第
+                    <NumberBox style="width:80px;height:23px" spinAlign="left" :spinners="true"
+                               v-model="datagrid.pageNumberState"
+                               :min="1" :max="Math.floor((total-1)/pageSize+1)"
+                               :inputStyle="{textAlign:'left'}">
+                      <Addon align="right">
+                        <LinkButton iconCls="icon-search"
+                                    :style="{borderRadius:0,borderWidth:'0 1px 0 0',width:'20px'}"></LinkButton>
+                      </Addon>
+                    </NumberBox>
+                    页,共 {{Math.floor((total-1)/pageSize+1)}} 页 &nbsp;
+                  </div>
+
+                  <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
+                    <template slot="header" slot-scope="scope">
+                      <input type="checkbox" @click="checkAll($event)"/>
+                    </template>
+                    <template slot="body" slot-scope="scope">
+                      <input type="checkbox" v-model="checkedIds" :value="scope.row.id"/>
+                    </template>
+                  </GridColumn>
+
+                  <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
+                    <template slot="header" slot-scope="scope">
+                      <span>序</span>
+                    </template>
+                    <template slot="body" slot-scope="scope">
+                      {{scope.rowIndex + 1}}
+                    </template>
+                  </GridColumn>
+
+                  <GridColumn v-for="column in refUserDisplayColumns" :field="column.field" :title="column.title"
+                              v-if="column.show" :align="column.align" :sortable="column.sortable"
+                              :width="column.width">
+                  </GridColumn>
+                </DataGrid>
+              </Panel>
+
+            </div>
+            <div class="dialog-button">
+              <LinkButton style="width:60px" @click="refUser()&&$refs.d2.close()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="$refs.d2.close()">取消</LinkButton>
+            </div>
+          </Dialog>
+
+          <Dialog ref="d3" :title="roleDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+            <div class="f-full" style="padding: 20px 60px 20px 20px">
+
+            </div>
+            <div class="dialog-button">
+              <LinkButton style="width:60px" @click="confirm()&&$refs.d3.close()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="$refs.d3.close()">取消</LinkButton>
+            </div>
+          </Dialog>
+
+
+          <Dialog ref="d4" :title="roleDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+            <div class="f-full" style="padding: 20px 60px 20px 20px">
+
+            </div>
+            <div class="dialog-button">
+              <LinkButton style="width:60px" @click="confirm()&&$refs.d4.close()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="$refs.d4.close()">取消</LinkButton>
+            </div>
+          </Dialog>
+
         </LayoutPanel>
       </Layout>
     </section>
@@ -145,11 +233,20 @@
   export default {
     data() {
       return {
+        total: 0,
+        pageNumber: 0,
+        pageSize: 20,
+        pageList: [10, 20, 30, 40, 50],
+        pagePosition: "bottom",
+        filters: [],
         selection: null,
         orgRelationData: [],
         displayColumns: [],
+        refUserDisplayColumns: [],
         detailContent: {},
+        refUsers: [],
         users: [],
+        checkedIds: [],
         roleDialogTitle: "",
         role: {},
         loading: false
@@ -182,7 +279,7 @@
       edit() {
         this.roleDialogTitle = "编辑角色";
         if (this.selection.id) {
-          this.role =this.detailContent;
+          this.role = this.detailContent;
           this.$refs.d1.open();
         } else {
           this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
@@ -199,6 +296,44 @@
           this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
         }
       },
+      onPageChange(event) {
+        this.loadPage(event.pageNumber, event.pageSize);
+      },
+      loadPage(pageNumber, pageSize, filters) {
+        this.loading = true;
+        this.$api.user.roleRefUsers(this.detailContent.id, {
+          pageNo: pageNumber,
+          pageSize: pageSize,
+          queryFilters: filters
+        }).then((response) => {
+          //console.log("--->", response.data);
+          let result = response.data.data;
+          this.total = result.totalCount;
+          this.pageNumber = result.pageNo;
+          this.refUsers = result.content;
+          this.loading = false;
+          this.refUserDisplayColumns = result.extras.displayColumns;
+        }).catch(error => {
+          console.log("error", error);
+        });
+      },
+      grant(event) {
+        if (this.selection.id) {
+          if (event === "1") {
+            this.roleDialogTitle = "关联用户";
+            this.loadPage(this.pageNumber, this.pageSize, this.filters);
+            this.$refs.d2.open();
+          } else if (event === "2") {
+            this.roleDialogTitle = "功能授权";
+            this.$refs.d3.open();
+          } else {
+            this.roleDialogTitle = "数据授权";
+            this.$refs.d4.open();
+          }
+        } else {
+          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
+        }
+      },
       selected(event) {
         this.selection = event;
         this.$api.org.getOrgDetail(this.selection.id).then((response) => {
@@ -211,6 +346,24 @@
         }).catch(error => {
           console.log("error", error);
         });
+      },
+      refUserSelected(event) {
+        this.checkedIds = [];
+        let _this = this;
+        event.forEach(function (item, i) {
+          _this.checkedIds.push(item.id);
+        });
+      },
+      checkAll(event) {
+        if (event.currentTarget.checked) {
+          this.checkedIds = [];
+          let _this = this;
+          this.refUsers.forEach(function (item, i) {
+            _this.checkedIds.push(item.id);
+          });
+        } else {
+          this.checkedIds = [];
+        }
       },
       confirm() {
         this.$validator.validateAll().then((valid) => {
@@ -233,6 +386,17 @@
               });
             }
           }
+        });
+      },
+      refUser() {
+        this.loading = true;
+        this.$api.user.refUsers(this.detailContent.id, this.checkedIds).then((response) => {
+          //console.log("--->", response.data);
+          this.loading = false;
+          this.getTreeData();
+          this.$refs.d2.close();
+        }).catch(error => {
+          console.log("error", error);
         });
       }
     }

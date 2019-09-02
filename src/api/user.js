@@ -37,6 +37,14 @@ const user = {
   roleDel(param) {
     return axios.delete(`${base.sq}/au/role`, {data: param});
   },
+  //角色关联用户列表
+  roleRefUsers(roleId,param) {
+    return axios.post(`${base.sq}/au/role/getRefUser/`+roleId, param);
+  },
+  //角色关联用户
+  roleRefUser(roleId,param) {
+    return axios.post(`${base.sq}/au/role/refUser/`+roleId, param);
+  },
   // 其他接口…………
 };
 

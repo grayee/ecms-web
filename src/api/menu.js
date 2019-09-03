@@ -71,8 +71,8 @@ const menu = {
    * @param param 权限信息
    * @returns {IDBRequest | Promise<void>}
    */
-  permissionUpt(param) {
-    return axios.put(`${base.sq}/auth/resource/permission`, param);
+  permissionUpt(id,param) {
+    return axios.put(`${base.sq}/auth/resource/permission/`+id, param);
   }
   // 其他接口…………
 };

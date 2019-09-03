@@ -64,11 +64,12 @@
               <div class="f-row">
                 <div class="f-full" style="line-height:30px">已关联用户列表</div>
                 <div>
-                  <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">解除关联用户</LinkButton>
+                  <LinkButton iconCls="icon-remove" :plain="true" @click="removeRefUser()">解除关联用户</LinkButton>
                 </div>
               </div>
             </template>
-            <DataGrid :data="users" style="height:250px">
+            <DataGrid :data="users" style="height:250px" :selectionMode="'multiple'"
+                      @selectionChange="refUserSelected($event)">
 
               <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
                 <template slot="header" slot-scope="scope">
@@ -144,7 +145,7 @@
                     <TextBox iconCls="icon-search"></TextBox>
                   </div>
                 </template>
-                <DataGrid style="height:100%" :pagination="true" :lazy="true" :pageList="pageList"
+                <DataGrid style="height:100%" :pagination="true" :lazy="true" :pageList="pageList" emptyMsg="暂无数据"
                           :data="refUsers" :total="total" :loading="loading" :pageNumber="pageNumber"
                           :pageSize="pageSize" :pagePosition="pagePosition" :pageLinks="5"
                           :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
@@ -200,7 +201,8 @@
           <Dialog ref="d3" :title="roleDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
                   bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
             <div class="f-full" style="padding: 20px 60px 20px 20px">
-
+              <Tree ref="funcTree" :data="permTreeData" :checkbox="true" :selectLeafOnly="true"
+                    @selectionChange="treeSelected($event)"></Tree>
             </div>
             <div class="dialog-button">
               <LinkButton style="width:60px" @click="confirm()&&$refs.d3.close()">确认</LinkButton>
@@ -249,6 +251,7 @@
         checkedIds: [],
         roleDialogTitle: "",
         role: {},
+        permTreeData: [],
         loading: false
       };
     },
@@ -296,6 +299,17 @@
           this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
         }
       },
+      removeRefUser() {
+        if (this.checkedIds) {
+          this.$api.user.roleRomoveRefUser(this.detailContent.id,this.checkedIds).then((response) => {
+            this.getTreeData();
+          }).catch(error => {
+            console.log("error", error);
+          });
+        }else{
+          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
+        }
+      },
       onPageChange(event) {
         this.loadPage(event.pageNumber, event.pageSize);
       },
@@ -318,13 +332,33 @@
         });
       },
       grant(event) {
+        function checkTreeNode(treeData, treeObj) {
+          treeData.forEach(node => {
+            if (node.children && node.children.length) {
+              checkTreeNode(node.children());
+            } else {
+              if (node.checked) {
+                treeObj.checkNode(node);
+              }
+            }
+          });
+        }
+
         if (this.selection.id) {
           if (event === "1") {
             this.roleDialogTitle = "关联用户";
+            this.checkedIds=[];
             this.loadPage(this.pageNumber, this.pageSize, this.filters);
             this.$refs.d2.open();
           } else if (event === "2") {
             this.roleDialogTitle = "功能授权";
+            this.$api.user.rolePermTree({}).then((response) => {
+              //console.log("--->", response.data);
+              this.permTreeData = response.data.data;
+              checkTreeNode(this.permTreeData, this.$refs.funcTree);
+            }).catch(error => {
+              console.log("error", error);
+            });
             this.$refs.d3.open();
           } else {
             this.roleDialogTitle = "数据授权";
@@ -361,6 +395,9 @@
           this.refUsers.forEach(function (item, i) {
             _this.checkedIds.push(item.id);
           });
+          this.users.forEach(function (item, i) {
+            _this.checkedIds.push(item.id);
+          });
         } else {
           this.checkedIds = [];
         }
@@ -390,7 +427,7 @@
       },
       refUser() {
         this.loading = true;
-        this.$api.user.refUsers(this.detailContent.id, this.checkedIds).then((response) => {
+        this.$api.user.roleRefUser(this.detailContent.id, this.checkedIds).then((response) => {
           //console.log("--->", response.data);
           this.loading = false;
           this.getTreeData();

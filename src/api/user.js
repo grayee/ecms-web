@@ -45,6 +45,14 @@ const user = {
   roleRefUser(roleId,param) {
     return axios.post(`${base.sq}/au/role/refUser/`+roleId, param);
   },
+  //角色删除关联用户
+  roleRomoveRefUser(roleId, param) {
+    return axios.delete(`${base.sq}/au/role/refUser/` + roleId, {data: param});
+  },
+  //角色权限树
+  rolePermTree(param) {
+    return axios.get(`${base.sq}/auth/resource/perm/tree`, param);
+  },
   // 其他接口…………
 };
 

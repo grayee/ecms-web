@@ -200,7 +200,7 @@
           if (valid) {
             console.log("commit json data:" + JSON.stringify(this.permission));
             if (this.permission.id) {
-              this.$api.menu.permissionUpt(this.permission).then((response) => {
+              this.$api.menu.permissionUpt(this.selection.id,this.permission).then((response) => {
                 this.getTreeData();
                 this.$refs.d1.close();
               }).catch(error => {

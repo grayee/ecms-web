@@ -17,7 +17,7 @@
     <div class="f-row f-full">
       <div class="sidebar-body f-animate" :style="{width:width+'px'}">
         <div v-if="!collapsed" class="sidebar-user" style="margin-left: 30px">
-          <router-link to="/dashboard">首页</router-link>
+           <router-link to="/dashboard"><i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i>首页</router-link>
         </div>
         <SideMenu :data="menus" :border="false" :collapsed="collapsed" :animte="true"
                   @itemClick="onItemClick($event)"></SideMenu>

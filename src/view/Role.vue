@@ -200,12 +200,12 @@
 
           <Dialog ref="d3" :title="roleDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
                   bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
-            <div class="f-full" style="padding: 20px 60px 20px 20px">
+            <div class="f-full" style="padding: 3px 3px">
               <Tree ref="funcTree" :data="permTreeData" :checkbox="true" :selectLeafOnly="true"
                     @selectionChange="treeSelected($event)"></Tree>
             </div>
             <div class="dialog-button">
-              <LinkButton style="width:60px" @click="confirm()&&$refs.d3.close()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="grantFunc()&&$refs.d3.close()">确认</LinkButton>
               <LinkButton style="width:60px" @click="$refs.d3.close()">取消</LinkButton>
             </div>
           </Dialog>
@@ -435,6 +435,9 @@
         }).catch(error => {
           console.log("error", error);
         });
+      },
+      grantFunc(){
+        console.log(this.$refs.funcTree.getCheckedNodes().filter(item=>!item.children));
       }
     }
   };

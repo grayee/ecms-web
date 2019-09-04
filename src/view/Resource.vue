@@ -38,7 +38,7 @@
             </template>
 
             <DataGrid style="height:100%" :lazy="true" :data="data" :loading="loading" :selectionMode="'multiple'"
-                      @selectionChange="gridSelected($event)">
+                      @selectionChange="gridSelected($event)" >
 
               <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
                 <template slot="header" slot-scope="scope">
@@ -81,7 +81,7 @@
                          v-validate="'required|max:30'" data-vv-as="权限编码" placeholder="请输入权限编码"></TextBox>
                 <div class="error">{{ errors.first('value') }}</div>
 
-                <div>
+                <div STYLE=" margin-bottom: 3px;">
                   <Label for="enableStatus" align="right">状态:</Label>
                   <label>
                     <input type="radio" name="enableStatus" id="e1" value="1" v-model="permission.enableStatus" checked>
@@ -90,6 +90,8 @@
                   <label>
                     <input type="radio" name="enableStatus" id="e0" value="0" v-model="permission.enableStatus"> 禁用
                   </label>
+<!--
+                  <SwitchButton inputId="s3" onText="启用" offText="禁用" v-model="permission.enableStatus"></SwitchButton>-->
                 </div>
 
                 <Label for="description" align="right">描述信息:</Label>
@@ -144,6 +146,8 @@
         this.selection = event;
         if (event.attributes) {
           this.data = event.attributes.permissions;
+        }else{
+          this.data = [];
         }
       },
       gridSelected(event) {

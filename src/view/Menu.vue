@@ -98,9 +98,14 @@
                            placeholder="请输入排序编码" :value="100" :spinners="true"></NumberBox>
                 <div class="error">{{ errors.first('orderNo') }}</div>
 
+                <Label for="authCode" align="right">权限编码:</Label>
+                <TextBox inputId="authCode" name="authCode" v-model="menu.authCode" v-validate="'required'"
+                         style="width:18em"  placeholder="请输入权限编码"  data-vv-as="权限编码" ></TextBox>
+                <div class="error">{{ errors.first('authCode') }}</div>
+
                 <Label for="remark" align="right">备注信息:</Label>
                 <TextBox inputId="remark" name="remark" :multiline="true" v-model="menu.remark"
-                         style="width:218px;height:100px;"></TextBox>
+                         style="width:218px;height:80px;"></TextBox>
                 <div class="error">{{ errors.first('remark') }}</div>
               </Form>
             </div>

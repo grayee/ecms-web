@@ -49,10 +49,14 @@
               <div class="panel-body">
                 <Tabs style="height:250px">
                   <TabPanel :title="'功能权限'">
-                    <p>Tab Panel1</p>
+                    <p>
+                      <Tree ref="funcAuthTree" :data="funcAuth"></Tree>
+                    </p>
                   </TabPanel>
                   <TabPanel :title="'数据权限'">
-                    <p>Tab Panel2</p>
+                    <p>
+                      <Tree ref="dataAuthTree" :data="dataAuth"></Tree>
+                    </p>
                   </TabPanel>
                 </Tabs>
               </div>
@@ -201,7 +205,7 @@
           <Dialog ref="d3" :title="roleDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
                   bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
             <div class="f-full" style="padding: 3px 3px">
-              <Tree ref="funcTree" :data="permTreeData" :checkbox="true" :selectLeafOnly="true"
+              <Tree ref="funcTree" :data="permFuncTreeData" :checkbox="true" :selectLeafOnly="true" cascadeCheck="true"
                     @selectionChange="treeSelected($event)"></Tree>
             </div>
             <div class="dialog-button">
@@ -213,11 +217,12 @@
 
           <Dialog ref="d4" :title="roleDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
                   bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
-            <div class="f-full" style="padding: 20px 60px 20px 20px">
-
+            <div class="f-full" style="padding: 2px 2px">
+              <Tree ref="dataTree" :data="permDataTreeData" :checkbox="true" :selectLeafOnly="true" cascadeCheck="true"
+                    @selectionChange="treeSelected($event)"></Tree>
             </div>
             <div class="dialog-button">
-              <LinkButton style="width:60px" @click="confirm()&&$refs.d4.close()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="grantData()&&$refs.d4.close()">确认</LinkButton>
               <LinkButton style="width:60px" @click="$refs.d4.close()">取消</LinkButton>
             </div>
           </Dialog>
@@ -248,10 +253,13 @@
         detailContent: {},
         refUsers: [],
         users: [],
+        funcAuth: [],
+        dataAuth: [],
         checkedIds: [],
         roleDialogTitle: "",
         role: {},
-        permTreeData: [],
+        permFuncTreeData: [],
+        permDataTreeData: [],
         loading: false
       };
     },
@@ -301,12 +309,12 @@
       },
       removeRefUser() {
         if (this.checkedIds) {
-          this.$api.user.roleRomoveRefUser(this.detailContent.id,this.checkedIds).then((response) => {
+          this.$api.user.roleRemoveRefUser(this.detailContent.id, this.checkedIds).then((response) => {
             this.getTreeData();
           }).catch(error => {
             console.log("error", error);
           });
-        }else{
+        } else {
           this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
         }
       },
@@ -332,36 +340,63 @@
         });
       },
       grant(event) {
-        function checkTreeNode(treeData, treeObj) {
-          treeData.forEach(node => {
-            if (node.children && node.children.length) {
-              checkTreeNode(node.children());
-            } else {
-              if (node.checked) {
-                treeObj.checkNode(node);
-              }
-            }
-          });
-        }
-
         if (this.selection.id) {
           if (event === "1") {
             this.roleDialogTitle = "关联用户";
-            this.checkedIds=[];
+            this.checkedIds = [];
             this.loadPage(this.pageNumber, this.pageSize, this.filters);
             this.$refs.d2.open();
           } else if (event === "2") {
             this.roleDialogTitle = "功能授权";
-            this.$api.user.rolePermTree({}).then((response) => {
+            this.$api.user.rolePermFuncTree(this.detailContent.id, {}).then((response) => {
               //console.log("--->", response.data);
-              this.permTreeData = response.data.data;
-              checkTreeNode(this.permTreeData, this.$refs.funcTree);
+              this.permFuncTreeData = response.data.data;
+              let checkedNodes = [];
+              let getCheckedNodes = function (treeData) {
+                treeData.forEach((node) => {
+                  if (node.children && node.children.length) {
+                    getCheckedNodes(node.children);
+                  } else {
+                    if (node.checked) {
+                      checkedNodes.push(node);
+                    }
+                  }
+                });
+                return checkedNodes;
+              };
+              getCheckedNodes(this.permFuncTreeData);
+              checkedNodes.forEach((node) => {
+                this.$refs.funcTree.checkNode(node);
+              });
             }).catch(error => {
               console.log("error", error);
             });
             this.$refs.d3.open();
           } else {
             this.roleDialogTitle = "数据授权";
+            this.$api.user.rolePermDataTree(this.detailContent.id, {}).then((response) => {
+              //console.log("--->", response.data);
+              this.permDataTreeData = response.data.data;
+              let checkedNodes = [];
+              let getCheckedNodes = function (treeData) {
+                treeData.forEach((node) => {
+                  if (node.children && node.children.length) {
+                    getCheckedNodes(node.children);
+                  } else {
+                    if (node.checked) {
+                      checkedNodes.push(node);
+                    }
+                  }
+                });
+                return checkedNodes;
+              };
+              getCheckedNodes(this.permDataTreeData);
+              checkedNodes.forEach((node) => {
+                this.$refs.dataTree.checkNode(node);
+              });
+            }).catch(error => {
+              console.log("error", error);
+            });
             this.$refs.d4.open();
           }
         } else {
@@ -376,6 +411,8 @@
             this.displayColumns = result.extras.displayColumns;
             this.detailContent = result.content;
             this.users = result.extras.users;
+            this.funcAuth = result.extras.funcAuth;
+            this.dataAuth = result.extras.dataAuth;
           }
         }).catch(error => {
           console.log("error", error);
@@ -436,8 +473,29 @@
           console.log("error", error);
         });
       },
-      grantFunc(){
-        console.log(this.$refs.funcTree.getCheckedNodes().filter(item=>!item.children));
+      grantFunc() {
+        let permIds = this.$refs.funcTree.getCheckedNodes().filter(item => !item.children).map(item => item.id);
+        console.log(permIds);
+        this.$api.user.roleGrantFunc(this.detailContent.id, permIds).then((response) => {
+          //console.log("--->", response.data);
+          this.loading = false;
+          this.getTreeData();
+          this.$refs.d3.close();
+        }).catch(error => {
+          console.log("error", error);
+        });
+      },
+      grantData() {
+        let permIds = this.$refs.dataTree.getCheckedNodes().map(item => item.id);
+        console.log(permIds);
+        this.$api.user.roleGrantData(this.detailContent.id, permIds).then((response) => {
+          //console.log("--->", response.data);
+          this.loading = false;
+          this.getTreeData();
+          this.$refs.d4.close();
+        }).catch(error => {
+          console.log("error", error);
+        });
       }
     }
   };

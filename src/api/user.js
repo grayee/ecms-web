@@ -46,12 +46,24 @@ const user = {
     return axios.post(`${base.sq}/au/role/refUser/`+roleId, param);
   },
   //角色删除关联用户
-  roleRomoveRefUser(roleId, param) {
+  roleRemoveRefUser(roleId, param) {
     return axios.delete(`${base.sq}/au/role/refUser/` + roleId, {data: param});
   },
-  //角色权限树
-  rolePermTree(param) {
-    return axios.get(`${base.sq}/auth/resource/perm/tree`, param);
+  //角色功能权限树
+  rolePermFuncTree(roleId,param) {
+    return axios.get(`${base.sq}/au/role/func/tree/`+roleId, param);
+  },
+  //角色数据权限树
+  rolePermDataTree(roleId,param) {
+    return axios.get(`${base.sq}/au/role/org/tree/`+roleId, param);
+  },
+  //角色功能授权
+  roleGrantFunc(id,param) {
+    return axios.post(`${base.sq}/au/role/function/`+id, param);
+  },
+  //角色数据授权
+  roleGrantData(id,param) {
+    return axios.post(`${base.sq}/au/role/data/`+id, param);
   },
   // 其他接口…………
 };

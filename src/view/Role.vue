@@ -474,7 +474,13 @@
         });
       },
       grantFunc() {
-        let permIds = this.$refs.funcTree.getCheckedNodes().filter(item => !item.children).map(item => item.id);
+        let permIds = this.$refs.funcTree.getCheckedNodes().map(item => {
+          if (item.attributes) {
+            return item.id + "@" + item.attributes.isPerm;
+          } else {
+            return item.id + "@false"
+          }
+        });
         console.log(permIds);
         this.$api.user.roleGrantFunc(this.detailContent.id, permIds).then((response) => {
           //console.log("--->", response.data);

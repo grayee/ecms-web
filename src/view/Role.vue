@@ -355,6 +355,9 @@
               let getCheckedNodes = function (treeData) {
                 treeData.forEach((node) => {
                   if (node.children && node.children.length) {
+                    if (node.checked) {
+                      checkedNodes.push(node);
+                    }
                     getCheckedNodes(node.children);
                   } else {
                     if (node.checked) {
@@ -381,6 +384,9 @@
               let getCheckedNodes = function (treeData) {
                 treeData.forEach((node) => {
                   if (node.children && node.children.length) {
+                    if (node.checked) {
+                      checkedNodes.push(node);
+                    }
                     getCheckedNodes(node.children);
                   } else {
                     if (node.checked) {

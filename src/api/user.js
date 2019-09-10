@@ -10,6 +10,10 @@ const user = {
   userAdd(param) {
     return axios.post(`${base.sq}/au/user`, param);
   },
+  //用户新增
+  userRefAdd(param) {
+    return axios.post(`${base.sq}/au/user/ref`, param);
+  },
   //用户更新
   userUpt(param) {
     return axios.put(`${base.sq}/au/user`, param);

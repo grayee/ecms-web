@@ -20,24 +20,24 @@
       <Layout>
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
           <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
-            <Form :model="user" :labelWidth="120" labelAlign="right">
+            <Form :model="qUser" :labelWidth="120" labelAlign="right">
               <div style="margin-bottom:10px">
                 <Label for="loginId" align="right">登录账号：</Label>
-                <TextBox inputId="loginId" name="loginId" v-model="user.loginId"></TextBox>
+                <TextBox inputId="loginId" name="loginId" v-model="qUser.loginId"></TextBox>
                 <Label for="username" align="right">用户名：</Label>
-                <TextBox inputId="username" name="username" v-model="user.username"></TextBox>
+                <TextBox inputId="username" name="username" v-model="qUser.username"></TextBox>
                 <Label for="userStatus" style="text-align: right">用户状态: </Label>
-                <ComboBox inputId="userStatus" v-model="value" :data="data"></ComboBox>
+                <ComboBox inputId="userStatus" v-model="qUser.enableStatus" :data="data"></ComboBox>
               </div>
               <div style="margin-bottom:10px">
                 <Label for="name" style="text-align: right">所属机构:</Label>
-                <ComboBox inputId="c1" v-model="value" :data="data"></ComboBox>
+                <ComboBox inputId="c1" v-model="qUser.parentId" :data="data"></ComboBox>
 
                 <Label for="d2" align="right">创建日期： </Label>
                 <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateFrom"
-                         v-model="user.createDateFrom"></DateBox>
+                         v-model="qUser.createDateFrom"></DateBox>
                 至
-                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateTo" v-model="user.createDateTo"></DateBox>
+                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateTo" v-model="qUser.createDateTo"></DateBox>
                 <Label/>
 
                 <LinkButton iconCls="icon-search" style="width:60px" @click="search()">查询</LinkButton>
@@ -60,9 +60,9 @@
 
                   <MenuButton text="授权管理" :plain="true" iconCls="icon-add">
                     <Menu @itemClick="add($event)">
-                      <MenuItem   text="授权角色"></MenuItem>
-                      <MenuItem   text="数据授权"></MenuItem>
-                      <MenuItem   text="功能授权"></MenuItem>
+                      <MenuItem text="授权角色"></MenuItem>
+                      <MenuItem text="数据授权"></MenuItem>
+                      <MenuItem text="功能授权"></MenuItem>
                     </Menu>
                   </MenuButton>
 
@@ -146,25 +146,29 @@
               </p>
               <Form ref="form" :model="user">
                 <Label for="username" align="right">用户姓名:</Label>
-                <ComboTree name='username' :data="data" v-model="user.username" placeholder="-请选择-">
-                  <Tree slot="tree"></Tree>
+                <ComboTree name='username' :data="treeData" v-model="user.username" placeholder="-请选择-"
+                           style="width: 200px">
+                  <Tree slot="tree" :checkbox="false" :selectLeafOnly="true"></Tree>
                 </ComboTree>
                 <div class="error">{{ errors.first('username') }}</div>
 
                 <Label for="loginId" align="right">登录账号:</Label>
                 <TextBox inputId="loginId" name="loginId" v-model="user.loginId" style="width:14em"
-                         v-validate="'required|max:10'" data-vv-as="登录账号" placeholder="请输入登录账号" iconCls="icon-man"></TextBox>
+                         v-validate="'required|max:10'" data-vv-as="登录账号" placeholder="请输入登录账号"
+                         iconCls="icon-man"></TextBox>
                 <span style="color: red; ">*</span>
                 <div class="error">{{ errors.first('loginId') }}</div>
 
                 <Label for="password" align="right">登录密码:</Label>
-                <PasswordBox inputId="password" v-model="user.password" style="width:14em" v-validate="'required|min:6'"
+                <PasswordBox inputId="password" name="password" v-model="user.password" style="width:14em"
+                             v-validate="'required|min:6'"
                              data-vv-as="登录密码" placeholder="请输入登录密码:"></PasswordBox>
                 <span style="color: red; ">*</span>
                 <div class="error">{{ errors.first('password') }}</div>
 
                 <Label for="pwdConfirm" align="right">确认密码:</Label>
-                <PasswordBox inputId="pwdConfirm" v-model="user.password" style="width:14em" placeholder="请确认登录密码:"></PasswordBox>
+                <PasswordBox inputId="pwdConfirm" name="pwdConfirm" v-model="user.pwdConfirm" style="width:14em"
+                             v-validate="{is:user.password}" data-vv-as="确认密码" placeholder="请确认登录密码:"></PasswordBox>
                 <span style="color: red; ">*</span>
                 <div class="error">{{ errors.first('pwdConfirm') }}</div>
 
@@ -173,7 +177,7 @@
                   <input type="radio" name="enableStatus" id="e1" value="1" v-model="user.enableStatus" checked> 是
                 </label>
                 <label>
-                  <input type="radio" name="enableStatus" id="e0" value="0" v-model="user.enableStatus" >否
+                  <input type="radio" name="enableStatus" id="e0" value="0" v-model="user.enableStatus">否
                 </label>
               </Form>
             </div>
@@ -207,13 +211,24 @@
         pagePosition: "bottom",
         displayColumns: [],
         user: {},
-        userDialogTitle:""
+        qUser: {},
+        userDialogTitle: "",
+        treeData: []
       };
     },
     created() {
       this.loadPage(this.pageNumber, this.pageSize);
     },
     methods: {
+      getTreeData() {
+        this.$api.org.getTargetTree('4').then((response) => {
+          if (response.status === 200) {
+            this.treeData = response.data.data;
+          }
+        }).catch(error => {
+          console.log("error", error);
+        });
+      },
       onPageChange(event) {
         this.loadPage(event.pageNumber, event.pageSize);
       },
@@ -243,20 +258,20 @@
       search() {
         let filters = [];
         let dateFmt = Vue.filter('dateFmt');
-        for (let field in this.user) {
+        for (let field in this.qUser) {
           let filter = {};
           if (field.endsWith("From")) {
             filter.property = field.substr(0, field.indexOf("From"));
             filter.operator = "greaterThanOrEqualTo";
-            filter.value = dateFmt(this.user[field]);
+            filter.value = dateFmt(this.qUser[field]);
           } else if (field.endsWith("To")) {
             filter.property = field.substr(0, field.indexOf("To"));
             filter.operator = "lessThanOrEqualTo";
-            filter.value =  dateFmt(this.user[field],1);
+            filter.value = dateFmt(this.qUser[field], 1);
           } else {
             filter.property = field;
             filter.operator = "like";
-            filter.value = this.user[field];
+            filter.value = this.qUser[field];
           }
           filters.push(filter);
         }
@@ -316,6 +331,7 @@
         this.user = {};
         this.user.enableStatus = 1;
         this.userDialogTitle = "用户关联";
+        this.getTreeData();
         this.$refs.d1.open();
       },
       toAdd() {
@@ -361,9 +377,19 @@
           if (valid) {
             console.log("commit json data:" + JSON.stringify(this.user));
             if (this.user.id) {
-
+              this.$api.user.userUpt(this.checkedIds[0]).then((response) => {
+                this.loadPage(this.pageNumber, this.pageSize);
+                this.$refs.d1.close();
+              }).catch(error => {
+                console.log("get menu detail error", error);
+              });
             } else {
-
+              this.$api.user.userRefAdd(this.user).then((response) => {
+                this.loadPage(this.pageNumber, this.pageSize);
+                this.$refs.d1.close();
+              }).catch(error => {
+                console.log("get menu detail error", error);
+              });
             }
           }
         });
@@ -379,6 +405,7 @@
     font-size: 12px;
     margin: 4px 120px;
   }
+
   .dataList {
     display: flex;
     align-items: center;

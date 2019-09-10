@@ -10,6 +10,15 @@ const org = {
   getRelationTree(param) {
     return axios.get(`${base.sq}/org/relation/tree/` + param);
   },
+
+  /**
+   * 获取指定类型的树
+   * @param param 机构类型
+   */
+  getTargetTree(param) {
+    return axios.get(`${base.sq}/org/relation/tree/target/` + param);
+  },
+
   /**
    * 机构明细
    * @param param ID

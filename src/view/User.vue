@@ -59,10 +59,10 @@
                   <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
 
                   <MenuButton text="授权管理" :plain="true" iconCls="icon-add">
-                    <Menu @itemClick="add($event)">
-                      <MenuItem text="授权角色"></MenuItem>
-                      <MenuItem text="数据授权"></MenuItem>
-                      <MenuItem text="功能授权"></MenuItem>
+                    <Menu @itemClick="grant($event)">
+                      <MenuItem value="1" text="授权角色"></MenuItem>
+                      <MenuItem value="2" text="功能授权"></MenuItem>
+                      <MenuItem value="3" text="数据授权"></MenuItem>
                     </Menu>
                   </MenuButton>
 
@@ -187,6 +187,45 @@
             </div>
           </Dialog>
 
+
+          <Dialog ref="d2" :title="userDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+            <div class="f-full" style="padding: 3px 3px">
+              <Tree ref="roleTree" :data="roleTreeData" :checkbox="true" :selectLeafOnly="true" cascadeCheck="true"
+                    @selectionChange="treeSelected($event)"></Tree>
+            </div>
+            <div class="dialog-button">
+              <LinkButton style="width:60px" @click="grantFunc()&&$refs.d2.close()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="$refs.d2.close()">取消</LinkButton>
+            </div>
+          </Dialog>
+
+
+          <Dialog ref="d3" :title="userDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+            <div class="f-full" style="padding: 3px 3px">
+              <Tree ref="funcTree" :data="permFuncTreeData" :checkbox="true" :selectLeafOnly="true" cascadeCheck="true"
+                    @selectionChange="treeSelected($event)"></Tree>
+            </div>
+            <div class="dialog-button">
+              <LinkButton style="width:60px" @click="grantFunc()&&$refs.d3.close()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="$refs.d3.close()">取消</LinkButton>
+            </div>
+          </Dialog>
+
+
+          <Dialog ref="d4" :title="userDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+            <div class="f-full" style="padding: 2px 2px">
+              <Tree ref="dataTree" :data="permDataTreeData" :checkbox="true" :selectLeafOnly="true" cascadeCheck="true"
+                    @selectionChange="treeSelected($event)"></Tree>
+            </div>
+            <div class="dialog-button">
+              <LinkButton style="width:60px" @click="grantData()&&$refs.d4.close()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="$refs.d4.close()">取消</LinkButton>
+            </div>
+          </Dialog>
+
         </LayoutPanel>
       </Layout>
     </section>
@@ -213,7 +252,10 @@
         user: {},
         qUser: {},
         userDialogTitle: "",
-        treeData: []
+        treeData: [],
+        roleTreeData: [],
+        permFuncTreeData: [],
+        permDataTreeData: []
       };
     },
     created() {
@@ -393,6 +435,81 @@
             }
           }
         });
+      },
+      grant(event) {
+        if (this.checkedIds.length === 1) {
+          if (event === "1") {
+            this.userDialogTitle = "关联角色";
+            this.$api.user.getRoleTree('').then((response) => {
+              if (response.status === 200) {
+                this.roleTreeData = response.data.data;
+              }
+            }).catch(error => {
+              console.log("error", error);
+            });
+            this.$refs.d2.open();
+          } else if (event === "2") {
+            this.userDialogTitle = "功能授权";
+            this.$api.user.rolePermFuncTree(this.detailContent.id, {}).then((response) => {
+              //console.log("--->", response.data);
+              this.permFuncTreeData = response.data.data;
+              let checkedNodes = [];
+              let getCheckedNodes = function (treeData) {
+                treeData.forEach((node) => {
+                  if (node.children && node.children.length) {
+                    if (node.checked) {
+                      checkedNodes.push(node);
+                    }
+                    getCheckedNodes(node.children);
+                  } else {
+                    if (node.checked) {
+                      checkedNodes.push(node);
+                    }
+                  }
+                });
+                return checkedNodes;
+              };
+              getCheckedNodes(this.permFuncTreeData);
+              checkedNodes.forEach((node) => {
+                this.$refs.funcTree.checkNode(node);
+              });
+            }).catch(error => {
+              console.log("error", error);
+            });
+            this.$refs.d3.open();
+          } else {
+            this.userDialogTitle = "数据授权";
+            this.$api.user.rolePermDataTree(this.detailContent.id, {}).then((response) => {
+              //console.log("--->", response.data);
+              this.permDataTreeData = response.data.data;
+              let checkedNodes = [];
+              let getCheckedNodes = function (treeData) {
+                treeData.forEach((node) => {
+                  if (node.children && node.children.length) {
+                    if (node.checked) {
+                      checkedNodes.push(node);
+                    }
+                    getCheckedNodes(node.children);
+                  } else {
+                    if (node.checked) {
+                      checkedNodes.push(node);
+                    }
+                  }
+                });
+                return checkedNodes;
+              };
+              getCheckedNodes(this.permDataTreeData);
+              checkedNodes.forEach((node) => {
+                this.$refs.dataTree.checkNode(node);
+              });
+            }).catch(error => {
+              console.log("error", error);
+            });
+            this.$refs.d4.open();
+          }
+        } else {
+          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
+        }
       }
     }
   };

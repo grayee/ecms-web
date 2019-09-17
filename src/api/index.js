@@ -10,6 +10,7 @@ import position from '@/api/position';
 import employee from '@/api/employee';
 import menu from '@/api/menu';
 import user from '@/api/user';
+import login from '@/api/login';
 import org from '@/api/orgnization';
 import dict from '@/api/dictionary';
 import accounting from '@/api/accounting';
@@ -18,6 +19,7 @@ import accounting from '@/api/accounting';
 // 导出接口
 export default {
   user,
+  login,
   company,
   department,
   position,

@@ -17,6 +17,9 @@ const login = {
   logon(params) {
     return axios.post(`${base.sq}/login/oauth`, params);
   },
+  log(param) {
+    return axios.post(`${base.sq}/login/log`, param);
+  },
 
   /**
    * 获取菜单

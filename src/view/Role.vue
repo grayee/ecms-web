@@ -341,6 +341,22 @@
       },
       grant(event) {
         if (this.selection.id) {
+          let checkedNodes = [];
+          let getCheckedNodes = function (treeData) {
+            treeData.forEach((node) => {
+              if (node.children && node.children.length) {
+                if (node.checked) {
+                  checkedNodes.push(node);
+                }
+                getCheckedNodes(node.children);
+              } else {
+                if (node.checked) {
+                  checkedNodes.push(node);
+                }
+              }
+            });
+            return checkedNodes;
+          };
           if (event === "1") {
             this.roleDialogTitle = "关联用户";
             this.checkedIds = [];
@@ -351,22 +367,6 @@
             this.$api.user.rolePermFuncTree(this.detailContent.id, {}).then((response) => {
               //console.log("--->", response.data);
               this.permFuncTreeData = response.data.data;
-              let checkedNodes = [];
-              let getCheckedNodes = function (treeData) {
-                treeData.forEach((node) => {
-                  if (node.children && node.children.length) {
-                    if (node.checked) {
-                      checkedNodes.push(node);
-                    }
-                    getCheckedNodes(node.children);
-                  } else {
-                    if (node.checked) {
-                      checkedNodes.push(node);
-                    }
-                  }
-                });
-                return checkedNodes;
-              };
               getCheckedNodes(this.permFuncTreeData);
               checkedNodes.forEach((node) => {
                 this.$refs.funcTree.checkNode(node);
@@ -380,22 +380,6 @@
             this.$api.user.rolePermDataTree(this.detailContent.id, {}).then((response) => {
               //console.log("--->", response.data);
               this.permDataTreeData = response.data.data;
-              let checkedNodes = [];
-              let getCheckedNodes = function (treeData) {
-                treeData.forEach((node) => {
-                  if (node.children && node.children.length) {
-                    if (node.checked) {
-                      checkedNodes.push(node);
-                    }
-                    getCheckedNodes(node.children);
-                  } else {
-                    if (node.checked) {
-                      checkedNodes.push(node);
-                    }
-                  }
-                });
-                return checkedNodes;
-              };
               getCheckedNodes(this.permDataTreeData);
               checkedNodes.forEach((node) => {
                 this.$refs.dataTree.checkNode(node);

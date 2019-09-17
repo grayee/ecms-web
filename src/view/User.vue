@@ -195,7 +195,7 @@
                     @selectionChange="treeSelected($event)"></Tree>
             </div>
             <div class="dialog-button">
-              <LinkButton style="width:60px" @click="grantFunc()&&$refs.d2.close()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="grantRole()&&$refs.d2.close()">确认</LinkButton>
               <LinkButton style="width:60px" @click="$refs.d2.close()">取消</LinkButton>
             </div>
           </Dialog>
@@ -438,11 +438,31 @@
       },
       grant(event) {
         if (this.checkedIds.length === 1) {
+          let checkedNodes = [];
+          let getCheckedNodes = function (treeData) {
+            treeData.forEach((node) => {
+              if (node.children && node.children.length) {
+                if (node.checked) {
+                  checkedNodes.push(node);
+                }
+                getCheckedNodes(node.children);
+              } else {
+                if (node.checked) {
+                  checkedNodes.push(node);
+                }
+              }
+            });
+            return checkedNodes;
+          };
           if (event === "1") {
             this.userDialogTitle = "关联角色";
-            this.$api.user.getRoleTree('').then((response) => {
+            this.$api.user.getRoleTree(this.checkedIds[0]).then((response) => {
               if (response.status === 200) {
                 this.roleTreeData = response.data.data;
+                getCheckedNodes(this.roleTreeData);
+                checkedNodes.forEach((node) => {
+                  this.$refs.roleTree.checkNode(node);
+                });
               }
             }).catch(error => {
               console.log("error", error);
@@ -453,22 +473,6 @@
             this.$api.user.rolePermFuncTree(this.detailContent.id, {}).then((response) => {
               //console.log("--->", response.data);
               this.permFuncTreeData = response.data.data;
-              let checkedNodes = [];
-              let getCheckedNodes = function (treeData) {
-                treeData.forEach((node) => {
-                  if (node.children && node.children.length) {
-                    if (node.checked) {
-                      checkedNodes.push(node);
-                    }
-                    getCheckedNodes(node.children);
-                  } else {
-                    if (node.checked) {
-                      checkedNodes.push(node);
-                    }
-                  }
-                });
-                return checkedNodes;
-              };
               getCheckedNodes(this.permFuncTreeData);
               checkedNodes.forEach((node) => {
                 this.$refs.funcTree.checkNode(node);
@@ -482,22 +486,6 @@
             this.$api.user.rolePermDataTree(this.detailContent.id, {}).then((response) => {
               //console.log("--->", response.data);
               this.permDataTreeData = response.data.data;
-              let checkedNodes = [];
-              let getCheckedNodes = function (treeData) {
-                treeData.forEach((node) => {
-                  if (node.children && node.children.length) {
-                    if (node.checked) {
-                      checkedNodes.push(node);
-                    }
-                    getCheckedNodes(node.children);
-                  } else {
-                    if (node.checked) {
-                      checkedNodes.push(node);
-                    }
-                  }
-                });
-                return checkedNodes;
-              };
               getCheckedNodes(this.permDataTreeData);
               checkedNodes.forEach((node) => {
                 this.$refs.dataTree.checkNode(node);
@@ -510,6 +498,47 @@
         } else {
           this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
         }
+      },
+      grantRole() {
+        let roleIds = this.$refs.roleTree.getCheckedNodes().map(item => item.id);;
+        console.log(roleIds);
+        this.$api.user.userGrantRole(this.checkedIds[0], roleIds).then((response) => {
+          //console.log("--->", response.data);
+          this.loading = false;
+          this.$refs.d2.close();
+        }).catch(error => {
+          console.log("error", error);
+        });
+      },
+      grantFunc() {
+        let permIds = this.$refs.funcTree.getCheckedNodes().map(item => {
+          if (item.attributes) {
+            return item.id + "@" + item.attributes.isPerm;
+          } else {
+            return item.id + "@false"
+          }
+        });
+        console.log(permIds);
+        this.$api.user.roleGrantFunc(this.detailContent.id, permIds).then((response) => {
+          //console.log("--->", response.data);
+          this.loading = false;
+          this.getTreeData();
+          this.$refs.d3.close();
+        }).catch(error => {
+          console.log("error", error);
+        });
+      },
+      grantData() {
+        let permIds = this.$refs.dataTree.getCheckedNodes().map(item => item.id);
+        console.log(permIds);
+        this.$api.user.roleGrantData(this.detailContent.id, permIds).then((response) => {
+          //console.log("--->", response.data);
+          this.loading = false;
+          this.getTreeData();
+          this.$refs.d4.close();
+        }).catch(error => {
+          console.log("error", error);
+        });
       }
     }
   };

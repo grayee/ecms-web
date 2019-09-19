@@ -19,101 +19,103 @@
         -------------------------->
       <Layout>
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
-          <Panel title="查询条件" :collapsible="true" :bodyStyle="{padding:'10px',marginBottom:'5px'}">
-            <Form :model="subject" :labelWidth="120" labelAlign="right">
+          <Tabs @tabSelect="tabSelect($event)">
+            <TabPanel v-for="st in subjectTypes" :key="st.value" :title="st">
+              <Panel :bodyStyle="{padding:'10px',marginBottom:'5px'}">
+                <Form :model="subject" :labelWidth="120" labelAlign="right">
 
-              <div style="margin-bottom:10px">
-                <Label for="subjectCode" align="right">科目编码：</Label>
-                <TextBox inputId="subjectCode" name="subjectCode" v-model="subject.subjectCode"></TextBox>
+                  <div style="margin-bottom:10px">
+                    <Label for="subjectCode" align="right">科目编码：</Label>
+                    <TextBox inputId="subjectCode" name="subjectCode" v-model="subject.subjectCode"></TextBox>
 
-                <Label for="subjectName" align="right">科目名称：</Label>
-                <TextBox inputId="subjectName" name="subjectName" v-model="subject.subjectName"></TextBox>
+                    <Label for="subjectName" align="right">科目名称：</Label>
+                    <TextBox inputId="subjectName" name="subjectName" v-model="subject.subjectName"></TextBox>
 
-                <Label for="balanceDir" style="text-align: right">余额方向: </Label>
-                <ComboBox inputId="balanceDir" name="balanceDir" v-model="subject.balanceDir"
-                          :data="[{value: 0, text: '借方'},{value: 1, text: '贷方'}]"></ComboBox>
-              </div>
+                    <Label for="balanceDir" style="text-align: right">余额方向: </Label>
+                    <ComboBox inputId="balanceDir" name="balanceDir" v-model="subject.balanceDir"
+                              :data="[{value: 0, text: '借方'},{value: 1, text: '贷方'}]"></ComboBox>
+                  </div>
 
-              <div style="margin-bottom:10px">
+                  <div style="margin-bottom:10px">
 
-                <Label for="subjectType" style="text-align: right">科目类型: </Label>
-                <ComboBox inputId="subjectType" name="subjectType" v-model="subject.subjectType"
-                          :data="subjectTypes"></ComboBox>
+                    <Label for="d2" align="right">创建日期： </Label>
+                    <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateFrom"
+                             v-model="subject.createDateFrom"></DateBox>
+                    至
+                    <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateTo"
+                             v-model="subject.createDateTo"></DateBox>
+                    <Label/>
 
-                <Label for="d2" align="right">创建日期： </Label>
-                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateFrom"
-                         v-model="subject.createDateFrom"></DateBox>
-                至
-                <DateBox inputId="d2" format="yyyy-MM-dd" name="createDateTo"
-                         v-model="subject.createDateTo"></DateBox>
-                <Label/>
+                    <LinkButton iconCls="icon-search" style="width:60px" @click="search()">查询</LinkButton>
+                    <LinkButton iconCls="icon-cancel" style="width:60px" @click="reset()"> 重置</LinkButton>
+                  </div>
+                </Form>
+              </Panel>
 
-                <LinkButton iconCls="icon-search" style="width:60px" @click="search()">查询</LinkButton>
-                <LinkButton iconCls="icon-cancel" style="width:60px" @click="reset()"> 重置</LinkButton>
-              </div>
-            </Form>
-          </Panel>
+              <Panel title="列表" :bodyStyle="{padding:'3px'}">
 
-          <Panel title="列表" :bodyStyle="{padding:'3px'}">
-
-            <template slot="header">
-              <div class="f-row">
-                <div class="f-full" style="line-height:30px">列表</div>
-                <div>
-                  <LinkButton iconCls="icon-add" :plain="true" @click="toAdd()">新增</LinkButton>
-                  <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
-                  <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
-                  <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
-                  <LinkButton iconCls="icon-edit" :plain="true" @click="editDetail()">详细</LinkButton>
-                  <LinkButton iconCls="icon-back" :plain="true" @click="goBack()"></LinkButton>
-                </div>
-              </div>
-            </template>
-
-            <DataGrid style="height:100%" :pagination="true" :lazy="true" :pageList="pageList"
-                      :data="data" :total="total" :loading="loading" :pageNumber="pageNumber"
-                      :pageSize="pageSize" :pagePosition="pagePosition" :pageLinks="5"
-                      :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
-                      @pageChange="onPageChange($event)" :selectionMode="'multiple'" @rowDblClick="editDetail($event)"
-                      @selectionChange="selected($event)">
-
-              <div slot="tpl" slot-scope="{datagrid}">
-                &nbsp;第
-                <NumberBox style="width:80px;height:23px" spinAlign="left" :spinners="true"
-                           v-model="datagrid.pageNumberState"
-                           :min="1" :max="Math.floor((total-1)/pageSize+1)"
-                           :inputStyle="{textAlign:'left'}">
-                  <Addon align="right">
-                    <LinkButton iconCls="icon-search"
-                                :style="{borderRadius:0,borderWidth:'0 1px 0 0',width:'20px'}"></LinkButton>
-                  </Addon>
-                </NumberBox>
-                页,共 {{Math.floor((total-1)/pageSize+1)}} 页 &nbsp;
-              </div>
-
-              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
-                <template slot="header" slot-scope="scope">
-                  <input type="checkbox" @click="checkAll($event)"/>
+                <template slot="header">
+                  <div class="f-row">
+                    <div class="f-full" style="line-height:30px">列表</div>
+                    <div>
+                      <LinkButton iconCls="icon-add" :plain="true" @click="toAdd()">新增</LinkButton>
+                      <LinkButton iconCls="icon-reload" :plain="true" @click="refresh()">刷新</LinkButton>
+                      <LinkButton iconCls="icon-remove" :plain="true" @click="remove()">删除</LinkButton>
+                      <LinkButton iconCls="icon-edit" :plain="true" @click="edit()">编辑</LinkButton>
+                      <LinkButton iconCls="icon-edit" :plain="true" @click="editDetail()">详细</LinkButton>
+                      <LinkButton iconCls="icon-back" :plain="true" @click="goBack()"></LinkButton>
+                    </div>
+                  </div>
                 </template>
-                <template slot="body" slot-scope="scope">
-                  <input type="checkbox" v-model="checkedIds" :value="scope.row.id"/>
-                </template>
-              </GridColumn>
 
-              <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
-                <template slot="header" slot-scope="scope">
-                  <span>序</span>
-                </template>
-                <template slot="body" slot-scope="scope">
-                  {{scope.rowIndex + 1}}
-                </template>
-              </GridColumn>
+                <DataGrid style="height:100%" :pagination="true" :lazy="true" :pageList="pageList"
+                          :data="data" :total="total" :loading="loading" :pageNumber="pageNumber"
+                          :pageSize="pageSize" :pagePosition="pagePosition" :pageLinks="5"
+                          :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"
+                          @pageChange="onPageChange($event)" :selectionMode="'multiple'"
+                          @rowDblClick="editDetail($event)"
+                          @selectionChange="selected($event)">
 
-              <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
-                          v-if="column.show" :align="column.align" :sortable="column.sortable" :width="column.width">
-              </GridColumn>
-            </DataGrid>
-          </Panel>
+                  <div slot="tpl" slot-scope="{datagrid}">
+                    &nbsp;第
+                    <NumberBox style="width:80px;height:23px" spinAlign="left" :spinners="true"
+                               v-model="datagrid.pageNumberState"
+                               :min="1" :max="Math.floor((total-1)/pageSize+1)"
+                               :inputStyle="{textAlign:'left'}">
+                      <Addon align="right">
+                        <LinkButton iconCls="icon-search"
+                                    :style="{borderRadius:0,borderWidth:'0 1px 0 0',width:'20px'}"></LinkButton>
+                      </Addon>
+                    </NumberBox>
+                    页,共 {{Math.floor((total-1)/pageSize+1)}} 页 &nbsp;
+                  </div>
+
+                  <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
+                    <template slot="header" slot-scope="scope">
+                      <input type="checkbox" @click="checkAll($event)"/>
+                    </template>
+                    <template slot="body" slot-scope="scope">
+                      <input type="checkbox" v-model="checkedIds" :value="scope.row.id"/>
+                    </template>
+                  </GridColumn>
+
+                  <GridColumn align="center" cellCss="datagrid-td-rownumber" width="3%">
+                    <template slot="header" slot-scope="scope">
+                      <span>序</span>
+                    </template>
+                    <template slot="body" slot-scope="scope">
+                      {{scope.rowIndex + 1}}
+                    </template>
+                  </GridColumn>
+
+                  <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
+                              v-if="column.show" :align="column.align" :sortable="column.sortable"
+                              :width="column.width">
+                  </GridColumn>
+                </DataGrid>
+              </Panel>
+            </TabPanel>
+          </Tabs>
 
 
           <Dialog ref="d1" :title="dictDialogTitle" :dialogStyle="{width:'480px',height:'380px'}"
@@ -128,7 +130,7 @@
 
                 <Label for="code" align="right">类型编码:</Label>
                 <TextBox inputId="code" name="code" v-model="subject.code" style="width:18em"
-                         v-validate="'required|max:30'" data-vv-as="类型编码"  placeholder="请输入类型编码"></TextBox>
+                         v-validate="'required|max:30'" data-vv-as="类型编码" placeholder="请输入类型编码"></TextBox>
                 <div class="error">{{ errors.first('code') }}</div>
 
                 <Label for="description" align="right">描述信息:</Label>
@@ -164,28 +166,22 @@
         checkedFields: [],
         pageList: [10, 20, 30, 40, 50],
         loading: false,
-        filters : [],
+        subjectType: 0,
+        filters: [{property: "subjectType", operator: "equal", value: 0}],
         pagePosition: "bottom",
         displayColumns: [],
         subject: {},
-        subjectTypes: [
-          {value: 0, text: "资产类"},
-          {value: 1, text: "负债类"},
-          {value: 2, text: "权益类"},
-          {value: 3, text: "共同类"},
-          {value: 4, text: "成本类"},
-          {value: 5, text:"损益类"}
-        ],
+        subjectTypes: null,
         dictDialogTitle: "",
-        selection:{}
+        selection: {}
       };
     },
     created() {
-      this.loadPage(this.pageNumber, this.pageSize,this.filters);
+      this.loadPage(this.pageNumber, this.pageSize, this.filters);
     },
     methods: {
       onPageChange(event) {
-        this.loadPage(event.pageNumber, event.pageSize,this.filters);
+        this.loadPage(event.pageNumber, event.pageSize, this.filters);
       },
       loadPage(pageNumber, pageSize, filters) {
         this.loading = true;
@@ -201,6 +197,7 @@
           this.data = result.content;
           this.loading = false;
           this.displayColumns = result.extras.displayColumns;
+          this.subjectTypes = result.extras.subjectTypes;
           this.displayColumns.forEach((item, i) => {
             if (item.show) {
               this.checkedFields.push(item.field);
@@ -212,8 +209,9 @@
       },
       search() {
         let dateFmt = Vue.filter('dateFmt');
-        let eqFields = ["subjectType","balanceDir"];
-        this.filters =[];
+        let eqFields = ["subjectType", "balanceDir"];
+        this.filters = [];
+        this.subject.subjectType = this.subjectType;
         for (let field in this.subject) {
           let filter = {};
           if (field.endsWith("From")) {
@@ -224,7 +222,7 @@
             filter.property = field.substr(0, field.indexOf("To"));
             filter.operator = "lessThanOrEqualTo";
             filter.value = dateFmt(this.subject[field], 1);
-          }  else{
+          } else {
             filter.property = field;
             filter.operator = "like";
             if (eqFields.indexOf(field) > -1) {
@@ -247,31 +245,27 @@
             console.log("error", error);
           });
         } else {
-          this.$messager.alert({
-            title: "提示信息",
-            icon: "warning",
-            msg: "请至少选中一条记录!"
-          });
+          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
         }
       },
       edit() {
         if (this.checkedIds.length === 1) {
           this.dictDialogTitle = "字典类型编辑";
-          this.subject =this.selection;
+          this.subject = this.selection;
           delete this.subject.isSystem;
           this.$refs.d1.open();
         } else {
-          this.$messager.alert({title: "提示信息", icon: "warning",msg: "请至少选中一条记录!"});
+          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
         }
       },
-      editDetail(event){
+      editDetail(event) {
         if (event) {
           this.checkedIds.push(event.id);
         }
         if (this.checkedIds.length === 1) {
           this.$router.push({path: '/sys/dict/add?id=' + this.checkedIds[0]});
         } else {
-          this.$messager.alert({title: "提示信息", icon: "warning",msg: "请至少选中一条记录!"});
+          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
         }
       },
       refresh() {
@@ -300,7 +294,7 @@
         }
       },
       selected(event) {
-        this.selection =event[0];
+        this.selection = event[0];
         this.checkedIds = [];
         let _this = this;
         event.forEach(function (item, i) {
@@ -339,6 +333,12 @@
             }
           }
         });
+      },
+      tabSelect(e) {
+        this.subject = {};
+        this.subjectType = e.title.value;
+        this.filters = [{property: "subjectType", operator: "equal", value: this.subjectType}];
+        this.loadPage(this.pageNumber, this.pageSize, this.filters);
       }
     }
   };

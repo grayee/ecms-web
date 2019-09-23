@@ -230,8 +230,9 @@
       edit() {
         if (this.checkedIds.length === 1) {
           this.dictDialogTitle = "字典类型编辑";
-          this.dictionary =this.selection;
+          this.dictionary = this.selection;
           delete this.dictionary.isSystem;
+          delete this.dictionary.createDate;
           this.$refs.d1.open();
         } else {
           this.$messager.alert({title: "提示信息", icon: "warning",msg: "请至少选中一条记录!"});

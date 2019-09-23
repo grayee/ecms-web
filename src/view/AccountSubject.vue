@@ -118,17 +118,17 @@
           </Tabs>
 
 
-          <Dialog ref="d1" :title="dictDialogTitle" :dialogStyle="{width:'480px',height:'380px'}"
+          <Dialog ref="d1" :title="subjectDialogTitle" :dialogStyle="{width:'480px',height:'380px'}"
                   bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
             <div class="f-full" style="padding: 20px 60px 20px 20px">
               <Form ref="form" :model="subject">
-                <Label for="name" align="right">类型名称:</Label>
+                <Label for="name" align="right">科目名称:</Label>
                 <TextBox inputId="name" name="name" v-model="subject.name" style="width:18em"
                          v-validate="'required|max:10'" data-vv-as="类型名称" placeholder="请输入类型名称"></TextBox>
                 <span style="color: red; ">*</span>
                 <div class="error">{{ errors.first('name') }}</div>
 
-                <Label for="code" align="right">类型编码:</Label>
+                <Label for="code" align="right">科目编码:</Label>
                 <TextBox inputId="code" name="code" v-model="subject.code" style="width:18em"
                          v-validate="'required|max:30'" data-vv-as="类型编码" placeholder="请输入类型编码"></TextBox>
                 <div class="error">{{ errors.first('code') }}</div>
@@ -172,7 +172,7 @@
         displayColumns: [],
         subject: {},
         subjectTypes: null,
-        dictDialogTitle: "",
+        subjectDialogTitle: "",
         selection: {}
       };
     },
@@ -250,7 +250,7 @@
       },
       edit() {
         if (this.checkedIds.length === 1) {
-          this.dictDialogTitle = "字典类型编辑";
+          this.subjectDialogTitle = "科目编辑";
           this.subject = this.selection;
           delete this.subject.isSystem;
           this.$refs.d1.open();
@@ -283,7 +283,7 @@
         this.$router.go(-1);
       },
       toAdd() {
-        this.dictDialogTitle = "字典类型新增";
+        this.subjectDialogTitle = "科目新增";
         this.$refs.d1.open();
       },
       onRowClick(row) {

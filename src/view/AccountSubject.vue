@@ -118,25 +118,72 @@
           </Tabs>
 
 
-          <Dialog ref="d1" :title="subjectDialogTitle" :dialogStyle="{width:'480px',height:'380px'}"
+          <Dialog ref="d1" :title="subjectDialogTitle" :dialogStyle="{width:'480px',height:'540px'}"
                   bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
-            <div class="f-full" style="padding: 20px 60px 20px 20px">
+            <div class="f-full form-horizontal" style="padding: 20px 60px 20px 20px">
               <Form ref="form" :model="subject">
-                <Label for="name" align="right">科目名称:</Label>
-                <TextBox inputId="name" name="name" v-model="subject.name" style="width:18em"
-                         v-validate="'required|max:10'" data-vv-as="类型名称" placeholder="请输入类型名称"></TextBox>
-                <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('name') }}</div>
 
                 <Label for="code" align="right">科目编码:</Label>
                 <TextBox inputId="code" name="code" v-model="subject.code" style="width:18em"
-                         v-validate="'required|max:30'" data-vv-as="类型编码" placeholder="请输入类型编码"></TextBox>
+                         v-validate="'required|max:30'" data-vv-as="科目编码" placeholder="请输入科目编码"></TextBox>
                 <div class="error">{{ errors.first('code') }}</div>
 
-                <Label for="description" align="right">描述信息:</Label>
-                <TextBox inputId="description" name="description" :multiline="true" v-model="subject.description"
-                         style="width:218px;height:100px;"></TextBox>
-                <div class="error">{{ errors.first('description') }}</div>
+                <Label for="name" align="right">科目名称:</Label>
+                <TextBox inputId="name" name="name" v-model="subject.name" style="width:18em"
+                         v-validate="'required|max:10'" data-vv-as="科目名称" placeholder="请输入科目名称"></TextBox>
+                <span style="color: red; ">*</span>
+                <div class="error">{{ errors.first('name') }}</div>
+
+                <Label for="code" align="right">上级科目:</Label>
+                <TextBox inputId="code" name="code" v-model="subject.code" style="width:18em"
+                         v-validate="'required|max:30'" data-vv-as="上级科目" placeholder="请输入科目编码"></TextBox>
+                <div class="error">{{ errors.first('code') }}</div>
+
+                <Label for="hero" align="right">科目类型:</Label>
+                <ComboBox inputId='subjectType' name="subjectType" :data="{}" v-validate="'required'"
+                          data-vv-as="科目类型" v-model="subject.subjectType"></ComboBox>
+                <div class="error">{{ errors.first('subjectType') }}</div>
+
+                <Label for="balanceDir" align="right">余额方向:</Label>
+                <label>
+                  <input type="radio" name="balanceDir" id="e1" value="1" v-model="subject.balanceDir" checked>
+                  借
+                </label>
+                <label>
+                  <input type="radio" name="balanceDir" id="e0" value="0" v-model="subject.balanceDir"> 贷
+                </label>
+                <div class="error">{{ errors.first('balanceDir') }}</div>
+
+                <div>
+                  <fieldset>
+                    <legend><input type="checkbox" name="isAssistCheck" v-model="subject.isAssistCheck"/> 辅助核算</legend>
+
+                    <label v-for="(at,index) in assistTypes" :key="index">
+                      &nbsp;&nbsp;<input type="checkbox"  name='assistTypes' :value='at.value' v-model="subject.assistTypes">&nbsp;{{at.text}} &nbsp;&nbsp;
+                    </label>
+                    <div class="error">{{ errors.first('menuType') }}</div>
+
+
+                  </fieldset>
+                  <fieldset>
+                    <legend><input type="checkbox" name="isAmountCheck" v-model="subject.isAmountCheck"/> 数量核算</legend>
+                    <Label for="code" align="right">计量单位:</Label>
+                    <TextBox inputId="amountUnit" name="amountUnit" v-model="subject.amountUnit" style="width:10em"
+                             v-validate="'required|max:30'" data-vv-as="计量单位" placeholder="请输入计量单位"></TextBox>
+                    <div class="error">{{ errors.first('amountUnit') }}</div>
+
+                  </fieldset>
+
+                  <fieldset>
+                    <legend><input type="checkbox" name="isForeignCurrencyCheck" v-model="subject.isForeignCurrencyCheck"/> 外币核算</legend>
+                    <Label for="hero" align="right">币 种:</Label>
+                    <ComboBox inputId='currency' name="currency" :data="{}" v-validate="'required'"
+                              style="width:10em"
+                              data-vv-as="币种" v-model="subject.currency"></ComboBox>
+                    <div class="error">{{ errors.first('currency') }}</div>
+                  </fieldset>
+                </div>
+
               </Form>
             </div>
             <div class="dialog-button">
@@ -170,7 +217,13 @@
         filters: [{property: "subjectType", operator: "equal", value: 0}],
         pagePosition: "bottom",
         displayColumns: [],
-        subject: {},
+        subject: {assistTypes:[]},
+        assistTypes: [
+          {value: 0, text: "部门"},
+          {value: 1, text: "个人"},
+          {value: 2, text: "客户"},
+          {value: 3, text: "供应商"},
+          {value: 4, text: "项目"}],
         subjectTypes: null,
         subjectDialogTitle: "",
         selection: {}
@@ -350,6 +403,7 @@
     color: red;
     font-size: 12px;
     margin: 4px 120px;
+    width:120px;
   }
 
   .dataList {
@@ -359,6 +413,22 @@
     height: 35px;
     border-bottom: 1px solid #eee;
   }
+
+  fieldset {
+    padding: .15em .825em .15em;
+    margin: 0 2px 0 60px;
+    border: 1px solid silver
+  }
+
+  legend {
+    padding: .2em;
+    border: 0;
+    width: auto;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 1px
+  }
+
 </style>
 <!--
 https://www.cnblogs.com/wyguo/p/3556049.html

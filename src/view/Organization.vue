@@ -15,7 +15,7 @@
 
     <!-- Main content -->
     <section class="content container-fluid" style="background: rgb(255, 255, 255);padding:5px">
-      <Layout>
+      <Layout v-if="orgRelationData !== undefined && orgRelationData.length >0">
         <LayoutPanel region="west" :split="true" :bodyStyle="{padding:'3px'}" title="组织机构树" style="width:200px;">
             <Tree ref="tree" :data="orgRelationData" :checkbox="false" @selectionChange="selected($event)"></Tree>
         </LayoutPanel>
@@ -45,8 +45,17 @@
             </ul>
           </Panel>
         </LayoutPanel>
+      </Layout>
 
-
+      <Layout v-else>
+        <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'10px'}">
+           <div class="f-full">
+             暂无数据,请选择新增的根节点：<br>
+             <router-link to="/org/company/add"><i class="fa fa-org" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i>公司</router-link><br>
+             <router-link to="/org/department/add"><i class="fa fa-org" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i>部门</router-link><br>
+             <router-link to="/org/position/add"><i class="fa fa-org" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i>岗位</router-link><br>
+           </div>
+        </LayoutPanel>
       </Layout>
     </section>
     <!-- /.content -->

@@ -45,6 +45,15 @@
  }
  /*标签右对齐*/
   label {
-    text-align: right
+    text-align: right;
+    padding-left: 4px;
+    cursor: pointer;
+    margin: 0;
+    vertical-align: middle;
+  }
+  input[type=radio],input[type=checkbox]{
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 0;
   }
 </style>

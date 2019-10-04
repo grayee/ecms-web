@@ -62,7 +62,7 @@
               </div>
             </template>
 
-            <DataGrid style="height:100%" :pagination="true" :lazy="true" :pageList="pageList"
+            <DataGrid style="height:100%" :pagination="true" :lazy="true" :pageList="pageList" :columnResizing="true"
                       :data="data" :total="total" :loading="loading" :pageNumber="pageNumber"
                       :pageSize="pageSize" :pagePosition="pagePosition" :pageLinks="5"
                       :pageLayout="['list','sep','first','prev','sep','tpl','sep','next','last','sep','refresh','links','info']"

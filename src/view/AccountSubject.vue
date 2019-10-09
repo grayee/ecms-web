@@ -123,16 +123,16 @@
             <div class="f-full form-horizontal" style="padding: 20px 60px 20px 20px">
               <Form ref="form" :model="subject">
 
-                <Label for="code" align="right">科目编码:</Label>
-                <TextBox inputId="code" name="code" v-model="subject.code" style="width:18em"
+                <Label for="subjectCode" align="right">科目编码:</Label>
+                <TextBox inputId="subjectCode" name="subjectCode" v-model="subject.subjectCode" style="width:18em"
                          v-validate="'required|max:30'" data-vv-as="科目编码" placeholder="请输入科目编码"></TextBox>
-                <div class="error">{{ errors.first('code') }}</div>
+                <div class="error">{{ errors.first('subjectCode') }}</div>
 
-                <Label for="name" align="right">科目名称:</Label>
-                <TextBox inputId="name" name="name" v-model="subject.name" style="width:18em"
+                <Label for="subjectName" align="right">科目名称:</Label>
+                <TextBox inputId="subjectName" name="subjectName" v-model="subject.subjectName" style="width:18em"
                          v-validate="'required|max:10'" data-vv-as="科目名称" placeholder="请输入科目名称"></TextBox>
                 <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('name') }}</div>
+                <div class="error">{{ errors.first('subjectName') }}</div>
 
                 <Label for="code" align="right">上级科目:</Label>
                 <TextBox inputId="code" name="code" v-model="subject.code" style="width:18em"
@@ -140,50 +140,43 @@
                 <div class="error">{{ errors.first('code') }}</div>
 
                 <Label for="hero" align="right">科目类型:</Label>
-                <ComboBox inputId='subjectType' name="subjectType" :data="{}" v-validate="'required'"
+                <ComboBox inputId='subjectType' name="subjectType" :data="subject.subjectTypeMap" v-validate="'required'"
                           data-vv-as="科目类型" v-model="subject.subjectType"></ComboBox>
                 <div class="error">{{ errors.first('subjectType') }}</div>
 
                 <Label for="balanceDir" align="right">余额方向:</Label>
-                <label>
-                  <input type="radio" name="balanceDir" id="e1" value="1" v-model="subject.balanceDir" checked>
-                  借
-                </label>
-                <label>
-                  <input type="radio" name="balanceDir" id="e0" value="0" v-model="subject.balanceDir"> 贷
+                <label v-for="(bd,index) in subject.balanceDirMap" :key="index">
+                  <input type="radio" name="balanceDir" :value="bd.value" v-model="subject.balanceDir">{{bd.text}}
                 </label>
                 <div class="error">{{ errors.first('balanceDir') }}</div>
 
-                <div>
-                  <fieldset>
-                    <legend><input type="checkbox" name="isAssistCheck" v-model="subject.isAssistCheck"/> 辅助核算</legend>
 
-                    <label v-for="(at,index) in assistTypes" :key="index">
-                      &nbsp;&nbsp;<input type="checkbox"  name='assistTypes' :value='at.value' v-model="subject.assistTypes">&nbsp;{{at.text}} &nbsp;&nbsp;
-                    </label>
-                    <div class="error">{{ errors.first('menuType') }}</div>
+                <fieldset>
+                  <legend><input type="checkbox" name="isAssistCheck" v-model="subject.isAssistCheck"/> 辅助核算</legend>
+                  <label v-for="(at,index) in subject.assistTypeMap" :key="index">
+                    &nbsp;&nbsp;<input type="checkbox" name='assistTypes' :value='at.value'
+                                       v-model="subject.assistTypes">&nbsp;{{at.text}} &nbsp;&nbsp;
+                  </label>
+                </fieldset>
 
+                <fieldset>
+                  <legend><input type="checkbox" name="isAmountCheck" v-model="subject.isAmountCheck"/> 数量核算</legend>
+                  <Label for="code" align="right">计量单位:</Label>
+                  <TextBox inputId="amountUnit" name="amountUnit" v-model="subject.amountUnit" style="width:10em"
+                           v-validate="'required|max:30'" data-vv-as="计量单位" placeholder="请输入计量单位"></TextBox>
+                  <div class="error">{{ errors.first('amountUnit') }}</div>
 
-                  </fieldset>
-                  <fieldset>
-                    <legend><input type="checkbox" name="isAmountCheck" v-model="subject.isAmountCheck"/> 数量核算</legend>
-                    <Label for="code" align="right">计量单位:</Label>
-                    <TextBox inputId="amountUnit" name="amountUnit" v-model="subject.amountUnit" style="width:10em"
-                             v-validate="'required|max:30'" data-vv-as="计量单位" placeholder="请输入计量单位"></TextBox>
-                    <div class="error">{{ errors.first('amountUnit') }}</div>
+                </fieldset>
 
-                  </fieldset>
-
-                  <fieldset>
-                    <legend><input type="checkbox" name="isForeignCurrencyCheck" v-model="subject.isForeignCurrencyCheck"/> 外币核算</legend>
-                    <Label for="hero" align="right">币 种:</Label>
-                    <ComboBox inputId='currency' name="currency" :data="{}" v-validate="'required'"
-                              style="width:10em"
-                              data-vv-as="币种" v-model="subject.currency"></ComboBox>
-                    <div class="error">{{ errors.first('currency') }}</div>
-                  </fieldset>
-                </div>
-
+                <fieldset>
+                  <legend><input type="checkbox" name="isForeignCurrencyCheck"
+                                 v-model="subject.isForeignCurrencyCheck"/> 外币核算
+                  </legend>
+                  <Label for="hero" align="right">币 种:</Label>
+                  <ComboBox inputId='currency' name="currency" :data="subject.currencyTypeMap" v-validate="'required'"
+                            style="width:10em" data-vv-as="币种" v-model="subject.currency"></ComboBox>
+                  <div class="error">{{ errors.first('currency') }}</div>
+                </fieldset>
               </Form>
             </div>
             <div class="dialog-button">
@@ -214,16 +207,10 @@
         pageList: [10, 20, 30, 40, 50],
         loading: false,
         subjectType: 0,
-        filters: [{property: "subjectType", operator: "equal", value: 0}],
+        filters: [{property: "subjectType", operator: "equal", value: 1}],
         pagePosition: "bottom",
         displayColumns: [],
-        subject: {assistTypes:[]},
-        assistTypes: [
-          {value: 0, text: "部门"},
-          {value: 1, text: "个人"},
-          {value: 2, text: "客户"},
-          {value: 3, text: "供应商"},
-          {value: 4, text: "项目"}],
+        subject: {},
         subjectTypes: null,
         subjectDialogTitle: "",
         selection: {}
@@ -231,6 +218,9 @@
     },
     created() {
       this.loadPage(this.pageNumber, this.pageSize, this.filters);
+    },
+    computed:{
+
     },
     methods: {
       onPageChange(event) {
@@ -304,8 +294,12 @@
       edit() {
         if (this.checkedIds.length === 1) {
           this.subjectDialogTitle = "科目编辑";
-          this.subject = this.selection;
-          delete this.subject.isSystem;
+          this.$api.accounting.subjectDetail(this.selection.id).then((response) => {
+            this.subject = response.data.data;
+            console.log(this.subject);
+          }).catch(error => {
+            console.log("get menu detail error", error);
+          });
           this.$refs.d1.open();
         } else {
           this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
@@ -337,6 +331,12 @@
       },
       toAdd() {
         this.subjectDialogTitle = "科目新增";
+        this.$api.accounting.subjectDetail('').then((response) => {
+          this.subject = response.data.data;
+          console.log(this.subject);
+        }).catch(error => {
+          console.log("get menu detail error", error);
+        });
         this.$refs.d1.open();
       },
       onRowClick(row) {
@@ -370,14 +370,14 @@
           if (valid) {
             console.log("commit json data:" + JSON.stringify(this.subject));
             if (this.subject.id) {
-              this.$api.dict.subjectUpt(this.subject).then((response) => {
+              this.$api.accounting.subjectUpt(this.subject).then((response) => {
                 this.loadPage(event.pageNumber, event.pageSize);
                 this.$refs.d1.close();
               }).catch(error => {
                 console.log("error", error);
               });
             } else {
-              this.$api.dict.subjectAdd(this.subject).then((response) => {
+              this.$api.accounting.subjectAdd(this.subject).then((response) => {
                 this.loadPage(event.pageNumber, event.pageSize);
                 this.$refs.d1.close();
               }).catch(error => {
@@ -403,7 +403,7 @@
     color: red;
     font-size: 12px;
     margin: 4px 120px;
-    width:120px;
+    width: 120px;
   }
 
   .dataList {

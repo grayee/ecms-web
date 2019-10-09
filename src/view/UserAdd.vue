@@ -21,109 +21,139 @@
       <Layout style="height:100%">
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
 
-          <Form ref="form" :model="user" :labelAlign="right">
-            <div class="main">
-              <div class="divRow">
-                <div>
-                  <Label for="userName" align="right">用户名称:</Label>
-                  <TextBox inputId="userName" name="userName" v-model="user.userName"
-                           v-validate="'required|min:5'"
-                           style="width:18em" data-vv-as="用户名称" placeholder="请输入用户名称"/>
-                  <div class="error">{{ errors.first('userName') }}</div>
+          <Form ref="form" :model="user" :labelAlign="right" class="form-horizontal">
+            <fieldset>
+              <legend>登录信息</legend>
+              <div class="main">
+                <div class="divRow">
+                  <div>
+                    <Label for="username" align="right">用户名称:</Label>
+                    <TextBox inputId="username" name="username" v-model="user.username" v-validate="'required|min:5'"
+                             style="width:18em" data-vv-as="用户名称" placeholder="请输入用户名称"/>
+                    <div class="error">{{ errors.first('username') }}</div>
+                  </div>
+                  <div>
+                    <Label for="loginId" align="right">登录账号:</Label>
+                    <TextBox inputId="loginId" name="loginId" v-model="user.loginId"
+                             v-validate="'required|max:10'" style="width:18em" data-vv-as="登录账号" placeholder="请输入登录账号"/>
+                    <div class="error">{{ errors.first('loginId') }}</div>
+                  </div>
                 </div>
-                <div>
-                  <Label for="englishName" align="right">英文名称:</Label>
-                  <TextBox inputId="englishName" name="englishName" v-model="user.englishName"
-                           v-validate="'required|max:10'" style="width:18em" data-vv-as="英文名称" placeholder="请输入英文名称"/>
-                  <div class="error">{{ errors.first('englishName') }}</div>
+                <div class="divRow">
+                  <div>
+                    <Label for="password" align="right">登录密码:</Label>
+                    <PasswordBox inputId="password" name="password" v-model="user.password" style="width:14em"
+                                 v-validate="'required|min:6'"
+                                 data-vv-as="登录密码" placeholder="请输入登录密码:"></PasswordBox>
+                    <span style="color: red; ">*</span>
+                    <div class="error">{{ errors.first('password') }}</div>
+                  </div>
+                  <div>
+                    <Label for="pwdConfirm" align="right">确认密码:</Label>
+                    <PasswordBox inputId="pwdConfirm" name="pwdConfirm" v-model="user.pwdConfirm" style="width:14em"
+                                 v-validate="'required|confirmed:password'" data-vv-as="确认密码" placeholder="请确认登录密码:"></PasswordBox>
+                    <span style="color: red; ">*</span>
+                    <div class="error">{{ errors.first('pwdConfirm') }}</div>
+                  </div>
                 </div>
               </div>
-              <div class="divRow">
-                <div>
-                  <Label for="userNo" align="right">用户编号:</Label>
-                  <TextBox inputId="userNo" name="userNo" v-model="user.userNo" v-validate="'alpha_num'"
-                           data-vv-as="用户编号" placeholder="请输入用户编号"/>
-                  <div class="error">{{ errors.first('userNo') }}</div>
+            </fieldset>
+
+
+            <fieldset>
+              <legend>基础信息</legend>
+              <div class="main">
+                <div class="divRow">
+                  <div>
+                    <Label for="englishName" align="right">英文名称:</Label>
+                    <TextBox inputId="englishName" name="englishName" v-model="user.englishName"
+                             style="width:18em" data-vv-as="英文名称" placeholder="请输入英文名称"/>
+                  </div>
+                  <div>
+                    <Label for="mobilePhone" align="right">手机号码:</Label>
+                    <TextBox inputId="mobilePhone" name="mobilePhone" v-model="user.mobilePhone"
+                             v-validate="'max:11'" data-vv-as="手机号码" placeholder="请输入手机号码"/>
+                    <div class="error">{{ errors.first('mobilePhone') }}</div>
+                  </div>
                 </div>
-                <div>
-                  <Label for="sex" align="right">性别:</Label>
+                <div class="divRow">
+                  <div>
+                    <Label for="userNo" align="right">用户编号:</Label>
+                    <TextBox inputId="userNo" name="userNo" v-model="user.userNo" v-validate="'alpha_num'"
+                             data-vv-as="用户编号" placeholder="请输入用户编号"/>
+                    <div class="error">{{ errors.first('userNo') }}</div>
+                  </div>
+                  <div>
+                    <Label for="sex" align="right">性别:</Label>
                     <label>
                       <input type="radio" name="sex" id="male" value="male" v-model="user.sex" checked> 男
                     </label>
                     <label>
-                      <input type="radio" name="sex" id="female" value="female" v-model="user.sex" >女
+                      <input type="radio" name="sex" id="female" value="female" v-model="user.sex">女
                     </label>
+                  </div>
                 </div>
-              </div>
-              <div class="divRow">
-                <div>
-                  <Label for="hero" align="right">用户类型:</Label>
-                  <ComboBox inputId='userType' name="userType" :data="userType" v-validate="'required'"
-                            data-vv-as="用户类型" v-model="user.userType"></ComboBox>
-                  <div class="error">{{ errors.first('userType') }}</div>
+                <div class="divRow">
+                  <div>
+                    <Label for="hero" align="right">用户类型:</Label>
+                    <ComboBox inputId='userType' name="userType" :data="userType"
+                              data-vv-as="用户类型" v-model="user.userType"></ComboBox>
+                  </div>
+                  <div>
+                    <Label for="parentId" align="right">所属机构:</Label>
+                    <ComboTree name='parentId' :data="userList" v-model="user.parentId" placeholder="-请选择-">
+                      <Tree slot="tree"></Tree>
+                    </ComboTree>
+                  </div>
                 </div>
-                <div>
-                  <Label for="parentId" align="right">所属机构:</Label>
-                  <ComboTree name='parentId' :data="userList" v-model="user.parentId" placeholder="-请选择-">
-                    <Tree slot="tree"></Tree>
-                  </ComboTree>
-                  <div class="error">{{ errors.first('parentId') }}</div>
+                <div class="divRow">
+                  <div>
+                    <Label for="telPhone" align="right">电话:</Label>
+                    <TextBox inputId="telPhone" name="telPhone" v-model="user.telPhone"
+                             v-validate="'alpha_num'" data-vv-as="电话" placeholder="电话"/>
+                    <div class="error">{{ errors.first('telPhone') }}</div>
+                  </div>
+                  <div>
+                    <Label for="email" align="right">电子邮件:</Label>
+                    <TextBox inputId="email" v-validate="'email'" name="email" v-model="user.email"
+                             style="width:18em" data-vv-as="电子邮件" placeholder="请输入邮件地址"></TextBox>
+                    <div class="error">{{ errors.first('email') }}</div>
+                  </div>
                 </div>
-              </div>
-              <div class="divRow">
-                <div>
-                  <Label for="telPhone" align="right">电话:</Label>
-                  <TextBox inputId="telPhone" name="telPhone" v-model="user.telPhone" v-validate="'required|alpha_num'"
-                           data-vv-as="电话" placeholder="电话"/>
-                  <div class="error">{{ errors.first('telPhone') }}</div>
+                <div class="divRow">
+
+                  <div>
+                    <Label for="postalCode" align="right">邮编:</Label>
+                    <TextBox inputId="postalCode" name="postalCode" v-model="user.postalCode"
+                             v-validate="'max:100'" style="width:18em" data-vv-as="邮编" placeholder="请输入邮编"/>
+                    <div class="error">{{ errors.first('postalCode') }}</div>
+                  </div>
+                  <div>
+                    <Label for="address" align="right">联系地址:</Label>
+                    <TextBox inputId="t2" name="address" v-model="user.address"
+                             v-validate="'max:200'" style="width:20em" data-vv-as="联系地址"
+                             placeholder="请输入联系地址"></TextBox>
+                    <div class="error">{{ errors.first('address') }}</div>
+                  </div>
                 </div>
-                <div>
-                  <Label for="email" align="right">电子邮件:</Label>
-                  <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="user.email"
-                           style="width:18em" data-vv-as="电子邮件" placeholder="请输入邮件地址"></TextBox>
-                  <div class="error">{{ errors.first('email') }}</div>
-                </div>
-              </div>
-              <div class="divRow">
-                <div>
-                  <Label for="mobilePhone" align="right">手机号码:</Label>
-                  <TextBox inputId="mobilePhone" name="mobilePhone" v-model="user.mobilePhone"
-                           v-validate="'required|max:11'" data-vv-as="手机号码" placeholder="请输入手机号码"/>
-                  <div class="error">{{ errors.first('mobilePhone') }}</div>
-                </div>
-                <div>
-                  <Label for="postalCode" align="right">邮编:</Label>
-                  <TextBox inputId="postalCode" name="postalCode" v-model="user.postalCode"
-                           v-validate="'required|max:100'" style="width:18em" data-vv-as="邮编" placeholder="请输入邮编"/>
-                  <div class="error">{{ errors.first('postalCode') }}</div>
+
+                <div class="divRow">
+                  <div>
+                    <Label for="remark" align="right">备注:</Label>
+                    <TextBox inputId="t2" name="remark" :multiline="true" v-model="user.remark"
+                             style="width:73%;height:120px;"></TextBox>
+                    <div class="error">{{ errors.first('remark') }}</div>
+                  </div>
                 </div>
               </div>
 
-              <div class="divRow">
-                <div>
-                  <Label for="address" align="right">联系地址:</Label>
-                  <TextBox inputId="t2" name="address" v-model="user.address"
-                           v-validate="'required|max:200'" style="width:20em" data-vv-as="联系地址"
-                           placeholder="请输入联系地址"></TextBox>
-                  <div class="error">{{ errors.first('address') }}</div>
-                </div>
-              </div>
+            </fieldset>
 
-              <div class="divRow">
-                <div>
-                  <Label for="remark" align="right">备注:</Label>
-                  <TextBox inputId="t2" name="remark" :multiline="true" v-model="user.remark"
-                           style="width:73%;height:120px;"></TextBox>
-                  <div class="error">{{ errors.first('remark') }}</div>
-                </div>
-              </div>
-              <div class="formBtn">
-                <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
-                <LinkButton style="width:60px" @click="goBack()">取消</LinkButton>
-              </div>
+            <div class="formBtn">
+              <LinkButton style="width:60px" @click="submitForm()">确认</LinkButton>
+              <LinkButton style="width:60px" @click="goBack()">取消</LinkButton>
             </div>
           </Form>
-
         </LayoutPanel>
       </Layout>
     </section>
@@ -138,7 +168,7 @@
     data() {
       return {
         loading: false,
-        user: {sex:"male"},
+        user: {sex: "male"},
         userType: [
           {value: 0, text: "非正式"},
           {value: 1, text: "正式"},
@@ -148,7 +178,7 @@
         sex: [
           {value: 0, text: "男"},
           {value: 1, text: "女"}
-          ],
+        ],
         userList: []
       };
     },
@@ -235,6 +265,3 @@
     padding: 20px;
   }
 </style>
-<!--
-https://www.cnblogs.com/wyguo/p/3556049.html
--->

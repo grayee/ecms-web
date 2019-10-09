@@ -6,21 +6,21 @@ const accounting = {
   subjectList(param) {
     return axios.post(`${base.sq}/accounting/subject/list`, param);
   },
-  //公司新增
-  companyAdd(param) {
+  //科目新增
+  subjectAdd(param) {
     return axios.post(`${base.sq}/org/company`, param);
   },
-  //公司更新
-  companyUpt(param) {
-    return axios.put(`${base.sq}/org/company`, param);
+  //科目更新
+  subjectUpt(param) {
+    return axios.put(`${base.sq}/accounting/subject`, param);
   },
-  //公司详情,演示
-  companyDetail(id, params) {
-    return axios.get(`${base.sq}/org/company/detail/${id}`, {
+  //科目详情
+  subjectDetail(id, params) {
+    return axios.get(`${base.sq}/accounting/subject/detail/${id}`, {
       params: params
     });
   },
-  companyDel(param) {
+  subjectDel(param) {
     return axios.delete(`${base.sq}/org/company`, {data: param});
   },
   // 其他接口…………

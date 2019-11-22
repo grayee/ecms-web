@@ -29,7 +29,7 @@
                 <div>
                   <MenuButton text="新增" :plain="true" iconCls="icon-add">
                     <Menu @itemClick="add($event)">
-                      <MenuItem v-for="(val,index) in subOrgTypes" :value="val.value" :text="val.name"></MenuItem>
+                      <MenuItem v-for="(val,index) in subOrgTypes" :key="index" :value="val.value" :text="val.name"></MenuItem>
                     </Menu>
                   </MenuButton>
 
@@ -40,7 +40,7 @@
               </div>
             </template>
             <ul class="list-group">
-              <li class="list-group-item" v-for="(org,index) in displayColumns"><strong>{{org.title}}：</strong>{{detailContent[org.field]}}
+              <li class="list-group-item" v-for="(org,index) in displayColumns" :key="index"><strong>{{org.title}}：</strong>{{detailContent[org.field]}}
               </li>
             </ul>
           </Panel>

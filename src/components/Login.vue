@@ -2,7 +2,7 @@
   <body class="hold-transition login-page">
   <div class="login-box">
     <div class="login-logo">
-      <a href="/admin">ECMS 管理系统</a>
+      <a href="/admin">JSCS 管理系统</a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
@@ -17,14 +17,14 @@
           collect('field') -- 获取关于当前field的所有错误信息(list)
           has('field') -- 当前filed是否有错误(true/false)
           -->
-          <div v-show="errors.has('username')" class="error">{{ errors.first('username') }}</div>
+          <div v-show="veeErrors.has('username')" class="error">{{ veeErrors.first('username') }}</div>
         </div>
 
         <div class="form-group has-feedback">
           <input type="password" v-model="loginForm.password" name="password" v-validate="'required'"
                  class="form-control" @keyup.enter="handleLogin" placeholder="请输入密码">
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-          <div v-show="errors.has('password')" class="error">{{ errors.first('password') }}</div>
+          <div v-show="veeErrors.has('password')" class="error">{{ veeErrors.first('password') }}</div>
         </div>
 
         <div class="form-group">

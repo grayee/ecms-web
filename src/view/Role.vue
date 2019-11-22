@@ -16,7 +16,7 @@
     <!-- Main content -->
     <section class="content container-fluid" style="background: rgb(255, 255, 255);padding:5px">
       <Layout>
-        <LayoutPanel region="west" :split="true" :bodyStyle="{padding:'3px'}" title="角色树" style="width:200px;">
+        <LayoutPanel region="west" :split="true"   :collapsible="true" :collapsed="true" :expander="true"  :bodyStyle="{padding:'3px'}" title="角色树" style="width:200px;">
           <Tree ref="tree" :data="orgRelationData" :checkbox="false" @selectionChange="selected($event)"></Tree>
         </LayoutPanel>
 
@@ -100,19 +100,19 @@
           </Panel>
 
           <Dialog ref="d1" :title="roleDialogTitle" :dialogStyle="{width:'480px',height:'365px'}"
-                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true"  borderType="none">
             <div class="f-full" style="padding: 20px 60px 20px 20px">
               <Form ref="form" :model="role">
                 <Label for="name" align="right">角色名称:</Label>
                 <TextBox inputId="name" name="name" v-model="role.name" style="width:18em"
                          v-validate="'required|max:10'" data-vv-as="角色名称" placeholder="请输入角色名称"></TextBox>
                 <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('name') }}</div>
+                <div class="error">{{ veeErrors.first('name') }}</div>
 
                 <Label for="value" align="right">角色编码:</Label>
                 <TextBox inputId="value" name="value" v-model="role.value" style="width:18em"
                          v-validate="'required|max:30'" data-vv-as="角色编码" placeholder="请输入角色编码"></TextBox>
-                <div class="error">{{ errors.first('value') }}</div>
+                <div class="error">{{ veeErrors.first('value') }}</div>
 
                 <div>
                   <Label for="enableStatus" align="right">状态:</Label>
@@ -128,7 +128,7 @@
                 <Label for="remark" align="right">备注信息:</Label>
                 <TextBox inputId="remark" name="remark" :multiline="true" v-model="role.remark"
                          style="width:218px;height:100px;"></TextBox>
-                <div class="error">{{ errors.first('remark') }}</div>
+                <div class="error">{{ veeErrors.first('remark') }}</div>
               </Form>
             </div>
             <div class="dialog-button">
@@ -139,7 +139,7 @@
 
 
           <Dialog ref="d2" :title="roleDialogTitle" :dialogStyle="{width:'600px',height:'400px'}"
-                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true"  borderType="none">
             <div class="f-full" style="padding: 2px 2px">
 
               <Panel :bodyStyle="{padding:'3px',height:'288px'}">
@@ -188,7 +188,7 @@
                     </template>
                   </GridColumn>
 
-                  <GridColumn v-for="column in refUserDisplayColumns" :field="column.field" :title="column.title"
+                  <GridColumn v-for="column in refUserDisplayColumns" :key="column.id" :field="column.field" :title="column.title"
                               v-if="column.show" :align="column.align" :sortable="column.sortable"
                               :width="column.width">
                   </GridColumn>
@@ -203,7 +203,7 @@
           </Dialog>
 
           <Dialog ref="d3" :title="roleDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
-                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true"  borderType="none">
             <div class="f-full" style="padding: 3px 3px">
               <Tree ref="funcTree" :data="permFuncTreeData" :checkbox="true" :selectLeafOnly="true" cascadeCheck="true"
                     @selectionChange="treeSelected($event)"></Tree>
@@ -216,7 +216,7 @@
 
 
           <Dialog ref="d4" :title="roleDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
-                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true"  borderType="none">
             <div class="f-full" style="padding: 2px 2px">
               <Tree ref="dataTree" :data="permDataTreeData" :checkbox="true" :selectLeafOnly="true" cascadeCheck="true"
                     @selectionChange="treeSelected($event)"></Tree>

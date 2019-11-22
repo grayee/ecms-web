@@ -100,21 +100,20 @@
                 </template>
               </GridColumn>
 
-              <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
+              <GridColumn v-for="column in displayColumns" :key="column.id" :field="column.field" :title="column.title"
                           v-if="column.show" :align="column.align" :sortable="column.sortable" :width="column.width">
               </GridColumn>
             </DataGrid>
           </Panel>
 
-          <Dialog ref="d2" :title="'调整显示列'" :dialogStyle="{width:'300px',height:'500px'}" :draggable="true"
-                  :closed="true" :modal="true">
+          <Dialog ref="d2" :title="'调整显示列'" :dialogStyle="{width:'300px'}" :draggable="true"
+                  :closed="true" :modal="true"   borderType="none">
 
-            <DataList style="width:100%;height:410px;" :data="displayColumns"
+            <DataList  :data="displayColumns"
                       selectionMode="multiple" @rowClick="onRowClick($event)">
               <template slot-scope="scope">
                 <div class="dataList">
-                  <input type="checkbox" :value="scope.row.field" :id="scope.row.id" v-model="checkedFields"
-                         style="margin-bottom: 3px"/>
+                  <input type="checkbox" :value="scope.row.field" :id="scope.row.id" v-model="checkedFields"/>
                   <label :for="scope.row.id">{{scope.row.title}}</label>
                 </div>
               </template>
@@ -291,8 +290,8 @@
   .dataList {
     display: flex;
     align-items: center;
-    padding: 5px 10px;
-    height: 35px;
+    padding: 10px 12px;
+    height: 32px;
     border-bottom: 1px solid #eee;
   }
 </style>

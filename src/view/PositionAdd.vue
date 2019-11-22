@@ -28,13 +28,13 @@
                   <Label for="positionName" align="right">岗位名称:</Label>
                   <TextBox inputId="positionName" name="positionName" v-model="position.positionName" v-validate="'required|min:5'"
                            style="width:18em" data-vv-as="岗位名称" placeholder="请输入岗位名称"/>
-                  <div class="error">{{ errors.first('positionName') }}</div>
+                  <div class="error">{{ veeErrors.first('positionName') }}</div>
                 </div>
                 <div>
                   <Label for="positionNo" align="right">岗位编号:</Label>
                   <TextBox inputId="positionNo" name="positionNo" v-model="position.positionNo" v-validate="'alpha_num'"
                            data-vv-as="岗位编号" placeholder="请输入岗位编号"/>
-                  <div class="error">{{ errors.first('positionNo') }}</div>
+                  <div class="error">{{ veeErrors.first('positionNo') }}</div>
                 </div>
               </div>
               <div class="divRow">
@@ -43,14 +43,14 @@
                   <TextBox inputId="positionFlag" v-validate="'required'" name="positionFlag"
                            v-model="position.positionFlag"
                            style="width:18em" data-vv-as="岗位标识" placeholder="请输入岗位标识"></TextBox>
-                  <div class="error">{{ errors.first('positionFlag') }}</div>
+                  <div class="error">{{ veeErrors.first('positionFlag') }}</div>
                 </div>
 
                 <div>
                   <Label for="positionLevel" align="right">岗位级别:</Label>
                   <TextBox inputId="positionLevel" name="positionLevel" v-model="position.positionLevel"
                            v-validate="'required|max:100'" style="width:18em" data-vv-as="岗位级别" placeholder="请输入岗位级别"/>
-                  <div class="error">{{ errors.first('positionLevel') }}</div>
+                  <div class="error">{{ veeErrors.first('positionLevel') }}</div>
                 </div>
               </div>
               <div class="divRow">
@@ -58,14 +58,14 @@
                   <Label for="positionType" align="right">岗位类型:</Label>
                   <ComboBox inputId='positionType' name="positionType" :data="positionType" v-validate="'required'"
                             data-vv-as="岗位类型" v-model="position.positionType"></ComboBox>
-                  <div class="error">{{ errors.first('positionType') }}</div>
+                  <div class="error">{{ veeErrors.first('positionType') }}</div>
                 </div>
                 <div>
                   <Label for="parentId" align="right">所属机构:</Label>
                   <ComboTree name='parentId' :data="positionList" v-model="position.parentId" placeholder="-请选择-">
                     <Tree slot="tree"></Tree>
                   </ComboTree>
-                  <div class="error">{{ errors.first('parentId') }}</div>
+                  <div class="error">{{ veeErrors.first('parentId') }}</div>
                 </div>
               </div>
 
@@ -75,7 +75,7 @@
                   <TextBox inputId="leaderFlag" name="leaderFlag" v-model="position.leaderFlag" v-validate="'required|max:5'"
                            style="width:18em" data-vv-as="领导标识" placeholder="请输入领导标识"/>
 
-                  <div class="error">{{ errors.first('leaderFlag') }}</div>
+                  <div class="error">{{ veeErrors.first('leaderFlag') }}</div>
                 </div>
               </div>
 
@@ -84,7 +84,7 @@
                   <Label for="remark" align="right">备注:</Label>
                   <TextBox inputId="t2" name="remark" :multiline="true" v-model="position.remark"
                            style="width:73%;height:120px;"></TextBox>
-                  <div class="error">{{ errors.first('remark') }}</div>
+                  <div class="error">{{ veeErrors.first('remark') }}</div>
                 </div>
               </div>
               <div class="formBtn">

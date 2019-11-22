@@ -95,7 +95,7 @@
                 </template>
               </GridColumn>
 
-              <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
+              <GridColumn v-for="column in displayColumns" :key="column.id" :field="column.field" :title="column.title"
                           v-if="column.show" :align="column.align" :sortable="column.sortable" :width="column.width">
               </GridColumn>
             </DataGrid>
@@ -110,17 +110,17 @@
                 <TextBox inputId="name" name="name" v-model="dictionary.name" style="width:18em"
                          v-validate="'required|max:10'" data-vv-as="类型名称" placeholder="请输入类型名称"></TextBox>
                 <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('name') }}</div>
+                <div class="error">{{ veeErrors.first('name') }}</div>
 
                 <Label for="code" align="right">类型编码:</Label>
                 <TextBox inputId="code" name="code" v-model="dictionary.code" style="width:18em"
                          v-validate="'required|max:30'" data-vv-as="类型编码"  placeholder="请输入类型编码"></TextBox>
-                <div class="error">{{ errors.first('code') }}</div>
+                <div class="error">{{ veeErrors.first('code') }}</div>
 
                 <Label for="description" align="right">描述信息:</Label>
                 <TextBox inputId="description" name="description" :multiline="true" v-model="dictionary.description"
                          style="width:218px;height:100px;"></TextBox>
-                <div class="error">{{ errors.first('description') }}</div>
+                <div class="error">{{ veeErrors.first('description') }}</div>
               </Form>
             </div>
             <div class="dialog-button">

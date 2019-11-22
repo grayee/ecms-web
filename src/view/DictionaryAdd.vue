@@ -42,7 +42,7 @@
                     <Label for="code" align="right">编码:</Label>
                     <TextBox inputId="code" name="code" v-model="dictValue.code" v-validate="'required|max:10'"
                              style="width:18em" data-vv-as="编码" placeholder="请输入编码"/>
-                    <div class="error">{{ errors.first('code') }}</div>
+                    <div class="error">{{ veeErrors.first('code') }}</div>
                   </div>
                 </div>
 
@@ -51,7 +51,7 @@
                     <Label for="name" align="right">名称:</Label>
                     <TextBox inputId="name" name="name" v-model="dictValue.name"
                              v-validate="'required|max:10'" style="width:18em" data-vv-as="名称" placeholder="请输入名称"/>
-                    <div class="error">{{ errors.first('name') }}</div>
+                    <div class="error">{{ veeErrors.first('name') }}</div>
                   </div>
                 </div>
 
@@ -60,7 +60,7 @@
                     <Label for="value" align="right">字典值:</Label>
                     <TextBox inputId="value" name="value" v-model="dictValue.value"
                              v-validate="'required|max:10'" style="width:18em" data-vv-as="字典值" placeholder="请输入字典值"/>
-                    <div class="error">{{ errors.first('value') }}</div>
+                    <div class="error">{{ veeErrors.first('value') }}</div>
                   </div>
                 </div>
 
@@ -81,7 +81,7 @@
                     <NumberBox inputId="name" name="orderNo" v-model="dictValue.orderNo" :spinners="true"
                                :value="1" v-validate="'max:3'" style="width:8em" data-vv-as="显示序号"
                                placeholder="请输入显示序号"></NumberBox>
-                    <div class="error">{{ errors.first('orderNo') }}</div>
+                    <div class="error">{{ veeErrors.first('orderNo') }}</div>
                   </div>
                 </div>
 
@@ -90,7 +90,7 @@
                     <Label for="description" align="right">备注:</Label>
                     <TextBox inputId="t2" name="description" :multiline="true" v-model="dictValue.description"
                              style="width:30%;height:120px;"></TextBox>
-                    <div class="error">{{ errors.first('description') }}</div>
+                    <div class="error">{{ veeErrors.first('description') }}</div>
                   </div>
                 </div>
 

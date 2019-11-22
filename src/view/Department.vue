@@ -101,7 +101,7 @@
                 </template>
               </GridColumn>
 
-              <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
+              <GridColumn v-for="column in displayColumns" :key="column.id" :field="column.field" :title="column.title"
                           v-if="column.show" :align="column.align" :sortable="column.sortable" :width="column.width">
               </GridColumn>
             </DataGrid>

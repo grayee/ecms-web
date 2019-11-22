@@ -64,49 +64,49 @@
                 <label v-for="(mt,index) in menuType" :key="index">
                   <input type="radio" :value='mt.value' v-model="menu.type">{{mt.text}} &nbsp;&nbsp;
                 </label>
-                <div class="error">{{ errors.first('menuType') }}</div>
+                <div class="error">{{ veeErrors.first('menuType') }}</div>
 
                 <Label for="menuParent" align="right">上级菜单:</Label>
                 <ComboTree name='menuParent' :data="menus" v-model="menu.parentId" placeholder="-请选择-">
                   <Tree slot="tree"></Tree>
                 </ComboTree>
-                <div class="error">{{ errors.first('menuParent') }}</div>
+                <div class="error">{{ veeErrors.first('menuParent') }}</div>
 
                 <Label for="menuName" align="right">菜单名称:</Label>
                 <TextBox inputId="menuName" name="menuName" v-model="menu.name" style="width:18em"
                          v-validate="'required|max:10'" placeholder="请输入菜单名称"></TextBox>
                 <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('menuName') }}</div>
+                <div class="error">{{ veeErrors.first('menuName') }}</div>
 
                 <Label for="menuPath" align="right">菜单路径:</Label>
                 <TextBox inputId="menuPath" name="menuPath" v-model="menu.url" style="width:18em"
                          v-validate="'max:100'" placeholder="请输入菜单路径"></TextBox>
-                <div class="error">{{ errors.first('menuPath') }}</div>
+                <div class="error">{{ veeErrors.first('menuPath') }}</div>
 
                 <Label for="component" align="right">组件名称:</Label>
                 <TextBox inputId="component" name="component" v-model="menu.component" style="width:18em"
                          v-validate="'max:100'" placeholder="请输入组件名称"></TextBox>
-                <div class="error">{{ errors.first('component') }}</div>
+                <div class="error">{{ veeErrors.first('component') }}</div>
 
                 <Label for="menuIcon" align="right">菜单图标:</Label>
                 <TextBox inputId="menuIcon" name="menuIcon" v-model="menu.icon" style="width:18em"
                          v-validate="'required'" placeholder="请输入菜单图标样式"></TextBox>
-                <div class="error">{{ errors.first('menuIcon') }}</div>
+                <div class="error">{{ veeErrors.first('menuIcon') }}</div>
 
                 <Label for="orderNo" align="right">排序编码:</Label>
                 <NumberBox inputId="orderNo" name="orderNo" v-model="menu.orderNo" v-validate="'required'"
                            placeholder="请输入排序编码" :value="100" :spinners="true"></NumberBox>
-                <div class="error">{{ errors.first('orderNo') }}</div>
+                <div class="error">{{ veeErrors.first('orderNo') }}</div>
 
                 <Label for="authCode" align="right">权限编码:</Label>
                 <TextBox inputId="authCode" name="authCode" v-model="menu.authCode" v-validate="'required'"
                          style="width:18em"  placeholder="请输入权限编码"  data-vv-as="权限编码" ></TextBox>
-                <div class="error">{{ errors.first('authCode') }}</div>
+                <div class="error">{{ veeErrors.first('authCode') }}</div>
 
                 <Label for="remark" align="right">备注信息:</Label>
                 <TextBox inputId="remark" name="remark" :multiline="true" v-model="menu.remark"
                          style="width:218px;height:80px;"></TextBox>
-                <div class="error">{{ errors.first('remark') }}</div>
+                <div class="error">{{ veeErrors.first('remark') }}</div>
               </Form>
             </div>
             <div class="dialog-button">

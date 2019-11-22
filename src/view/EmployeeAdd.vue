@@ -29,13 +29,13 @@
                   <TextBox inputId="employeeName" name="employeeName" v-model="employee.employeeName"
                            v-validate="'required|min:5'"
                            style="width:18em" data-vv-as="员工名称" placeholder="请输入员工名称"/>
-                  <div class="error">{{ errors.first('employeeName') }}</div>
+                  <div class="error">{{ veeErrors.first('employeeName') }}</div>
                 </div>
                 <div>
                   <Label for="englishName" align="right">英文名称:</Label>
                   <TextBox inputId="englishName" name="englishName" v-model="employee.englishName"
                            v-validate="'required|max:10'" style="width:18em" data-vv-as="英文名称" placeholder="请输入英文名称"/>
-                  <div class="error">{{ errors.first('englishName') }}</div>
+                  <div class="error">{{ veeErrors.first('englishName') }}</div>
                 </div>
               </div>
               <div class="divRow">
@@ -43,7 +43,7 @@
                   <Label for="employeeNo" align="right">员工编号:</Label>
                   <TextBox inputId="employeeNo" name="employeeNo" v-model="employee.employeeNo" v-validate="'alpha_num'"
                            data-vv-as="员工编号" placeholder="请输入员工编号"/>
-                  <div class="error">{{ errors.first('employeeNo') }}</div>
+                  <div class="error">{{ veeErrors.first('employeeNo') }}</div>
                 </div>
                 <div>
                   <Label for="sex" align="right">性别:</Label>
@@ -60,14 +60,14 @@
                   <Label for="hero" align="right">员工类型:</Label>
                   <ComboBox inputId='employeeType' name="employeeType" :data="employeeType" v-validate="'required'"
                             data-vv-as="员工类型" v-model="employee.employeeType"></ComboBox>
-                  <div class="error">{{ errors.first('employeeType') }}</div>
+                  <div class="error">{{ veeErrors.first('employeeType') }}</div>
                 </div>
                 <div>
                   <Label for="parentId" align="right">所属机构:</Label>
                   <ComboTree name='parentId' :data="employeeList" v-model="employee.parentId" placeholder="-请选择-">
                     <Tree slot="tree"></Tree>
                   </ComboTree>
-                  <div class="error">{{ errors.first('parentId') }}</div>
+                  <div class="error">{{ veeErrors.first('parentId') }}</div>
                 </div>
               </div>
               <div class="divRow">
@@ -75,13 +75,13 @@
                   <Label for="telPhone" align="right">电话:</Label>
                   <TextBox inputId="telPhone" name="telPhone" v-model="employee.telPhone" v-validate="'required|alpha_num'"
                            data-vv-as="电话" placeholder="电话"/>
-                  <div class="error">{{ errors.first('telPhone') }}</div>
+                  <div class="error">{{ veeErrors.first('telPhone') }}</div>
                 </div>
                 <div>
                   <Label for="email" align="right">电子邮件:</Label>
                   <TextBox inputId="email" v-validate="'required|email'" name="email" v-model="employee.email"
                            style="width:18em" data-vv-as="电子邮件" placeholder="请输入邮件地址"></TextBox>
-                  <div class="error">{{ errors.first('email') }}</div>
+                  <div class="error">{{ veeErrors.first('email') }}</div>
                 </div>
               </div>
               <div class="divRow">
@@ -89,13 +89,13 @@
                   <Label for="mobilePhone" align="right">手机号码:</Label>
                   <TextBox inputId="mobilePhone" name="mobilePhone" v-model="employee.mobilePhone"
                            v-validate="'required|max:11'" data-vv-as="手机号码" placeholder="请输入手机号码"/>
-                  <div class="error">{{ errors.first('mobilePhone') }}</div>
+                  <div class="error">{{ veeErrors.first('mobilePhone') }}</div>
                 </div>
                 <div>
                   <Label for="postalCode" align="right">邮编:</Label>
                   <TextBox inputId="postalCode" name="postalCode" v-model="employee.postalCode"
                            v-validate="'required|max:100'" style="width:18em" data-vv-as="邮编" placeholder="请输入邮编"/>
-                  <div class="error">{{ errors.first('postalCode') }}</div>
+                  <div class="error">{{ veeErrors.first('postalCode') }}</div>
                 </div>
               </div>
 
@@ -105,7 +105,7 @@
                   <TextBox inputId="t2" name="address" v-model="employee.address"
                            v-validate="'required|max:200'" style="width:20em" data-vv-as="联系地址"
                            placeholder="请输入联系地址"></TextBox>
-                  <div class="error">{{ errors.first('address') }}</div>
+                  <div class="error">{{ veeErrors.first('address') }}</div>
                 </div>
               </div>
 
@@ -114,7 +114,7 @@
                   <Label for="remark" align="right">备注:</Label>
                   <TextBox inputId="t2" name="remark" :multiline="true" v-model="employee.remark"
                            style="width:73%;height:120px;"></TextBox>
-                  <div class="error">{{ errors.first('remark') }}</div>
+                  <div class="error">{{ veeErrors.first('remark') }}</div>
                 </div>
               </div>
               <div class="formBtn">

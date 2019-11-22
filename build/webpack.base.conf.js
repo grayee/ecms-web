@@ -1,5 +1,5 @@
 'use strict'
-const webpack = require('webpack');
+
 
 const path = require('path')
 const utils = require('./utils')
@@ -16,16 +16,6 @@ module.exports = {
   entry: {
     app: './src/main.js'
   },
-  plugins: [
-    //引入全局变量
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      jquery: "jquery",
-      "window.jQuery": 'jquery',
-      "window.$": 'jquery'
-    })
-  ],
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',

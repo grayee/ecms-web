@@ -9,19 +9,13 @@ import router from './router'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.min.js'
 import 'font-awesome/css/font-awesome.css'
 //AdminLTE
 import 'admin-lte'
 import 'admin-lte/dist/css/AdminLTE.min.css'
 import 'admin-lte/dist/css/skins/_all-skins.css'
-import 'admin-lte/bower_components/chart.js/Chart'
 import 'admin-lte/bower_components/Ionicons/css/ionicons.min.css'
 
-//AdminLTE dashboard demo (This is only for demo purposes)
-import 'admin-lte/dist/js/pages/dashboard2'
-//AdminLTE for demo purposes
-import 'admin-lte/dist/js/demo'
 
 //时间格式化组件moment
 import moment from 'moment'
@@ -57,6 +51,8 @@ import './mock/mock'
 Vue.use(VeeValidate, {
   i18n,
   i18nRootKey: 'validation',// customize the root path for validation messages.
+  errorBagName: 'veeErrors', // change if property conflicts.
+  fieldsBagName: 'veeFields', //此处默认为fields
   dictionary: {
     zh_CN: zh_CN
   }

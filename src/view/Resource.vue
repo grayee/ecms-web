@@ -74,12 +74,12 @@
                 <TextBox inputId="name" name="name" v-model="permission.name" style="width:18em"
                          v-validate="'required|max:10'" data-vv-as="权限名称" placeholder="请输入权限名称"></TextBox>
                 <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('name') }}</div>
+                <div class="error">{{ veeErrors.first('name') }}</div>
 
                 <Label for="value" align="right">权限编码:</Label>
                 <TextBox inputId="value" name="value" v-model="permission.value" style="width:18em"
                          v-validate="'required|max:30'" data-vv-as="权限编码" placeholder="请输入权限编码"></TextBox>
-                <div class="error">{{ errors.first('value') }}</div>
+                <div class="error">{{ veeErrors.first('value') }}</div>
 
                 <div STYLE=" margin-bottom: 3px;">
                   <Label for="enableStatus" align="right">状态:</Label>
@@ -97,7 +97,7 @@
                 <Label for="description" align="right">描述信息:</Label>
                 <TextBox inputId="description" name="description" :multiline="true" v-model="permission.description"
                          style="width:218px;height:100px;"></TextBox>
-                <div class="error">{{ errors.first('description') }}</div>
+                <div class="error">{{ veeErrors.first('description') }}</div>
               </Form>
             </div>
             <div class="dialog-button">

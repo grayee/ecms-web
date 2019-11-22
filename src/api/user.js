@@ -27,6 +27,13 @@ const user = {
   userDel(param) {
     return axios.delete(`${base.sq}/au/user`, {data: param});
   },
+  //用户上传头像
+  userUploadAvatar(param) {
+    let config = {
+      headers:{'Content-Type':'multipart/form-data'}
+    };
+    return axios.post(`${base.sq}/au/user/avatar`, param,config);
+  },
   getRoleTree(param) {
     return axios.get(`${base.sq}/au/role/tree/` + param);
   },

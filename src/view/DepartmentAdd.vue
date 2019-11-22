@@ -29,26 +29,26 @@
                   <TextBox inputId="deptName" name="deptName" v-model="department.deptName"
                            v-validate="'required|min:5'"
                            style="width:18em" data-vv-as="部门名称" placeholder="请输入部门名称"/>
-                  <div class="error">{{ errors.first('deptName') }}</div>
+                  <div class="error">{{ veeErrors.first('deptName') }}</div>
                 </div>
                 <div>
                   <Label for="deptFlag" align="right">部门标识:</Label>
                   <TextBox inputId="deptFlag" v-validate="'required'" name="deptFlag" v-model="department.deptFlag"
                            style="width:18em" data-vv-as="部门标识" placeholder="请输入部门标识"></TextBox>
-                  <div class="error">{{ errors.first('deptFlag') }}</div>
+                  <div class="error">{{ veeErrors.first('deptFlag') }}</div>
                 </div>
               </div>
               <div class="divRow">
                 <div>
                   <Label for="deptNo" align="right">部门编码:</Label>
                   <TextBox inputId="code" name="deptNo" v-model="department.deptNo" placeholder="请输入部门编码"/>
-                  <div class="error">{{ errors.first('deptNo') }}</div>
+                  <div class="error">{{ veeErrors.first('deptNo') }}</div>
                 </div>
                 <div>
                   <Label for="deptLevel" align="right">部门级别:</Label>
                   <TextBox inputId="deptLevel" v-validate="'required'" name="deptLevel" v-model="department.deptLevel"
                            style="width:18em" data-vv-as="部门级别" placeholder="部门级别"></TextBox>
-                  <div class="error">{{ errors.first('deptLevel') }}</div>
+                  <div class="error">{{ veeErrors.first('deptLevel') }}</div>
                 </div>
               </div>
               <div class="divRow">
@@ -56,14 +56,14 @@
                   <Label for="deptType" align="right">部门类型:</Label>
                   <ComboBox inputId='deptType' name="deptType" :data="departmentType" v-validate="'required'"
                             v-model="department.deptType"></ComboBox>
-                  <div class="error">{{ errors.first('departmentType') }}</div>
+                  <div class="error">{{ veeErrors.first('departmentType') }}</div>
                 </div>
                 <div>
                   <Label for="parentId" align="right">所属机构:</Label>
                   <ComboTree name='parentId' :data="departmentList" v-model="department.parentId" placeholder="-请选择-">
                     <Tree slot="tree"></Tree>
                   </ComboTree>
-                  <div class="error">{{ errors.first('parentId') }}</div>
+                  <div class="error">{{ veeErrors.first('parentId') }}</div>
                 </div>
               </div>
               <div class="divRow">
@@ -71,7 +71,7 @@
                   <Label for="deptLeader" align="right">部门领导:</Label>
                   <TextBox inputId="deptLeader" name="deptLeader" v-model="department.deptLeader"
                            v-validate="'required|max:20'" style="width:18em" data-vv-as="部门领导" placeholder="请输入部门领导"/>
-                  <div class="error">{{ errors.first('deptLeader') }}</div>
+                  <div class="error">{{ veeErrors.first('deptLeader') }}</div>
                 </div>
 
                 <div>
@@ -79,7 +79,7 @@
                   <DateBox inputId="foundDate" format="yyyy-MM-dd" name="foundDate"
                            v-model="department.foundDate" data-vv-as="成立时间" placeholder="请输入成立时间"></DateBox>
 
-                  <div class="error">{{ errors.first('foundDate') }}</div>
+                  <div class="error">{{ veeErrors.first('foundDate') }}</div>
                 </div>
               </div>
 
@@ -88,7 +88,7 @@
                   <Label for="remark" align="right">备注:</Label>
                   <TextBox inputId="t2" name="remark" :multiline="true" v-model="department.remark"
                            style="width:73%;height:120px;"></TextBox>
-                  <div class="error">{{ errors.first('remark') }}</div>
+                  <div class="error">{{ veeErrors.first('remark') }}</div>
                 </div>
               </div>
               <div class="formBtn">

@@ -68,7 +68,7 @@
 
 
                   <LinkButton iconCls="icon-back" :plain="true" @click="goBack()"></LinkButton>
-                  <LinkButton iconCls="icon-filter" :plain="true" @click="$refs.d2.open()">调整显示列</LinkButton>
+                  <LinkButton iconCls="icon-filter" :plain="true" @click="$refs.d5.open()">调整显示列</LinkButton>
                 </div>
               </div>
             </template>
@@ -112,14 +112,14 @@
                 </template>
               </GridColumn>
 
-              <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
+              <GridColumn v-for="column in displayColumns" :key="column.id" :field="column.field" :title="column.title"
                           v-if="column.show" :align="column.align" :sortable="column.sortable" :width="column.width">
               </GridColumn>
             </DataGrid>
           </Panel>
 
-          <Dialog ref="d2" :title="'调整显示列'" :dialogStyle="{width:'300px',height:'500px'}" :draggable="true"
-                  :closed="true" :modal="true">
+          <Dialog ref="d5" :title="'调整显示列'" :dialogStyle="{width:'300px'}" :draggable="true"
+                  :closed="true" :modal="true" borderType="none">
 
             <DataList style="width:100%;height:410px;" :data="displayColumns"
                       selectionMode="multiple" @rowClick="onRowClick($event)">
@@ -133,13 +133,13 @@
             </DataList>
 
             <div class="dialog-button">
-              <LinkButton style="width:60px" @click="submitForm($refs.d2)">确认</LinkButton>
-              <LinkButton style="width:60px" @click="$refs.d2.close()">取消</LinkButton>
+              <LinkButton style="width:60px" @click="submitForm($refs.d5)">确认</LinkButton>
+              <LinkButton style="width:60px" @click="$refs.d5.close()">取消</LinkButton>
             </div>
           </Dialog>
 
           <Dialog ref="d1" :title="userDialogTitle" :dialogStyle="{width:'480px',height:'400px'}"
-                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true" borderType="none">
             <div class="f-full" style="padding: 20px 60px 20px 20px">
               <p>
                 友情提示：密码至少为6位，只能为数字、字母、下划线，不能使用中文。
@@ -150,27 +150,27 @@
                            style="width: 200px">
                   <Tree slot="tree" :checkbox="false" :selectLeafOnly="true"></Tree>
                 </ComboTree>
-                <div class="error">{{ errors.first('username') }}</div>
+                <div class="error">{{ veeErrors.first('username') }}</div>
 
                 <Label for="loginId" align="right">登录账号:</Label>
                 <TextBox inputId="loginId" name="loginId" v-model="user.loginId" style="width:14em"
                          v-validate="'required|max:10'" data-vv-as="登录账号" placeholder="请输入登录账号"
                          iconCls="icon-man"></TextBox>
                 <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('loginId') }}</div>
+                <div class="error">{{ veeErrors.first('loginId') }}</div>
 
                 <Label for="password" align="right">登录密码:</Label>
                 <PasswordBox inputId="password" name="password" v-model="user.password" style="width:14em"
                              v-validate="'required|min:6'"
                              data-vv-as="登录密码" placeholder="请输入登录密码:"></PasswordBox>
                 <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('password') }}</div>
+                <div class="error">{{ veeErrors.first('password') }}</div>
 
                 <Label for="pwdConfirm" align="right">确认密码:</Label>
                 <PasswordBox inputId="pwdConfirm" name="pwdConfirm" v-model="user.pwdConfirm" style="width:14em"
                              v-validate="{is:user.password}" data-vv-as="确认密码" placeholder="请确认登录密码:"></PasswordBox>
                 <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('pwdConfirm') }}</div>
+                <div class="error">{{ veeErrors.first('pwdConfirm') }}</div>
 
                 <Label for="enableStatus" align="right">是否启用:</Label>
                 <label>
@@ -189,7 +189,7 @@
 
 
           <Dialog ref="d2" :title="userDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
-                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true" borderType="none">
             <div class="f-full" style="padding: 3px 3px">
               <Tree ref="roleTree" :data="roleTreeData" :checkbox="true" :selectLeafOnly="true" cascadeCheck="true"
                     @selectionChange="treeSelected($event)"></Tree>
@@ -202,7 +202,7 @@
 
 
           <Dialog ref="d3" :title="userDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
-                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true" borderType="none">
             <div class="f-full" style="padding: 3px 3px">
               <Tree ref="funcTree" :data="permFuncTreeData" :checkbox="true" :selectLeafOnly="true" cascadeCheck="true"
                     @selectionChange="treeSelected($event)"></Tree>
@@ -215,7 +215,7 @@
 
 
           <Dialog ref="d4" :title="userDialogTitle" :dialogStyle="{width:'350px',height:'500px'}"
-                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true" borderType="none">
             <div class="f-full" style="padding: 2px 2px">
               <Tree ref="dataTree" :data="permDataTreeData" :checkbox="true" :selectLeafOnly="true" cascadeCheck="true"
                     @selectionChange="treeSelected($event)"></Tree>
@@ -339,20 +339,10 @@
       },
       edit() {
         if (this.checkedIds.length === 1) {
-          this.userDialogTitle = "用户编辑";
-          this.$api.user.userDetail(this.checkedIds[0]).then((response) => {
-            this.user = response.data.data;
-          }).catch(error => {
-            console.log("get menu detail error", error);
-          });
-
-          this.$refs.d1.open();
+          //path来匹配路由，然后通过query来传递参数
+          this.$router.push({path: '/auth/user/add?id=' + this.checkedIds[0]});
         } else {
-          this.$messager.alert({
-            title: "提示信息",
-            icon: "warning",
-            msg: "请至少选中一条记录!"
-          });
+          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
         }
       },
       refresh() {

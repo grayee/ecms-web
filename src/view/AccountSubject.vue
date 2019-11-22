@@ -108,7 +108,7 @@
                     </template>
                   </GridColumn>
 
-                  <GridColumn v-for="column in displayColumns" :field="column.field" :title="column.title"
+                  <GridColumn v-for="column in displayColumns" :key="column.id" :field="column.field" :title="column.title"
                               v-if="column.show" :align="column.align" :sortable="column.sortable"
                               :width="column.width">
                   </GridColumn>
@@ -126,29 +126,29 @@
                 <Label for="subjectCode" align="right">科目编码:</Label>
                 <TextBox inputId="subjectCode" name="subjectCode" v-model="subject.subjectCode" style="width:18em"
                          v-validate="'required|max:30'" data-vv-as="科目编码" placeholder="请输入科目编码"></TextBox>
-                <div class="error">{{ errors.first('subjectCode') }}</div>
+                <div class="error">{{ veeErrors.first('subjectCode') }}</div>
 
                 <Label for="subjectName" align="right">科目名称:</Label>
                 <TextBox inputId="subjectName" name="subjectName" v-model="subject.subjectName" style="width:18em"
                          v-validate="'required|max:10'" data-vv-as="科目名称" placeholder="请输入科目名称"></TextBox>
                 <span style="color: red; ">*</span>
-                <div class="error">{{ errors.first('subjectName') }}</div>
+                <div class="error">{{ veeErrors.first('subjectName') }}</div>
 
                 <Label for="code" align="right">上级科目:</Label>
                 <TextBox inputId="code" name="code" v-model="subject.code" style="width:18em"
                          v-validate="'required|max:30'" data-vv-as="上级科目" placeholder="请输入科目编码"></TextBox>
-                <div class="error">{{ errors.first('code') }}</div>
+                <div class="error">{{ veeErrors.first('code') }}</div>
 
                 <Label for="hero" align="right">科目类型:</Label>
                 <ComboBox inputId='subjectType' name="subjectType" :data="subject.subjectTypeMap" v-validate="'required'"
                           data-vv-as="科目类型" v-model="subject.subjectType"></ComboBox>
-                <div class="error">{{ errors.first('subjectType') }}</div>
+                <div class="error">{{ veeErrors.first('subjectType') }}</div>
 
                 <Label for="balanceDir" align="right">余额方向:</Label>
                 <label v-for="(bd,index) in subject.balanceDirMap" :key="index">
                   <input type="radio" name="balanceDir" :value="bd.value" v-model="subject.balanceDir">{{bd.text}}
                 </label>
-                <div class="error">{{ errors.first('balanceDir') }}</div>
+                <div class="error">{{ veeErrors.first('balanceDir') }}</div>
 
 
                 <fieldset>
@@ -164,7 +164,7 @@
                   <Label for="code" align="right">计量单位:</Label>
                   <TextBox inputId="amountUnit" name="amountUnit" v-model="subject.amountUnit" style="width:10em"
                            v-validate="'required|max:30'" data-vv-as="计量单位" placeholder="请输入计量单位"></TextBox>
-                  <div class="error">{{ errors.first('amountUnit') }}</div>
+                  <div class="error">{{ veeErrors.first('amountUnit') }}</div>
 
                 </fieldset>
 
@@ -175,7 +175,7 @@
                   <Label for="hero" align="right">币 种:</Label>
                   <ComboBox inputId='currency' name="currency" :data="subject.currencyTypeMap" v-validate="'required'"
                             style="width:10em" data-vv-as="币种" v-model="subject.currency"></ComboBox>
-                  <div class="error">{{ errors.first('currency') }}</div>
+                  <div class="error">{{ veeErrors.first('currency') }}</div>
                 </fieldset>
               </Form>
             </div>

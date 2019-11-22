@@ -23,8 +23,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ## FileTree 目录结构
 ```shell
-├── bin                       // node 命令行构建工具 
-├── build                      // 构建相关  
+├── bin                       // node 命令行构建工具
+├── build                      // 构建相关
 ├── config                     // 配置相关
 ├── src                        // 源代码
 |    ├── assets                // 图片等静态资源
@@ -54,3 +54,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 └── package.json               // package.json
 
 ```
+# upgrade
+1.cnpm install -g npm-check-updates 或者 npm install -g npm-check-updates
+2.在有package.json的目录执行 npm-check-updates或者 ncu简写命令检查是否有更新（该插件会去npm官网查询是否有最新版本）
+3.然后执行ncu -u，检查package.json文件，会发现package.json里面的依赖版本号已经变成最新版本
+4.然后cnpm install即可

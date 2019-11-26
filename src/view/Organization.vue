@@ -1,22 +1,9 @@
 <!-- 组织管理视图 -->
 <!-- 1.模板 :html 结构-->
 <template>
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header" style="padding: 0px 15px 0 15px;">
-      <ol id="nav_title" class="breadcrumb" style="position: static; float: none;">
-        <li class="active">
-          <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;首页
-        </li>
-        <li class="active">组织机构管理</li>
-      </ol>
-    </section>
-
-    <!-- Main content -->
-    <section class="content container-fluid" style="background: rgb(255, 255, 255);padding:5px">
+  <div>
       <Layout v-if="orgRelationData !== undefined && orgRelationData.length >0">
-        <LayoutPanel region="west" :split="true" :bodyStyle="{padding:'3px'}" title="组织机构树" style="width:200px;">
+        <LayoutPanel region="west" :split="true" :collapsible="true"  :expander="true"  :bodyStyle="{padding:'3px'}" title="组织机构树" style="width:200px;">
             <Tree ref="tree" :data="orgRelationData" :checkbox="false" @selectionChange="selected($event)"></Tree>
         </LayoutPanel>
 
@@ -57,10 +44,7 @@
            </div>
         </LayoutPanel>
       </Layout>
-    </section>
-    <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
 </template>
 
 <!-- 2.行为 :处理逻辑-->

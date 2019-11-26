@@ -13,8 +13,6 @@ import 'font-awesome/css/font-awesome.css'
 //AdminLTE
 import 'admin-lte'
 import 'admin-lte/dist/css/AdminLTE.min.css'
-import 'admin-lte/dist/css/skins/_all-skins.css'
-import 'admin-lte/bower_components/Ionicons/css/ionicons.min.css'
 
 
 //时间格式化组件moment

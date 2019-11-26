@@ -17,14 +17,22 @@
     <div class="f-row f-full">
       <div class="sidebar-body f-animate" :style="{width:width+'px'}">
         <div v-if="!collapsed" class="sidebar-user" style="margin-left: 30px">
-           <router-link to="/dashboard"><i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i>首页</router-link>
+          <router-link to="/dashboard"><i class="fa fa-home"
+                                          style="font-size: 16px; position: relative; top: 2px; left: -3px;"></i>首页
+          </router-link>
         </div>
         <SideMenu :data="menus" :border="false" :collapsed="collapsed" :animte="true"
                   @itemClick="onItemClick($event)"></SideMenu>
       </div>
       <div class="main-body f-full">
-        <router-view></router-view>
-        <app-main-footer></app-main-footer>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+          <breadcrumb/>
+          <router-view></router-view>
+          <app-main-footer/>
+        </div>
+        <!-- /.content-wrapper -->
+      </div>
       </div>
     </div>
   </div>
@@ -34,10 +42,12 @@
   import {mapState, mapGetters, mapActions} from "vuex";
   //引入Footer局部组件
   import MainFooter from './MainFooter';
-
+  //引入Footer局部组件
+  import Breadcrumb from './Breadcrumb';
   export default {
     components: {
-      "app-main-footer": MainFooter
+      "app-main-footer": MainFooter,
+      "breadcrumb": Breadcrumb
     },
     data() {
       return {
@@ -87,7 +97,6 @@
   };
 </script>
 <style>
-  @import "https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
 
   .sidemenu .accordion .panel-title {
     color: #b8c7ce;
@@ -96,6 +105,7 @@
   .sidemenu .tree-title {
     margin: 8px 0;
   }
+
   .sidemenu .accordion .accordion-header {
     background: #222d32;
     color: #b8c7ce;

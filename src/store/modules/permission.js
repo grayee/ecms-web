@@ -1,6 +1,7 @@
 import {asyncRouter} from '../../router';
 
 const _import = require('../../router/_import_dev');
+import Content from '@/view/Content'
 
 const permission = {
   state: {
@@ -15,8 +16,8 @@ const permission = {
     GenerateRoutes({commit}, data) {
       return new Promise(resolve => {
         const {menus} = data;
-        let accessedRouters = [];
-        getRouterByMenu(menus, accessedRouters);
+        let accessedRouters = getRouterByMenu(menus);
+        console.log("路由数组：",JSON.stringify(accessedRouters));
         commit('SET_ROUTERS', accessedRouters);
         resolve();
       })
@@ -27,20 +28,29 @@ const permission = {
   }
 };
 
-function getRouterByMenu(menus, routers) {
+function getRouterByMenu(menus) {
   const mapRouter = function (menu) {
     const router = {};
     router.name = menu.path;
     router.path = menu.path;
+    router.meta = {};
+    router.meta.title = menu.text;
     if (menu.attributes.component) {
       router.components = _import(menu.attributes.component);
     }
     return router;
   };
 
+  let routers =[];
   menus.forEach((menu) => {
     if (menu.children && menu.children.length) {
-      getRouterByMenu(menu.children, routers);
+      let fistChildren = menu.children[0];
+      let curRouter = mapRouter(menu);
+      curRouter.path = "/" + fistChildren.path.split("/")[1];
+      curRouter.redirect = fistChildren.path;
+      curRouter.component= Content;
+      curRouter.children = getRouterByMenu(menu.children);
+      routers.push(curRouter);
     } else {
       routers.push(mapRouter(menu));
       if (menu.attributes.pageBtn) {

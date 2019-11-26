@@ -1,23 +1,6 @@
 <!-- 1.模板 :html 结构-->
 <template>
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header" style="padding: 0px 15px 0 15px;">
-      <ol id="nav_title" class="breadcrumb" style="position: static; float: none;">
-        <li class="active">
-          <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;权限管理
-        </li>
-        <li class="active">用户管理</li>
-        <li class="active">新增</li>
-      </ol>
-    </section>
-
-    <!-- Main content -->
-    <section class="content container-fluid" style="background: rgb(255, 255, 255);padding:5px">
-      <!--------------------------
-        | Your Page Content Here |
-        -------------------------->
+  <div>
       <Layout style="height:100%">
         <LayoutPanel region="center" style="height:100%" :bodyStyle="{padding:'5px'}">
 
@@ -147,10 +130,7 @@
           </Form>
         </LayoutPanel>
       </Layout>
-    </section>
-    <!-- /.content -->
   </div>
-  <!-- /.content-wrapper -->
 </template>
 
 <!-- 2.行为 :处理逻辑-->

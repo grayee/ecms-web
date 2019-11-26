@@ -1,17 +1,6 @@
 <!-- 1.模板 :html 结构-->
 <template>
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header" style="padding: 0px 15px 0 15px;">
-      <ol id="nav_title" class="breadcrumb" style="position: static; float: none;">
-        <li class="active">
-          <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp;首页
-        </li>
-        <li class="active">控制台</li>
-      </ol>
-    </section>
-
+  <div>
     <!-- Main content -->
     <section class="content">
       <!-- Info boxes -->

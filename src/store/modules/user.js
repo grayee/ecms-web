@@ -89,7 +89,7 @@ const user = {
       return new Promise((resolve, reject) => {
         login.getMenus(param).then(response => {
           const result = response.data.data;
-          console.log("菜单数据：", JSON.stringify(result));
+          //console.log("菜单数据：", JSON.stringify(result));
           commit('SET_MENUS', result);
           resolve(result);
         }).catch(error => {

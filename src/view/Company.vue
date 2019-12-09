@@ -194,7 +194,7 @@
             console.log("error", error);
           });
         } else {
-          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
+          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!",borderType: "none",});
         }
       },
       edit() {
@@ -202,7 +202,7 @@
           //path来匹配路由，然后通过query来传递参数
           this.$router.push({path: '/org/company/add?id=' + this.checkedIds[0]});
         } else {
-          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!"});
+          this.$messager.alert({title: "提示信息", icon: "warning", msg: "请至少选中一条记录!",borderType: "none",});
         }
       },
       refresh() {

@@ -44,7 +44,7 @@
           </Panel>
 
           <Dialog ref="d1" :title="menuDialogTitle" :dialogStyle="{width:'480px',height:'500px'}"
-                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true"  borderType="none">
             <div class="f-full" style="padding: 20px 60px 20px 20px">
               <Form ref="form" :model="menu">
                 <Label for="menuType" align="right">菜单类型:</Label>
@@ -179,6 +179,7 @@
       },
       add() {
         this.menu = {};
+        this.menu.type=1;
         this.menuDialogTitle="新增菜单";
         if (this.selection) {
           this.menu.parentId = this.selection.id;
@@ -260,11 +261,6 @@
 <!-- 3.样式:解决样式     -->
 <style scoped>
   .error {
-    color: red;
-    font-size: 12px;
-    margin: 4px 120px;
+    margin: 0 120px;
   }
 </style>
-<!--
-https://www.cnblogs.com/wyguo/p/3556049.html
--->

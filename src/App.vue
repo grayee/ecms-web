@@ -41,7 +41,7 @@
   /* 错误提示信息样式*/
  .error {
    color: red;
-   font-size: 12px;
+   font-size: 10px;
  }
  /*标签右对齐*/
   label {

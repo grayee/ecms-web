@@ -97,7 +97,6 @@
   };
 </script>
 <style>
-
   .sidemenu .accordion .panel-title {
     color: #b8c7ce;
   }

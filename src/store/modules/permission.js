@@ -17,7 +17,7 @@ const permission = {
       return new Promise(resolve => {
         const {menus} = data;
         let accessedRouters = getRouterByMenu(menus);
-        console.log("路由数组：",JSON.stringify(accessedRouters));
+        //console.log("路由数组：",JSON.stringify(accessedRouters));
         commit('SET_ROUTERS', accessedRouters);
         resolve();
       })

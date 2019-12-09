@@ -7,7 +7,10 @@ const app = {
     },
     theme: 'default',
     livenewsChannels: Cookies.get('livenewsChannels') || '[]',
-    visitedViews: []
+    visitedViews: [],
+    breadListState: [
+      {name: '首页', path: '/'}
+    ]
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -25,17 +28,26 @@ const app = {
     DEL_VISITED_VIEWS: (state, view) => {
       const index = state.visitedViews.indexOf(view)
       state.visitedViews.splice(index, 1)
+    },
+    breadListMutations(getters,list){
+      getters.breadListState=list;
+      sessionStorage.setItem('breadListStorage',list);
     }
   },
   actions: {
-    ToggleSideBar: ({ commit }) => {
+    ToggleSideBar: ({commit}) => {
       commit('TOGGLE_SIDEBAR')
     },
-    addVisitedViews: ({ commit }, view) => {
+    addVisitedViews: ({commit}, view) => {
       commit('ADD_VISITED_VIEWS', view)
     },
-    delVisitedViews: ({ commit }, view) => {
+    delVisitedViews: ({commit}, view) => {
       commit('DEL_VISITED_VIEWS', view)
+    }
+  },
+  getters: {
+    breadListState(){
+      return JSON.parse(sessionStorage.getItem('breadListStorage')) || [];
     }
   }
 };

@@ -103,7 +103,7 @@
 
 
           <Dialog ref="d1" :title="subjectDialogTitle" :dialogStyle="{width:'480px',height:'540px'}"
-                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true">
+                  bodyCls="f-column" :draggable="true" :closed="true" :modal="true" borderType="none">
             <div class="f-full form-horizontal" style="padding: 20px 60px 20px 20px">
               <Form ref="form" :model="subject">
 
@@ -148,7 +148,7 @@
                   <Label for="code" align="right">计量单位:</Label>
                   <TextBox inputId="amountUnit" name="amountUnit" v-model="subject.amountUnit" style="width:10em"
                            v-validate="'required|max:30'" data-vv-as="计量单位" placeholder="请输入计量单位"></TextBox>
-                  <div class="error">{{ veeErrors.first('amountUnit') }}</div>
+                  <div class="error" v-if="subject.isAmountCheck">{{ veeErrors.first('amountUnit') }}</div>
 
                 </fieldset>
 
@@ -159,7 +159,7 @@
                   <Label for="hero" align="right">币 种:</Label>
                   <ComboBox inputId='currency' name="currency" :data="subject.currencyTypeMap" v-validate="'required'"
                             style="width:10em" data-vv-as="币种" v-model="subject.currency"></ComboBox>
-                  <div class="error">{{ veeErrors.first('currency') }}</div>
+                  <div class="error" v-if="subject.isForeignCurrencyCheck">{{ veeErrors.first('currency') }}</div>
                 </fieldset>
               </Form>
             </div>
@@ -381,16 +381,14 @@
 <!-- 3.样式:解决样式     -->
 <style scoped>
   .error {
-    color: red;
-    font-size: 12px;
-    margin: 4px 120px;
+    margin: 0 120px;
     width: 120px;
   }
 
   .dataList {
     display: flex;
     align-items: center;
-    padding: 5px 10px;
+    padding: 3px 10px;
     height: 35px;
     border-bottom: 1px solid #eee;
   }

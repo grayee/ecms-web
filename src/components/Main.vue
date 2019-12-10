@@ -21,7 +21,7 @@
                                           style="font-size: 16px; position: relative; top: 2px; left: -3px;"></i>首页
           </router-link>
         </div>
-        <SideMenu :data="menus" :border="false" :collapsed="collapsed" :animte="true"
+        <SideMenu :data="menus" :border="false" :collapsed="collapsed" :animte="true" :multiple="false"
                   @itemClick="onItemClick($event)"></SideMenu>
       </div>
       <div class="main-body f-full">

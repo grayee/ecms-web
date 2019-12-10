@@ -17,7 +17,7 @@ const permission = {
       return new Promise(resolve => {
         const {menus} = data;
         let accessedRouters = getRouterByMenu(menus);
-        //console.log("路由数组：",JSON.stringify(accessedRouters));
+        console.log("路由数组：",JSON.stringify(accessedRouters));
         commit('SET_ROUTERS', accessedRouters);
         resolve();
       })
@@ -43,21 +43,21 @@ function getRouterByMenu(menus) {
 
   let routers =[];
   menus.forEach((menu) => {
+    let curRouter = mapRouter(menu);
     if (menu.children && menu.children.length) {
       let fistChildren = menu.children[0];
-      let curRouter = mapRouter(menu);
       curRouter.path = "/" + fistChildren.path.split("/")[1];
       curRouter.redirect = fistChildren.path;
       curRouter.component= Content;
       curRouter.children = getRouterByMenu(menu.children);
       routers.push(curRouter);
     } else {
-      routers.push(mapRouter(menu));
       if (menu.attributes.pageBtn) {
         menu.attributes.pageBtn.forEach(btn => {
           routers.push(mapRouter(btn))
         });
       }
+      routers.push(curRouter);
     }
   });
   return routers;

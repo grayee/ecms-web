@@ -59,3 +59,9 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 2.在有package.json的目录执行 npm-check-updates或者 ncu简写命令检查是否有更新（该插件会去npm官网查询是否有最新版本）
 3.然后执行ncu -u，检查package.json文件，会发现package.json里面的依赖版本号已经变成最新版本
 4.然后cnpm install即可
+
+
+cnpm update vue-router@3.1.1 --save
+
+--save和--save-dev区别
+一句话:--save-dev是你开发时依赖的东西，--save是发布后还依赖的东西.

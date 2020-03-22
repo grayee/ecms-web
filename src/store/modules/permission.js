@@ -35,6 +35,7 @@ function getRouterByMenu(menus) {
     router.path = menu.path;
     router.meta = {};
     router.meta.title = menu.text;
+    router.hidden = menu.attributes.menuType === 2
     if (menu.attributes.component) {
       router.components = _import(menu.attributes.component);
     }

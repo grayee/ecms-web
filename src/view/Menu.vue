@@ -80,10 +80,10 @@
                          v-validate="'required'" placeholder="请输入菜单图标样式"></TextBox>
                 <div class="error">{{ veeErrors.first('menuIcon') }}</div>
 
-                <Label for="orderNo" align="right">排序编码:</Label>
-                <NumberBox inputId="orderNo" name="orderNo" v-model="menu.orderNo" v-validate="'required'"
+                <Label for="orderCode" align="right">排序编码:</Label>
+                <NumberBox inputId="orderCode" name="orderCode" v-model="menu.orderCode" v-validate="'required'"
                            placeholder="请输入排序编码" :value="100" :spinners="true"></NumberBox>
-                <div class="error">{{ veeErrors.first('orderNo') }}</div>
+                <div class="error">{{ veeErrors.first('orderCode') }}</div>
 
                 <Label for="authCode" align="right">权限编码:</Label>
                 <TextBox inputId="authCode" name="authCode" v-model="menu.authCode" v-validate="'required'"

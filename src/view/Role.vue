@@ -176,7 +176,7 @@
                   </GridColumn>
 
                   <GridColumn v-for="column in refUserDisplayColumns" :key="column.id" :field="column.field" :title="column.title"
-                              v-if="column.show" :align="column.align" :sortable="column.sortable"
+                              v-if="column.visible" :align="column.align" :sortable="column.sortable"
                               :width="column.width">
                   </GridColumn>
                 </DataGrid>

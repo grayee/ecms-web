@@ -85,7 +85,7 @@
               </GridColumn>
 
               <GridColumn v-for="column in displayColumns" :key="column.id" :field="column.field" :title="column.title"
-                          v-if="column.show" :align="column.align" :sortable="column.sortable" :width="column.width">
+                          v-if="column.visible" :align="column.align" :sortable="column.sortable" :width="column.width">
               </GridColumn>
             </DataGrid>
           </Panel>
@@ -155,7 +155,7 @@
           this.loading = false;
           this.displayColumns = result.extras.displayColumns;
           this.displayColumns.forEach((item, i) => {
-            if (item.show) {
+            if (item.visible) {
               this.checkedFields.push(item.field);
             }
           });
@@ -262,7 +262,7 @@
           alert("请至少选中一条数据");
         } else {
           this.displayColumns.forEach((column, index) => {
-            column.show = this.checkedFields.indexOf(column.field) > -1;
+            column.visible = this.checkedFields.indexOf(column.field) > -1;
           });
           dialog.close();
         }
